@@ -3,26 +3,26 @@ import java.io.*;
 
 public class Scanner implements ScannerConstants {
 
-  public static void main(String[] args) throws FileNotFoundException
-  {
-     try {
-            new Scanner(new java.io.StringReader(args[0])).PROG();
+    public static void main(String[] args) throws FileNotFoundException
+    {
+        try {
+            new Scanner(new java.io.FileInputStream(args[0])).PROG();
             System.out.println("Syntax is okay");
         } catch (Throwable e) {
             // Catching Throwable is ugly but JavaCC throws Error objects!
             System.out.println("Syntax check failed: " + e.getMessage());
         }
-  }
+    }
 
   static final public void PROG() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case 16:
+    case IMPORT:
       IMPRT();
       MDL();
       label_1:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 7:
+        case ANALYZE:
           ;
           break;
         default:
@@ -31,15 +31,14 @@ public class Scanner implements ScannerConstants {
         }
         STMT();
       }
-      jj_consume_token(0);
       break;
-    case 9:
+    case MODEL:
       MDL();
       IMPRT();
       label_2:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case 7:
+        case ANALYZE:
           ;
           break;
         default:
@@ -48,7 +47,6 @@ public class Scanner implements ScannerConstants {
         }
         STMT();
       }
-      jj_consume_token(0);
       break;
     default:
       jj_la1[2] = jj_gen;
@@ -59,54 +57,23 @@ public class Scanner implements ScannerConstants {
 
   static final public void STMT() throws ParseException {
     ANLZ();
-    jj_consume_token(EOL);
-  }
-
-  static final public void ANLZ() throws ParseException {
-    jj_consume_token(7);
-    ID();
-    jj_consume_token(8);
-    ID();
-  }
-
-  static final public void MDL() throws ParseException {
-    jj_consume_token(9);
-    ID();
-    jj_consume_token(10);
-    jj_consume_token(EOL);
-    label_3:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case LETTER:
-      case 19:
-        ;
-        break;
-      default:
-        jj_la1[3] = jj_gen;
-        break label_3;
-      }
-      RLE();
-    }
-    jj_consume_token(11);
-    jj_consume_token(EOL);
-  }
-
-  static final public void RLE() throws ParseException {
-    ID();
-    jj_consume_token(12);
-    EXPR();
-    jj_consume_token(EOL);
-  }
-
-  static final public void EXPR() throws ParseException {
-    ID();
-    jj_consume_token(13);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case 14:
-      jj_consume_token(14);
+    case EOL:
+      label_3:
+      while (true) {
+        jj_consume_token(EOL);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case EOL:
+          ;
+          break;
+        default:
+          jj_la1[3] = jj_gen;
+          break label_3;
+        }
+      }
       break;
-    case 15:
-      jj_consume_token(15);
+    case 0:
+      jj_consume_token(0);
       break;
     default:
       jj_la1[4] = jj_gen;
@@ -115,128 +82,116 @@ public class Scanner implements ScannerConstants {
     }
   }
 
-  static final public void IMPRT() throws ParseException {
-    jj_consume_token(16);
-    FLNM();
-    jj_consume_token(17);
-    ID();
-    jj_consume_token(EOL);
+  static final public void ANLZ() throws ParseException {
+    jj_consume_token(ANALYZE);
+    jj_consume_token(ID);
+    jj_consume_token(WITH);
+    jj_consume_token(ID);
   }
 
-  static final public void FLNM() throws ParseException {
+  static final public void MDL() throws ParseException {
+    jj_consume_token(MODEL);
+    jj_consume_token(ID);
+    jj_consume_token(BLOCKSTART);
     label_4:
     while (true) {
+      jj_consume_token(EOL);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case LETTER:
-        jj_consume_token(LETTER);
-        break;
-      case DIGIT:
-        jj_consume_token(DIGIT);
-        break;
-      case 18:
-        jj_consume_token(18);
-        break;
-      case 19:
-        jj_consume_token(19);
+      case EOL:
+        ;
         break;
       default:
         jj_la1[5] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
+        break label_4;
       }
+    }
+    label_5:
+    while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case LETTER:
-      case DIGIT:
-      case 18:
-      case 19:
+      case ID:
         ;
         break;
       default:
         jj_la1[6] = jj_gen;
-        break label_4;
+        break label_5;
       }
+      RLE();
     }
-    jj_consume_token(20);
-  }
-
-  static final public void ID() throws ParseException {
+    jj_consume_token(BLOCKSTOP);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case LETTER:
-      jj_consume_token(LETTER);
-      label_5:
+    case EOL:
+      label_6:
       while (true) {
+        jj_consume_token(EOL);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case LETTER:
-        case DIGIT:
-        case 19:
+        case EOL:
           ;
           break;
         default:
           jj_la1[7] = jj_gen;
-          break label_5;
-        }
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case LETTER:
-          jj_consume_token(LETTER);
-          break;
-        case DIGIT:
-          jj_consume_token(DIGIT);
-          break;
-        case 19:
-          jj_consume_token(19);
-          break;
-        default:
-          jj_la1[8] = jj_gen;
-          jj_consume_token(-1);
-          throw new ParseException();
+          break label_6;
         }
       }
       break;
-    case 19:
-      jj_consume_token(19);
+    case 0:
+      jj_consume_token(0);
+      break;
+    default:
+      jj_la1[8] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  static final public void RLE() throws ParseException {
+    jj_consume_token(ID);
+    jj_consume_token(DEFINERULE);
+    EXPR();
+    label_7:
+    while (true) {
+      jj_consume_token(EOL);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case LETTER:
-        jj_consume_token(LETTER);
-        break;
-      case DIGIT:
-        jj_consume_token(DIGIT);
+      case EOL:
+        ;
         break;
       default:
         jj_la1[9] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
+        break label_7;
       }
-      label_6:
+    }
+  }
+
+  static final public void EXPR() throws ParseException {
+    jj_consume_token(ID);
+    jj_consume_token(EQUALS);
+    jj_consume_token(CONSTRAINT);
+  }
+
+  static final public void IMPRT() throws ParseException {
+    jj_consume_token(IMPORT);
+    jj_consume_token(FILENAME);
+    jj_consume_token(IN);
+    jj_consume_token(ID);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case EOL:
+      label_8:
       while (true) {
+        jj_consume_token(EOL);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case LETTER:
-        case DIGIT:
-        case 19:
+        case EOL:
           ;
           break;
         default:
           jj_la1[10] = jj_gen;
-          break label_6;
-        }
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case LETTER:
-          jj_consume_token(LETTER);
-          break;
-        case DIGIT:
-          jj_consume_token(DIGIT);
-          break;
-        case 19:
-          jj_consume_token(19);
-          break;
-        default:
-          jj_la1[11] = jj_gen;
-          jj_consume_token(-1);
-          throw new ParseException();
+          break label_8;
         }
       }
       break;
+    case 0:
+      jj_consume_token(0);
+      break;
     default:
-      jj_la1[12] = jj_gen;
+      jj_la1[11] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -252,13 +207,13 @@ public class Scanner implements ScannerConstants {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[13];
+  static final private int[] jj_la1 = new int[12];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x80,0x80,0x10200,0x80010,0xc000,0xc0030,0xc0030,0x80030,0x80030,0x30,0x80030,0x80030,0x80010,};
+      jj_la1_0 = new int[] {0x1000,0x1000,0x50,0x10000,0x10001,0x10000,0x8000,0x10000,0x10001,0x10000,0x10000,0x10001,};
    }
 
   /** Constructor with InputStream. */
@@ -279,7 +234,7 @@ public class Scanner implements ScannerConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 13; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -293,7 +248,7 @@ public class Scanner implements ScannerConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 13; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -310,7 +265,7 @@ public class Scanner implements ScannerConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 13; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -320,7 +275,7 @@ public class Scanner implements ScannerConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 13; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -336,7 +291,7 @@ public class Scanner implements ScannerConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 13; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -345,7 +300,7 @@ public class Scanner implements ScannerConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 13; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -396,12 +351,67 @@ public class Scanner implements ScannerConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[21];
+    boolean[] la1tokens = new boolean[20];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 13; i++) {
+    for (int i = 0; i < 12; i++) {
+
+  static private Token jj_consume_token(int kind) throws ParseException {
+    Token oldToken;
+    if ((oldToken = token).next != null) token = token.next;
+    else token = token.next = token_source.getNextToken();
+    jj_ntk = -1;
+    if (token.kind == kind) {
+      jj_gen++;
+      return token;
+    }
+    token = oldToken;
+    jj_kind = kind;
+    throw generateParseException();
+  }
+
+
+/** Get the next Token. */
+  static final public Token getNextToken() {
+    if (token.next != null) token = token.next;
+    else token = token.next = token_source.getNextToken();
+    jj_ntk = -1;
+    jj_gen++;
+    return token;
+  }
+
+/** Get the specific Token. */
+  static final public Token getToken(int index) {
+    Token t = token;
+    for (int i = 0; i < index; i++) {
+      if (t.next != null) t = t.next;
+      else t = t.next = token_source.getNextToken();
+    }
+    return t;
+  }
+
+  static private int jj_ntk() {
+    if ((jj_nt=token.next) == null)
+      return (jj_ntk = (token.next=token_source.getNextToken()).kind);
+    else
+      return (jj_ntk = jj_nt.kind);
+  }
+
+  static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  static private int[] jj_expentry;
+  static private int jj_kind = -1;
+
+  /** Generate ParseException. */
+  static public ParseException generateParseException() {
+    jj_expentries.clear();
+    boolean[] la1tokens = new boolean[20];
+    if (jj_kind >= 0) {
+      la1tokens[jj_kind] = true;
+      jj_kind = -1;
+    }
+    for (int i = 0; i < 12; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -410,7 +420,7 @@ public class Scanner implements ScannerConstants {
         }
       }
     }
-    for (int i = 0; i < 21; i++) {
+    for (int i = 0; i < 20; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

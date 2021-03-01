@@ -9,14 +9,38 @@ public interface ScannerConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int LETTER = 4;
+  int IMPORT = 4;
   /** RegularExpression Id. */
-  int DIGIT = 5;
+  int IN = 5;
   /** RegularExpression Id. */
-  int EOL = 6;
+  int MODEL = 6;
+  /** RegularExpression Id. */
+  int BLOCKSTART = 7;
+  /** RegularExpression Id. */
+  int BLOCKSTOP = 8;
+  /** RegularExpression Id. */
+  int DEFINERULE = 9;
+  /** RegularExpression Id. */
+  int EQUALS = 10;
+  /** RegularExpression Id. */
+  int CONSTRAINT = 11;
+  /** RegularExpression Id. */
+  int ANALYZE = 12;
+  /** RegularExpression Id. */
+  int WITH = 13;
+  /** RegularExpression Id. */
+  int FILENAME = 14;
+  /** RegularExpression Id. */
+  int ID = 15;
+  /** RegularExpression Id. */
+  int EOL = 16;
+  /** RegularExpression Id. */
+  int COMMENT = 18;
 
   /** Lexical state. */
   int DEFAULT = 0;
+  /** Lexical state. */
+  int IN_COMMENT = 1;
 
   /** Literal token values. */
   String[] tokenImage = {
@@ -24,23 +48,22 @@ public interface ScannerConstants {
     "\"\\t\"",
     "\"\\r\"",
     "\" \"",
-    "<LETTER>",
-    "<DIGIT>",
-    "\"\\n\"",
-    "\"ANALYZE\"",
-    "\"WITH\"",
+    "\"IMPORT\"",
+    "\"IN\"",
     "\"MODEL\"",
     "\"BEGIN\"",
     "\"END\"",
     "\":\"",
     "\"=\"",
-    "\"LETTERS\"",
-    "\"NUMBERS\"",
-    "\"IMPORT\"",
-    "\"IN\"",
-    "\"-\"",
-    "\"_\"",
-    "\".csv\"",
+    "<CONSTRAINT>",
+    "\"ANALYZE\"",
+    "\"WITH\"",
+    "<FILENAME>",
+    "<ID>",
+    "\"\\n\"",
+    "\"//\"",
+    "\"//\"",
+    "<token of kind 19>",
   };
 
 }

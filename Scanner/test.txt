@@ -1,5 +1,10 @@
 IMPORT people.csv IN people
-MODEL person BEGIN 
+
+MODEL person BEGIN
+
     rule1: name = LETTERS
-END
-ANALYZE people WITH persons
+
+    rule2: height = NUMBERS
+
+
+ANALYZe: people WITH persons

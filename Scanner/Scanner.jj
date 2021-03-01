@@ -9,16 +9,16 @@ import java.io.*;
 
 public class Scanner {
 
-  public static void main(String[] args) throws FileNotFoundException
-  {
-     try {
-            new Scanner(new java.io.StringReader(args[0])).PROG();
+    public static void main(String[] args) throws FileNotFoundException
+    {
+        try {
+            new Scanner(new java.io.FileInputStream(args[0])).PROG();
             System.out.println("Syntax is okay");
         } catch (Throwable e) {
             // Catching Throwable is ugly but JavaCC throws Error objects!
             System.out.println("Syntax check failed: " + e.getMessage());
         }
-  }
+    }
 }
 
 PARSER_END(Scanner)
@@ -32,17 +32,42 @@ SKIP: /* Whitespace */
 
 TOKEN:
 {
-    <LETTER:        ["A"-"Z","a"-"z"]>
-|   <DIGIT:         ["0"-"9"]>
+    <IMPORT:        "IMPORT">
+|   <IN:            "IN">
+|   <MODEL:         "MODEL">
+|   <BLOCKSTART:    "BEGIN">
+|   <BLOCKSTOP:     "END">
+|   <DEFINERULE:    ":">
+|   <EQUALS:        "=">
+|   <CONSTRAINT:    "LETTERS"|"NUMBERS">
+|   <ANALYZE:       "ANALYZE">
+|   <WITH:          "WITH">
+|   <FILENAME:      (["A"-"Z","a"-"z","0"-"9","-","_"])+".csv">
+|   <ID:            (["A"-"Z","a"-"z"](["A"-"Z","a"-"z","0"-"9","_"])*)|("_"(["A"-"Z","a"-"z","0"-"9"])(["A"-"Z","a"-"z","0"-"9","_"])*)>
 |   <EOL:           "\n">
 }
 
-void PROG(): {} { IMPRT() MDL() (STMT())* <EOF> | MDL() IMPRT() (STMT())* <EOF> }
-void STMT(): {} { ANLZ() <EOL> }
-void ANLZ(): {} { "ANALYZE" ID() "WITH" ID() }
-void MDL():  {} { "MODEL" ID() "BEGIN" <EOL> (RLE())* "END" <EOL> }
-void RLE():  {} { ID() ":" EXPR() <EOL> }
-void EXPR(): {} { ID() "=" ("LETTERS"|"NUMBERS") }
-void IMPRT():{} { "IMPORT" FLNM() "IN" ID() <EOL> }
-void FLNM(): {} { (<LETTER>|<DIGIT>|"-"|"_")+".csv" }
-void ID():   {} { (<LETTER>(<LETTER>|<DIGIT>|"_")*)|("_"(<LETTER>|<DIGIT>)(<LETTER>|<DIGIT>|"_")*) }
+MORE :
+{
+    "//" : IN_COMMENT
+}
+
+<IN_COMMENT>
+SPECIAL_TOKEN :
+{
+  <COMMENT: "//" > : DEFAULT
+}
+
+<IN_COMMENT>
+MORE :
+{
+  < ~[] >
+}
+
+void PROG(): {} { IMPRT() MDL() (STMT())* | MDL() IMPRT() (STMT())* }
+void STMT(): {} { ANLZ() ((<EOL>)+ | <EOF>) }
+void ANLZ(): {} { <ANALYZE> <ID> <WITH> <ID> }
+void MDL():  {} { <MODEL> <ID> <BLOCKSTART> (<EOL>)+ (RLE())* <BLOCKSTOP> ((<EOL>)+ | <EOF>) }
+void RLE():  {} { <ID> <DEFINERULE> EXPR() (<EOL>)+ }
+void EXPR(): {} { <ID> <EQUALS> <CONSTRAINT> }
+void IMPRT():{} { <IMPORT> <FILENAME> <IN> <ID> ((<EOL>)+ | <EOF>) }
