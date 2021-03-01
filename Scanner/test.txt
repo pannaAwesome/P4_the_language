@@ -1,0 +1,5 @@
+IMPORT people.csv IN people
+MODEL person BEGIN 
+    rule1: name = LETTERS
+END
+ANALYZE people WITH persons

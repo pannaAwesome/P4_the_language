@@ -1,0 +1,48 @@
+options {
+  IGNORE_CASE = false;
+  OPTIMIZE_TOKEN_MANAGER = true;
+}
+
+PARSER_BEGIN(Scanner)
+
+import java.io.*;
+
+public class Scanner {
+
+  public static void main(String[] args) throws FileNotFoundException
+  {
+     try {
+            new Scanner(new java.io.StringReader(args[0])).PROG();
+            System.out.println("Syntax is okay");
+        } catch (Throwable e) {
+            // Catching Throwable is ugly but JavaCC throws Error objects!
+            System.out.println("Syntax check failed: " + e.getMessage());
+        }
+  }
+}
+
+PARSER_END(Scanner)
+
+SKIP: /* Whitespace */
+{
+  "\t"
+| "\r"
+| " "
+}
+
+TOKEN:
+{
+    <LETTER:        ["A"-"Z","a"-"z"]>
+|   <DIGIT:         ["0"-"9"]>
+|   <EOL:           "\n">
+}
+
+void PROG(): {} { IMPRT() MDL() (STMT())* <EOF> | MDL() IMPRT() (STMT())* <EOF> }
+void STMT(): {} { ANLZ() <EOL> }
+void ANLZ(): {} { "ANALYZE" ID() "WITH" ID() }
+void MDL():  {} { "MODEL" ID() "BEGIN" <EOL> (RLE())* "END" <EOL> }
+void RLE():  {} { ID() ":" EXPR() <EOL> }
+void EXPR(): {} { ID() "=" ("LETTERS"|"NUMBERS") }
+void IMPRT():{} { "IMPORT" FLNM() "IN" ID() <EOL> }
+void FLNM(): {} { (<LETTER>|<DIGIT>|"-"|"_")+".csv" }
+void ID():   {} { (<LETTER>(<LETTER>|<DIGIT>|"_")*)|("_"(<LETTER>|<DIGIT>)(<LETTER>|<DIGIT>|"_")*) }
