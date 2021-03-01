@@ -6,5 +6,6 @@ MODEL person BEGIN
 
     rule2: height = NUMBERS
 
+END
 
-ANALYZe: people WITH persons
+ANALYZE people WITH persons
