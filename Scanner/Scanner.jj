@@ -1,6 +1,5 @@
 options {
   IGNORE_CASE = false;
-  OPTIMIZE_TOKEN_MANAGER = true;
 }
 
 PARSER_BEGIN(Scanner)
@@ -30,21 +29,45 @@ SKIP: /* Whitespace */
 | " "
 }
 
-TOKEN:
+TOKEN: /* Keywords */
 {
     <IMPORT:        "IMPORT">
 |   <IN:            "IN">
 |   <MODEL:         "MODEL">
 |   <BLOCKSTART:    "BEGIN">
 |   <BLOCKSTOP:     "END">
-|   <DEFINERULE:    ":">
-|   <EQUALS:        "=">
-|   <CONSTRAINT:    "LETTERS"|"NUMBERS">
 |   <ANALYZE:       "ANALYZE">
 |   <WITH:          "WITH">
-|   <FILENAME:      (["A"-"Z","a"-"z","0"-"9","-","_"])+".csv">
+}
+
+TOKEN: /* Whitespace */
+{
+    <EOL:           "\n">
+}
+
+TOKEN: /* Operators */
+{
+    <COMPARISON:    "=" | "<=" | ">=" | "<" | ">" >
+|   <LOGICAL:       "AND" | "OR" >
+|   <DEFINERULE:    ":" >
+|   <IS:            "IS" >
+}
+
+TOKEN: /* Regex */
+{
+    <CONSTRAINT:    "LETTERS"|"NUMBERS">
+}
+
+TOKEN: /* Identifiers */
+{
+    <FILENAME:      (["A"-"Z","a"-"z","0"-"9","-","_"])+".csv">
 |   <ID:            (["A"-"Z","a"-"z"](["A"-"Z","a"-"z","0"-"9","_"])*)|("_"(["A"-"Z","a"-"z","0"-"9"])(["A"-"Z","a"-"z","0"-"9","_"])*)>
-|   <EOL:           "\n">
+}
+
+TOKEN: /* Numbers */
+{
+    <INT:           ["1"-"9"](["0"-"9"])* | "0" >
+|   <FLOAT:         "0" "." (["0"-"9"])+ | ["1"-"9"] (["0"-"9"])* "." (["0"-"9"])+ >
 }
 
 MORE :
@@ -64,10 +87,12 @@ MORE :
   < ~[] >
 }
 
-void PROG(): {} { IMPRT() MDL() (STMT())* | MDL() IMPRT() (STMT())* }
-void STMT(): {} { ANLZ() ((<EOL>)+ | <EOF>) }
-void ANLZ(): {} { <ANALYZE> <ID> <WITH> <ID> }
-void MDL():  {} { <MODEL> <ID> <BLOCKSTART> (<EOL>)+ (RLE())* <BLOCKSTOP> ((<EOL>)+ | <EOF>) }
-void RLE():  {} { <ID> <DEFINERULE> EXPR() (<EOL>)+ }
-void EXPR(): {} { <ID> <EQUALS> <CONSTRAINT> }
-void IMPRT():{} { <IMPORT> <FILENAME> <IN> <ID> ((<EOL>)+ | <EOF>) }
+void PROG():    {}  { IMPRT() MDL() (STMT())* | MDL() IMPRT() (STMT())* }
+void STMT():    {}  { ANLZ() ((<EOL>)+ | <EOF>) }
+void ANLZ():    {}  { <ANALYZE> <ID> <WITH> <ID> }
+void IMPRT():   {}  { <IMPORT> <FILENAME> <IN> <ID> ((<EOL>)+ | <EOF>) }
+void MDL():     {}  { <MODEL> <ID> <BLOCKSTART> (<EOL>)+ (RLE())* <BLOCKSTOP> ((<EOL>)+ | <EOF>) }
+void RLE():     {}  { <ID> <DEFINERULE> EXPR() (<EOL>)+ }
+void EXPR():    {}  { SUBEXPR() (<LOGICAL> SUBEXPR())* }
+void SUBEXPR(): {}  { <ID> (<IS> <CONSTRAINT> | <COMPARISON> NUM()) }
+void NUM():     {}  { <INT> | <FLOAT> }

@@ -2,9 +2,9 @@ IMPORT people.csv IN people
 
 MODEL person BEGIN
 
-    rule1: name = LETTERS
+    rule1: name IS LETTERS
 
-    rule2: height = NUMBERS
+    rule2: height IS NUMBERS
 
 END
 

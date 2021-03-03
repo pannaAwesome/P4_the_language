@@ -19,23 +19,31 @@ public interface ScannerConstants {
   /** RegularExpression Id. */
   int BLOCKSTOP = 8;
   /** RegularExpression Id. */
-  int DEFINERULE = 9;
+  int ANALYZE = 9;
   /** RegularExpression Id. */
-  int EQUALS = 10;
+  int WITH = 10;
   /** RegularExpression Id. */
-  int CONSTRAINT = 11;
+  int EOL = 11;
   /** RegularExpression Id. */
-  int ANALYZE = 12;
+  int COMPARISON = 12;
   /** RegularExpression Id. */
-  int WITH = 13;
+  int LOGICAL = 13;
   /** RegularExpression Id. */
-  int FILENAME = 14;
+  int DEFINERULE = 14;
   /** RegularExpression Id. */
-  int ID = 15;
+  int IS = 15;
   /** RegularExpression Id. */
-  int EOL = 16;
+  int CONSTRAINT = 16;
   /** RegularExpression Id. */
-  int COMMENT = 18;
+  int FILENAME = 17;
+  /** RegularExpression Id. */
+  int ID = 18;
+  /** RegularExpression Id. */
+  int INT = 19;
+  /** RegularExpression Id. */
+  int FLOAT = 20;
+  /** RegularExpression Id. */
+  int COMMENT = 22;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -53,17 +61,21 @@ public interface ScannerConstants {
     "\"MODEL\"",
     "\"BEGIN\"",
     "\"END\"",
-    "\":\"",
-    "\"=\"",
-    "<CONSTRAINT>",
     "\"ANALYZE\"",
     "\"WITH\"",
+    "\"\\n\"",
+    "<COMPARISON>",
+    "<LOGICAL>",
+    "\":\"",
+    "\"IS\"",
+    "<CONSTRAINT>",
     "<FILENAME>",
     "<ID>",
-    "\"\\n\"",
+    "<INT>",
+    "<FLOAT>",
     "\"//\"",
     "\"//\"",
-    "<token of kind 19>",
+    "<token of kind 23>",
   };
 
 }
