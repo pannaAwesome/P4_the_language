@@ -1,11 +1,14 @@
-IMPORT people.csv IN people
-
 MODEL person BEGIN
 
     rule1: name IS LETTERS
 
     rule2: height IS NUMBERS
 
+    rule3: id = "123456"
+
 END
 
-ANALYZE people WITH persons
+IMPORT people.csv IN people
+
+ANALYZE ID ID BOB
+HEJ HEJ HEJ

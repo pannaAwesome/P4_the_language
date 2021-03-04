@@ -27,23 +27,27 @@ public interface ScannerConstants {
   /** RegularExpression Id. */
   int COMPARISON = 12;
   /** RegularExpression Id. */
-  int LOGICAL = 13;
+  int EQUAL = 13;
   /** RegularExpression Id. */
-  int DEFINERULE = 14;
+  int LOGICAL = 14;
   /** RegularExpression Id. */
-  int IS = 15;
+  int DEFINERULE = 15;
   /** RegularExpression Id. */
-  int CONSTRAINT = 16;
+  int IS = 16;
   /** RegularExpression Id. */
-  int FILENAME = 17;
+  int CONSTRAINT = 17;
   /** RegularExpression Id. */
-  int ID = 18;
+  int FILENAME = 18;
   /** RegularExpression Id. */
-  int INT = 19;
+  int ID = 19;
   /** RegularExpression Id. */
-  int FLOAT = 20;
+  int INT = 20;
   /** RegularExpression Id. */
-  int COMMENT = 22;
+  int FLOAT = 21;
+  /** RegularExpression Id. */
+  int STRING = 22;
+  /** RegularExpression Id. */
+  int COMMENT = 24;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -65,6 +69,7 @@ public interface ScannerConstants {
     "\"WITH\"",
     "\"\\n\"",
     "<COMPARISON>",
+    "\"=\"",
     "<LOGICAL>",
     "\":\"",
     "\"IS\"",
@@ -73,9 +78,10 @@ public interface ScannerConstants {
     "<ID>",
     "<INT>",
     "<FLOAT>",
+    "<STRING>",
     "\"//\"",
     "\"//\"",
-    "<token of kind 23>",
+    "<token of kind 25>",
   };
 
 }

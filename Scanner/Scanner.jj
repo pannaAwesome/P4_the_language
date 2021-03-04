@@ -19,7 +19,86 @@ public class Scanner {
         }
     }
 }
+/*
+public class Scanner {
 
+    public static void main(String[] args) throws FileNotFoundException
+    {
+        if ( args.length < 1 ) {
+       System.out.println("Please pass in the filename for a parameter.");
+       System.exit(1);
+    }
+
+    SimpleCharStream stream = new SimpleCharStream(
+                                  new FileInputStream(args[0]),0,0);
+    Token temp_token = null;
+
+    ScannerTokenManager TkMgr = new ScannerTokenManager(stream);
+
+    do {
+        temp_token = TkMgr.getNextToken();
+
+        switch(temp_token.kind) {
+            case IMPORT:
+                System.out.print(" IMPORT ");
+                break;
+            case IN:
+                System.out.print(" IN ");
+                break;
+            case MODEL:
+                System.out.print(" MODEL ");
+                break;
+            case BLOCKSTART:
+                System.out.print(" BLOCKSTART ");
+                break;
+            case BLOCKSTOP:
+                System.out.print(" BLOCKSTOP ");
+                break;
+            case COMPARISON:
+                System.out.print(" COMPARISON ");
+                break;
+            case EQUAL:
+                System.out.print(" EQUAL ");
+                break;
+            case LOGICAL:
+                System.out.print(" LOGICAL ");
+                break;
+            case IS:
+                System.out.print(" IS ");
+                break;
+            case DEFINERULE:
+                System.out.print(" DEFINERULE ");
+                break;
+            case CONSTRAINT:
+                System.out.print(" CONSTRAINT ");
+                break;
+            case ANALYZE:
+                System.out.print(" ANALYZE ");
+                break;
+            case WITH:
+                System.out.print(" WITH ");
+                break;
+            case FILENAME:
+                System.out.print(" FILENAME ");
+                break;
+            case ID:
+                System.out.print(" ID ");
+                break;
+            case EOL:
+                System.out.println("    EOL");
+                break;
+            case STRING:
+                System.out.print("STRING");
+                break;
+         default:
+           if ( temp_token.kind != EOF )
+             System.out.println("OTHER: " + temp_token.image);
+           break;
+        }
+    } while (temp_token.kind != EOF);
+    }
+}
+*/
 PARSER_END(Scanner)
 
 SKIP: /* Whitespace */
@@ -47,7 +126,8 @@ TOKEN: /* Whitespace */
 
 TOKEN: /* Operators */
 {
-    <COMPARISON:    "=" | "<=" | ">=" | "<" | ">" >
+    <COMPARISON:    "<=" | ">=" | "<" | ">" >
+|   <EQUAL:         "=">
 |   <LOGICAL:       "AND" | "OR" >
 |   <DEFINERULE:    ":" >
 |   <IS:            "IS" >
@@ -64,10 +144,11 @@ TOKEN: /* Identifiers */
 |   <ID:            (["A"-"Z","a"-"z"](["A"-"Z","a"-"z","0"-"9","_"])*)|("_"(["A"-"Z","a"-"z","0"-"9"])(["A"-"Z","a"-"z","0"-"9","_"])*)>
 }
 
-TOKEN: /* Numbers */
+TOKEN: /* Literals */
 {
     <INT:           ["1"-"9"](["0"-"9"])* | "0" >
 |   <FLOAT:         "0" "." (["0"-"9"])+ | ["1"-"9"] (["0"-"9"])* "." (["0"-"9"])+ >
+|   <STRING:        "\"" (~["\""])* "\"" >
 }
 
 MORE :
@@ -87,12 +168,13 @@ MORE :
   < ~[] >
 }
 
-void PROG():    {}  { IMPRT() MDL() (STMT())* | MDL() IMPRT() (STMT())* }
-void STMT():    {}  { ANLZ() ((<EOL>)+ | <EOF>) }
+//void PROG():    {}  { STMT() }
+void PROG():    {}  { MDL() IMPRT() (STMT())+ }
+void STMT():    {}  { ANLZ() ((<EOL>)+ | <EOF> ) }
 void ANLZ():    {}  { <ANALYZE> <ID> <WITH> <ID> }
-void IMPRT():   {}  { <IMPORT> <FILENAME> <IN> <ID> ((<EOL>)+ | <EOF>) }
-void MDL():     {}  { <MODEL> <ID> <BLOCKSTART> (<EOL>)+ (RLE())* <BLOCKSTOP> ((<EOL>)+ | <EOF>) }
+void IMPRT():   {}  { <IMPORT> <FILENAME> <IN> <ID> ((<EOL>)+) }
+void MDL():     {}  { <MODEL> <ID> <BLOCKSTART> (<EOL>)+ (RLE())* <BLOCKSTOP> ((<EOL>)+) }
 void RLE():     {}  { <ID> <DEFINERULE> EXPR() (<EOL>)+ }
 void EXPR():    {}  { SUBEXPR() (<LOGICAL> SUBEXPR())* }
-void SUBEXPR(): {}  { <ID> (<IS> <CONSTRAINT> | <COMPARISON> NUM()) }
+void SUBEXPR(): {}  { <ID> (<IS> <CONSTRAINT> | <EQUAL> (<STRING> | NUM()) | <COMPARISON> NUM())}
 void NUM():     {}  { <INT> | <FLOAT> }
