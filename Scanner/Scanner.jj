@@ -169,8 +169,8 @@ MORE :
 }
 
 //void PROG():    {}  { STMT() }
-void PROG():    {}  { MDL() IMPRT() (STMT())+ }
-void STMT():    {}  { ANLZ() ((<EOL>)+ | <EOF> ) }
+void PROG():    {}  { MDL() IMPRT() STMT() }
+void STMT():    {}  { ANLZ() (<EOL>)+ STMT() | <EOF>  }
 void ANLZ():    {}  { <ANALYZE> <ID> <WITH> <ID> }
 void IMPRT():   {}  { <IMPORT> <FILENAME> <IN> <ID> ((<EOL>)+) }
 void MDL():     {}  { <MODEL> <ID> <BLOCKSTART> (<EOL>)+ (RLE())* <BLOCKSTOP> ((<EOL>)+) }
