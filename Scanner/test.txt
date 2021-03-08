@@ -1,11 +1,10 @@
-IMPORT people.csv IN people
-
 MODEL person BEGIN
 
-    rule1: name = LETTERS
-
-    rule2: height = NUMBERS
+    rule2: (name = "hej" OR name IS LETTERS) AND name < 180
+    rule3: height < 180 OR height IS NUMBERS
 
 END
 
-ANALYZE people WITH persons
+IMPORT people.csv IN people
+
+ANALYZE ID WITH BOB

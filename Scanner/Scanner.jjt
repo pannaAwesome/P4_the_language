@@ -1,0 +1,211 @@
+
+PARSER_BEGIN(Scanner)
+
+import java.io.*;
+
+public class Scanner {
+
+    public static void main(String[] args) throws ParseException, FileNotFoundException {
+        if ( args.length < 1 ) {
+           System.out.println("Please pass in the filename for a parameter.");
+           System.exit(1);
+        }
+
+        Scanner parser = new Scanner( new FileInputStream(args[0]) );
+
+        try {
+            SimpleNode n = parser.PROG();
+            n.dump("");
+            System.out.println("Finished succesfully");
+        }catch(Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}
+
+PARSER_END(Scanner)
+
+SKIP: /* Whitespace */
+{
+  "\t"
+| "\r"
+| " "
+}
+
+TOKEN: /* Keywords */
+{
+    <IMPORT:        "IMPORT">
+|   <IN:            "IN">
+|   <MODEL:         "MODEL">
+|   <BLOCKSTART:    "BEGIN">
+|   <BLOCKSTOP:     "END">
+|   <ANALYZE:       "ANALYZE">
+|   <WITH:          "WITH">
+}
+
+TOKEN: /* Whitespace */
+{
+    <EOL:           "\n">
+}
+
+TOKEN: /* Operators */
+{
+    <COMPARISON:    "<=" | ">=" | "<" | ">" >
+|   <EQUAL:         "=">
+|   <DEFINERULE:    ":" >
+|   <IS:            "IS" >
+|   <OR:            "OR">
+|   <AND:           "AND">
+}
+
+TOKEN: /* Regex */
+{
+    <CONSTRAINT:    "LETTERS"|"NUMBERS">
+}
+
+TOKEN: /* Literals */
+{
+    <INT:           ["1"-"9"](["0"-"9"])* | "0" >
+|   <FLOAT:         "0" "." (["0"-"9"])+ | ["1"-"9"] (["0"-"9"])* "." (["0"-"9"])+ >
+|   <STRING:        "\"" (~["\""])* "\"" >
+}
+
+TOKEN: /* Identifiers */
+{
+    <FILENAME:      (["A"-"Z","a"-"z","0"-"9","-","_"])+".csv">
+|   <ID:            (["A"-"Z","a"-"z"](["A"-"Z","a"-"z","0"-"9","_"])*)|("_"(["A"-"Z","a"-"z","0"-"9"])(["A"-"Z","a"-"z","0"-"9","_"])*)>
+}
+
+
+
+MORE :
+{
+    "//" : IN_COMMENT
+}
+
+<IN_COMMENT>
+SPECIAL_TOKEN :
+{
+  <COMMENT: "//" > : DEFAULT
+}
+
+<IN_COMMENT>
+MORE :
+{
+  < ~[] >
+}
+
+SimpleNode PROG():    {}  
+{ 
+    (MDL() IMPRT() STMT() | IMPRT() MDL() STMT()) 
+    { return jjtThis; }
+}
+
+void IMPRT() #IMPORT:   
+{}  
+{ <IMPORT> FLNM() <IN> IDEN() (<EOL>)+ }
+
+void FLNM():    
+{ Token t; }
+{
+    t = <FILENAME>
+    {
+        jjtThis.value = t.image;
+    }
+}
+
+void MDL() #MODEL:     
+{}  
+{ <MODEL> IDEN() <BLOCKSTART> (<EOL>)+ (RLE())* <BLOCKSTOP> (<EOL>)+}
+
+void RLE() #void:     
+{}
+{ (IDEN() <DEFINERULE> EXPR() (<EOL>)+)#RULE(>1) }
+
+void EXPR() #void:
+{}
+{
+    OREXPR()
+}
+
+void OREXPR() #void:
+{ int count = 0; }
+{
+    (ANDEXPR() (<OR> { count++; } ANDEXPR())*)#OR(count>0)
+}
+
+void ANDEXPR() #void:
+{ int count = 0; }
+{
+    (VPEXPR() (<AND> { count++; } VPEXPR())*)#AND(count>0)
+}
+
+void VPEXPR() #void:
+{}
+{
+    VALEXPR()
+    | "(" EXPR() ")"
+}
+
+void VALEXPR():
+{ Token t; }
+{
+    IDEN()
+    (t = <IS> CONSTRAINTS()
+    | t = <EQUAL> TYPES()
+    | t = <COMPARISON> NUM()) { jjtThis.value = t.image;}
+}
+
+void CONSTRAINTS():
+{ Token t; }
+{
+    t = <CONSTRAINT>
+    { jjtThis.value = t.image; }
+}
+
+void TYPES():
+{ Token t; }
+{
+    (t = <STRING> { jjtThis.value = t.image; })
+    | NUM()
+}
+
+void NUM() #void:     
+{}
+{ INTEGER() | FLOATY() }
+
+void INTEGER(): 
+{ Token t; }
+{
+    t = <INT>
+    {
+        jjtThis.value = t.image;
+    }
+}
+
+void FLOATY(): 
+{ Token t; }
+{
+    t = <FLOAT>
+    {
+        jjtThis.value = t.image;
+    }
+}
+
+void STMT() #void:
+{}
+{ ANLZ() ((<EOL>)+ | <EOF>) STMT() | <EOF> }
+
+void ANLZ() #ANALYZE:
+{}
+{ <ANALYZE> IDEN() <WITH> IDEN() }
+
+void IDEN():
+{ Token t; }
+{
+    t = <ID>
+    {
+        jjtThis.value = t.image;
+    }
+}
