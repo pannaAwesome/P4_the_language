@@ -3,24 +3,34 @@ public interface ScannerTreeConstants
 {
   public int JJTPROG = 0;
   public int JJTIMPORT = 1;
-  public int JJTFLNM = 2;
-  public int JJTMODEL = 3;
-  public int JJTVOID = 4;
-  public int JJTRULE = 5;
-  public int JJTOR = 6;
-  public int JJTAND = 7;
-  public int JJTVALEXPR = 8;
-  public int JJTCONSTRAINTS = 9;
-  public int JJTTYPES = 10;
-  public int JJTINTEGER = 11;
-  public int JJTFLOATY = 12;
-  public int JJTANALYZE = 13;
-  public int JJTIDEN = 14;
+  public int JJTIMOPTIONS = 2;
+  public int JJTFLNM = 3;
+  public int JJTMODEL = 4;
+  public int JJTVOID = 5;
+  public int JJTRULE = 6;
+  public int JJTOR = 7;
+  public int JJTAND = 8;
+  public int JJTVALEXPR = 9;
+  public int JJTREGEX = 10;
+  public int JJTREGOREXPR = 11;
+  public int JJTREGEXPR = 12;
+  public int JJTLENGTH = 13;
+  public int JJTCONSTRAINTS = 14;
+  public int JJTSTRING = 15;
+  public int JJTINTEGER = 16;
+  public int JJTFLOATY = 17;
+  public int JJTANALYZE = 18;
+  public int JJTANOPTIONS = 19;
+  public int JJTROWS = 20;
+  public int JJTCOLS = 21;
+  public int JJTINDEX = 22;
+  public int JJTIDEN = 23;
 
 
   public String[] jjtNodeName = {
     "PROG",
     "IMPORT",
+    "IMOPTIONS",
     "FLNM",
     "MODEL",
     "void",
@@ -28,12 +38,20 @@ public interface ScannerTreeConstants
     "OR",
     "AND",
     "VALEXPR",
+    "REGEX",
+    "REGOREXPR",
+    "REGEXPR",
+    "LENGTH",
     "CONSTRAINTS",
-    "TYPES",
+    "STRING",
     "INTEGER",
     "FLOATY",
     "ANALYZE",
+    "ANOPTIONS",
+    "ROWS",
+    "COLS",
+    "INDEX",
     "IDEN",
   };
 }
-/* JavaCC - OriginalChecksum=945c8378dda540603dbf513a8af4bcdc (do not edit this line) */
+/* JavaCC - OriginalChecksum=10e29014360b12c3de7ee0f12620d3d6 (do not edit this line) */

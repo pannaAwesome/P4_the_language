@@ -15,41 +15,65 @@ public interface ScannerConstants {
   /** RegularExpression Id. */
   int MODEL = 6;
   /** RegularExpression Id. */
-  int BLOCKSTART = 7;
+  int ANALYZE = 7;
   /** RegularExpression Id. */
-  int BLOCKSTOP = 8;
+  int WITH = 8;
   /** RegularExpression Id. */
-  int ANALYZE = 9;
+  int ROW = 9;
   /** RegularExpression Id. */
-  int WITH = 10;
+  int COL = 10;
   /** RegularExpression Id. */
-  int EOL = 11;
+  int NOHEADERS = 11;
   /** RegularExpression Id. */
-  int COMPARISON = 12;
+  int IDKEY = 12;
   /** RegularExpression Id. */
-  int EQUAL = 13;
+  int EOL = 13;
   /** RegularExpression Id. */
-  int DEFINERULE = 14;
+  int COMPARISON = 14;
   /** RegularExpression Id. */
-  int IS = 15;
+  int EQUAL = 15;
   /** RegularExpression Id. */
-  int OR = 16;
+  int DEFINERULE = 16;
   /** RegularExpression Id. */
-  int AND = 17;
+  int IS = 17;
   /** RegularExpression Id. */
-  int CONSTRAINT = 18;
+  int OR = 18;
   /** RegularExpression Id. */
-  int INT = 19;
+  int AND = 19;
   /** RegularExpression Id. */
-  int FLOAT = 20;
+  int NOT = 20;
   /** RegularExpression Id. */
-  int STRING = 21;
+  int CONSTRAINT = 21;
   /** RegularExpression Id. */
-  int FILENAME = 22;
+  int MAXLENGTH = 22;
   /** RegularExpression Id. */
-  int ID = 23;
+  int MINLENGTH = 23;
   /** RegularExpression Id. */
-  int COMMENT = 25;
+  int CONTAINS = 24;
+  /** RegularExpression Id. */
+  int COMMA = 25;
+  /** RegularExpression Id. */
+  int DASH = 26;
+  /** RegularExpression Id. */
+  int LPAREN = 27;
+  /** RegularExpression Id. */
+  int RPAREN = 28;
+  /** RegularExpression Id. */
+  int ARGSSTART = 29;
+  /** RegularExpression Id. */
+  int ARGSSTOP = 30;
+  /** RegularExpression Id. */
+  int INT = 31;
+  /** RegularExpression Id. */
+  int FLOAT = 32;
+  /** RegularExpression Id. */
+  int STRING = 33;
+  /** RegularExpression Id. */
+  int FILENAME = 34;
+  /** RegularExpression Id. */
+  int ID = 35;
+  /** RegularExpression Id. */
+  int COMMENT = 37;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -65,10 +89,12 @@ public interface ScannerConstants {
     "\"IMPORT\"",
     "\"IN\"",
     "\"MODEL\"",
-    "\"BEGIN\"",
-    "\"END\"",
     "\"ANALYZE\"",
     "\"WITH\"",
+    "\"ROW\"",
+    "\"COL\"",
+    "\"NOHEADERS\"",
+    "\"ID\"",
     "\"\\n\"",
     "<COMPARISON>",
     "\"=\"",
@@ -76,7 +102,17 @@ public interface ScannerConstants {
     "\"IS\"",
     "\"OR\"",
     "\"AND\"",
+    "\"NOT\"",
     "<CONSTRAINT>",
+    "\"MAXLENGTH\"",
+    "\"MINLENGTH\"",
+    "\"CONTAINS\"",
+    "\",\"",
+    "\"-\"",
+    "\"(\"",
+    "\")\"",
+    "\"BEGIN\"",
+    "\"END\"",
     "<INT>",
     "<FLOAT>",
     "<STRING>",
@@ -84,9 +120,7 @@ public interface ScannerConstants {
     "<ID>",
     "\"//\"",
     "\"//\"",
-    "<token of kind 26>",
-    "\"(\"",
-    "\")\"",
+    "<token of kind 38>",
   };
 
 }
