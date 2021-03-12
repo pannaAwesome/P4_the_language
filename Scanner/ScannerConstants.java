@@ -27,33 +27,33 @@ public interface ScannerConstants {
   /** RegularExpression Id. */
   int IDKEY = 12;
   /** RegularExpression Id. */
-  int EOL = 13;
+  int TO = 13;
   /** RegularExpression Id. */
-  int COMPARISON = 14;
+  int EOL = 14;
   /** RegularExpression Id. */
-  int EQUAL = 15;
+  int COMPARISON = 15;
   /** RegularExpression Id. */
-  int DEFINERULE = 16;
+  int EQUAL = 16;
   /** RegularExpression Id. */
-  int IS = 17;
+  int DEFINERULE = 17;
   /** RegularExpression Id. */
-  int OR = 18;
+  int IS = 18;
   /** RegularExpression Id. */
-  int AND = 19;
+  int OR = 19;
   /** RegularExpression Id. */
-  int NOT = 20;
+  int AND = 20;
   /** RegularExpression Id. */
-  int CONSTRAINT = 21;
+  int NOT = 21;
   /** RegularExpression Id. */
-  int MAXLENGTH = 22;
+  int CONSTRAINT = 22;
   /** RegularExpression Id. */
-  int MINLENGTH = 23;
+  int MAXLENGTH = 23;
   /** RegularExpression Id. */
-  int CONTAINS = 24;
+  int MINLENGTH = 24;
   /** RegularExpression Id. */
-  int COMMA = 25;
+  int CONTAINS = 25;
   /** RegularExpression Id. */
-  int DASH = 26;
+  int COMMA = 26;
   /** RegularExpression Id. */
   int LPAREN = 27;
   /** RegularExpression Id. */
@@ -95,6 +95,7 @@ public interface ScannerConstants {
     "\"COL\"",
     "\"NOHEADERS\"",
     "\"ID\"",
+    "\"TO\"",
     "\"\\n\"",
     "<COMPARISON>",
     "\"=\"",
@@ -108,7 +109,6 @@ public interface ScannerConstants {
     "\"MINLENGTH\"",
     "\"CONTAINS\"",
     "\",\"",
-    "\"-\"",
     "\"(\"",
     "\")\"",
     "\"BEGIN\"",

@@ -1,10 +1,17 @@
 MODEL person BEGIN
 
-    rule2: (name = "hej" OR name IS LETTERS) AND name < 180.09
-    rule3: height < 0 OR height IS NUMBERS
+    rule2: (name IS "hej" OR name IS LETTERS) AND name < 180.09
+    rule3: height IS ((NOT LETTERS, MINLENGTH = 3) "123" (LETTERS, MAXLENGTH = 5))
 
 END
 
-IMPORT people.csv IN people
+IMPORT people.csv IN people BEGIN
+    NOHEADERS
+    ID 1
+END
 
-ANALYZE ID WITH BOB
+ANALYZE people WITH person BEGIN
+    rule2
+    ROW 1 TO 20
+    COL hej, hojde
+END

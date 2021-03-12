@@ -44,6 +44,7 @@ TOKEN: /* Keywords */
 |   <COL:           "COL">
 |   <NOHEADERS:     "NOHEADERS">
 |   <IDKEY:         "ID">
+|   <TO:            "TO">
 }
 
 TOKEN: /* Whitespace */
@@ -53,7 +54,7 @@ TOKEN: /* Whitespace */
 
 TOKEN: /* Operators */
 {
-    <COMPARISON:    "<=" | ">=" | "<" | ">" | "=">
+    <COMPARISON:    "<=" | ">=" | "<" | ">" | "==">
 |   <EQUAL:         "=">
 |   <DEFINERULE:    ":" >
 |   <IS:            "IS" >
@@ -70,12 +71,9 @@ TOKEN: /* Regex */
 |   <CONTAINS:      "CONTAINS">
 }
 
-TOKEN: /*/
-
 TOKEN: /* Delimiters */
 {
     <COMMA:      ",">
-|   <DASH:       "-">
 |   <LPAREN:     "(">
 |   <RPAREN:     ")">
 |   <ARGSSTART:  "BEGIN">
@@ -121,7 +119,7 @@ SimpleNode PROG():    {}
 
 void IMPRT() #IMPORT:   
 {}  
-{ <IMPORT> FLNM() <IN> IDEN() (<ARGSSTART> (<EOL>)+ IMOPTIONS() <ARGSSTOP>) (<EOL>)+ }
+{ <IMPORT> FLNM() <IN> IDEN() (<ARGSSTART> (<EOL>)+ IMOPTIONS() <ARGSSTOP>)? (<EOL>)+ }
 
 void IMOPTIONS():
 {}
@@ -194,8 +192,8 @@ void REGOREXPR():
 void REGEXPR():
 {}
 {
-    <LPAREN> REGOREXPR() <RPAREN>
-|   (<NOT>)? (((<CONTAINS>)? STRING())+ | CONSTRAINTS() (<COMMA> LENGTH())?)
+    <LPAREN> REGOREXPR() <RPAREN> REGEXPR()
+|   ((<NOT>)? ((<CONTAINS>)? STRING() | CONSTRAINTS() (<COMMA> LENGTH())?))*
 }
 
 void LENGTH():
@@ -251,14 +249,26 @@ void ANLZ() #ANALYZE:
 void ANOPTIONS():
 {}
 {
-    RULEOPT() (ROWOPT() COLOPT() | COLOPT() ROWOPT())
-|   (COLOPT() RULEOPT() ROWOPT())
-|   (COLOPT() ROWOPT() RULEOPT())
-|   (ROWOPT() COLOPT() RULEOPT())
-|   (ROWOPT() RULEOPT() COLOPT())
+    RULEOPT() (ROWOPT() (COLOPT())? | COLOPT() (ROWOPT())?)
 }
 
-/* (IDEN() (<EOL>)+)* ( (ROWS() (<EOL>)+)? (IDEN() (<EOL>)+)* (COLS() (<EOL>)+)? (IDEN() (<EOL>)+)* | (COLS() (<EOL>)+)? (IDEN() (<EOL>)+)* (ROWS() (<EOL>)+)? (IDEN() (<EOL>)+)* ) */
+void RULEOPT():
+{}
+{
+    (IDEN() (<EOL>)+)+
+}
+
+void ROWOPT():
+{}
+{
+   ROWS() (<EOL>)+
+}
+
+void COLOPT():
+{}
+{
+    COLS() (<EOL>)+
+}
 
 void ROWS():
 {}
@@ -275,7 +285,7 @@ void COLS():
 void INDEX():
 {}
 {
-    INTEGER() (<DASH> INTEGER())?
+    INTEGER() (<TO> INTEGER())?
 }
 
 void IDEN():

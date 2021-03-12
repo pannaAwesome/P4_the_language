@@ -21,10 +21,13 @@ public interface ScannerTreeConstants
   public int JJTFLOATY = 17;
   public int JJTANALYZE = 18;
   public int JJTANOPTIONS = 19;
-  public int JJTROWS = 20;
-  public int JJTCOLS = 21;
-  public int JJTINDEX = 22;
-  public int JJTIDEN = 23;
+  public int JJTRULEOPT = 20;
+  public int JJTROWOPT = 21;
+  public int JJTCOLOPT = 22;
+  public int JJTROWS = 23;
+  public int JJTCOLS = 24;
+  public int JJTINDEX = 25;
+  public int JJTIDEN = 26;
 
 
   public String[] jjtNodeName = {
@@ -48,10 +51,13 @@ public interface ScannerTreeConstants
     "FLOATY",
     "ANALYZE",
     "ANOPTIONS",
+    "RULEOPT",
+    "ROWOPT",
+    "COLOPT",
     "ROWS",
     "COLS",
     "INDEX",
     "IDEN",
   };
 }
-/* JavaCC - OriginalChecksum=10e29014360b12c3de7ee0f12620d3d6 (do not edit this line) */
+/* JavaCC - OriginalChecksum=53ae74c0d1c2c95de3e6dd29ae145b4f (do not edit this line) */

@@ -48,6 +48,7 @@ TOKEN: /* Keywords */
 |   <COL:           "COL">
 |   <NOHEADERS:     "NOHEADERS">
 |   <IDKEY:         "ID">
+|   <TO:            "TO">
 }
 
 TOKEN: /* Whitespace */
@@ -57,7 +58,7 @@ TOKEN: /* Whitespace */
 
 TOKEN: /* Operators */
 {
-    <COMPARISON:    "<=" | ">=" | "<" | ">" | "=">
+    <COMPARISON:    "<=" | ">=" | "<" | ">" | "==">
 |   <EQUAL:         "=">
 |   <DEFINERULE:    ":" >
 |   <IS:            "IS" >
@@ -74,12 +75,9 @@ TOKEN: /* Regex */
 |   <CONTAINS:      "CONTAINS">
 }
 
-TOKEN: /*/
-
 TOKEN: /* Delimiters */
 {
     <COMMA:      ",">
-|   <DASH:       "-">
 |   <LPAREN:     "(">
 |   <RPAREN:     ")">
 |   <ARGSSTART:  "BEGIN">
@@ -162,7 +160,7 @@ void IMPRT()        :
 /*@egen*/}  
 {/*@bgen(jjtree) IMPORT */
   try {
-/*@egen*/ <IMPORT> FLNM() <IN> IDEN() (<ARGSSTART> (<EOL>)+ IMOPTIONS() <ARGSSTOP>) (<EOL>)+/*@bgen(jjtree)*/
+/*@egen*/ <IMPORT> FLNM() <IN> IDEN() (<ARGSSTART> (<EOL>)+ IMOPTIONS() <ARGSSTOP>)? (<EOL>)+/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -494,8 +492,8 @@ void REGEXPR():
 {/*@bgen(jjtree) REGEXPR */
     try {
 /*@egen*/
-    <LPAREN> REGOREXPR() <RPAREN>
-|   (<NOT>)? (((<CONTAINS>)? STRING())+ | CONSTRAINTS() (<COMMA> LENGTH())?)/*@bgen(jjtree)*/
+    <LPAREN> REGOREXPR() <RPAREN> REGEXPR()
+|   ((<NOT>)? ((<CONTAINS>)? STRING() | CONSTRAINTS() (<COMMA> LENGTH())?))*/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -697,7 +695,103 @@ void ANOPTIONS():
 {/*@bgen(jjtree) ANOPTIONS */
     try {
 /*@egen*/
-    (IDEN() (<EOL>)+)* ( (ROWS() (<EOL>)+)? (IDEN() (<EOL>)+)* (COLS() (<EOL>)+)? (IDEN() (<EOL>)+)* | (COLS() (<EOL>)+)? (IDEN() (<EOL>)+)* (ROWS() (<EOL>)+)? (IDEN() (<EOL>)+)* )/*@bgen(jjtree)*/
+    RULEOPT() (ROWOPT() (COLOPT())? | COLOPT() (ROWOPT())?)/*@bgen(jjtree)*/
+    } catch (Throwable jjte000) {
+      if (jjtc000) {
+        jjtree.clearNodeScope(jjtn000);
+        jjtc000 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte000 instanceof RuntimeException) {
+        throw (RuntimeException)jjte000;
+      }
+      if (jjte000 instanceof ParseException) {
+        throw (ParseException)jjte000;
+      }
+      throw (Error)jjte000;
+    } finally {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+      }
+    }
+/*@egen*/
+}
+
+void RULEOPT():
+{/*@bgen(jjtree) RULEOPT */
+  SimpleNode jjtn000 = new SimpleNode(JJTRULEOPT);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}
+{/*@bgen(jjtree) RULEOPT */
+    try {
+/*@egen*/
+    (IDEN() (<EOL>)+)+/*@bgen(jjtree)*/
+    } catch (Throwable jjte000) {
+      if (jjtc000) {
+        jjtree.clearNodeScope(jjtn000);
+        jjtc000 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte000 instanceof RuntimeException) {
+        throw (RuntimeException)jjte000;
+      }
+      if (jjte000 instanceof ParseException) {
+        throw (ParseException)jjte000;
+      }
+      throw (Error)jjte000;
+    } finally {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+      }
+    }
+/*@egen*/
+}
+
+void ROWOPT():
+{/*@bgen(jjtree) ROWOPT */
+  SimpleNode jjtn000 = new SimpleNode(JJTROWOPT);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}
+{/*@bgen(jjtree) ROWOPT */
+   try {
+/*@egen*/
+   ROWS() (<EOL>)+/*@bgen(jjtree)*/
+   } catch (Throwable jjte000) {
+     if (jjtc000) {
+       jjtree.clearNodeScope(jjtn000);
+       jjtc000 = false;
+     } else {
+       jjtree.popNode();
+     }
+     if (jjte000 instanceof RuntimeException) {
+       throw (RuntimeException)jjte000;
+     }
+     if (jjte000 instanceof ParseException) {
+       throw (ParseException)jjte000;
+     }
+     throw (Error)jjte000;
+   } finally {
+     if (jjtc000) {
+       jjtree.closeNodeScope(jjtn000, true);
+     }
+   }
+/*@egen*/
+}
+
+void COLOPT():
+{/*@bgen(jjtree) COLOPT */
+  SimpleNode jjtn000 = new SimpleNode(JJTCOLOPT);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}
+{/*@bgen(jjtree) COLOPT */
+    try {
+/*@egen*/
+    COLS() (<EOL>)+/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -793,7 +887,7 @@ void INDEX():
 {/*@bgen(jjtree) INDEX */
     try {
 /*@egen*/
-    INTEGER() (<DASH> INTEGER())?/*@bgen(jjtree)*/
+    INTEGER() (<TO> INTEGER())?/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
