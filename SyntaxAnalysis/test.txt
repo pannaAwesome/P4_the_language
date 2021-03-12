@@ -1,5 +1,4 @@
 MODEL person BEGIN
-
     rule2: name = "Thomas"
     rule3: name < 4
 END
