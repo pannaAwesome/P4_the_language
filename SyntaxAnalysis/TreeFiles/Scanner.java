@@ -12,7 +12,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
         Scanner parser = new Scanner( new FileInputStream(args[0]) );
 
         try {
-            SimpleNode n = parser.PROG();
+            ASTPROG n = parser.PROG();
             n.dump("");
             System.out.println("Finished succesfully");
         }catch(Exception e) {
@@ -21,9 +21,9 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
         }
     }
 
-  static final public SimpleNode PROG() throws ParseException {
-                       /*@bgen(jjtree) PROG */
-  SimpleNode jjtn000 = new SimpleNode(JJTPROG);
+  static final public ASTPROG PROG() throws ParseException {
+                    /*@bgen(jjtree) PROG */
+  ASTPROG jjtn000 = new ASTPROG(JJTPROG);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -70,7 +70,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void IMPRT() throws ParseException {
  /*@bgen(jjtree) IMPORT */
-  SimpleNode jjtn000 = new SimpleNode(JJTIMPORT);
+  ASTIMPORT jjtn000 = new ASTIMPORT(JJTIMPORT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -113,7 +113,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void FLNM() throws ParseException {
  /*@bgen(jjtree) FLNM */
-  SimpleNode jjtn000 = new SimpleNode(JJTFLNM);
+  ASTFLNM jjtn000 = new ASTFLNM(JJTFLNM);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -130,7 +130,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void MDL() throws ParseException {
  /*@bgen(jjtree) MODEL */
-  SimpleNode jjtn000 = new SimpleNode(JJTMODEL);
+  ASTMODEL jjtn000 = new ASTMODEL(JJTMODEL);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -196,7 +196,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
   }
 
   static final public void RLE() throws ParseException {
-    SimpleNode jjtn001 = new SimpleNode(JJTRULE);
+    ASTRULE jjtn001 = new ASTRULE(JJTRULE);
     boolean jjtc001 = true;
     jjtree.openNodeScope(jjtn001);
     try {
@@ -242,7 +242,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void OREXPR() throws ParseException {
   int count = 0;
-      SimpleNode jjtn001 = new SimpleNode(JJTOR);
+      ASTOR jjtn001 = new ASTOR(JJTOR);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {
@@ -284,7 +284,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void ANDEXPR() throws ParseException {
   int count = 0;
-      SimpleNode jjtn001 = new SimpleNode(JJTAND);
+      ASTAND jjtn001 = new ASTAND(JJTAND);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {
@@ -343,7 +343,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void VALEXPR() throws ParseException {
  /*@bgen(jjtree) VALEXPR */
-  SimpleNode jjtn000 = new SimpleNode(JJTVALEXPR);
+  ASTVALEXPR jjtn000 = new ASTVALEXPR(JJTVALEXPR);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -392,7 +392,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void CONSTRAINTS() throws ParseException {
  /*@bgen(jjtree) CONSTRAINTS */
-  SimpleNode jjtn000 = new SimpleNode(JJTCONSTRAINTS);
+  ASTCONSTRAINTS jjtn000 = new ASTCONSTRAINTS(JJTCONSTRAINTS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -409,7 +409,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void TYPES() throws ParseException {
  /*@bgen(jjtree) TYPES */
-  SimpleNode jjtn000 = new SimpleNode(JJTTYPES);
+  ASTTYPES jjtn000 = new ASTTYPES(JJTTYPES);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -467,7 +467,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void INTEGER() throws ParseException {
  /*@bgen(jjtree) INTEGER */
-  SimpleNode jjtn000 = new SimpleNode(JJTINTEGER);
+  ASTINTEGER jjtn000 = new ASTINTEGER(JJTINTEGER);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -484,7 +484,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void FLOATY() throws ParseException {
  /*@bgen(jjtree) FLOATY */
-  SimpleNode jjtn000 = new SimpleNode(JJTFLOATY);
+  ASTFLOATY jjtn000 = new ASTFLOATY(JJTFLOATY);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -540,7 +540,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void ANLZ() throws ParseException {
  /*@bgen(jjtree) ANALYZE */
-  SimpleNode jjtn000 = new SimpleNode(JJTANALYZE);
+  ASTANALYZE jjtn000 = new ASTANALYZE(JJTANALYZE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -571,7 +571,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void IDEN() throws ParseException {
  /*@bgen(jjtree) IDEN */
-  SimpleNode jjtn000 = new SimpleNode(JJTIDEN);
+  ASTIDEN jjtn000 = new ASTIDEN(JJTIDEN);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
