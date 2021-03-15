@@ -3,7 +3,7 @@
 public
 class ASTIDEN extends SimpleNode {
 
-  public String type;
+  public int type;
 
   public ASTIDEN(int id) {
     super(id);

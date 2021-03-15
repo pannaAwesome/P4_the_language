@@ -1,8 +1,0 @@
-MODEL person BEGIN
-    rule2: name = "Thomas"
-    rule3: name < 4
-END
-
-IMPORT people.csv IN people
-
-ANALYZE people WITH person

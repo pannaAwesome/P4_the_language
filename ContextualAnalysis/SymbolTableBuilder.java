@@ -2,7 +2,7 @@ import java.util.*;
 import SyntaxAnalysis.TreeFiles.*;
 
 public class SymbolTableBuilder implements ISymbolTableBuilder {
-    Map<String,String> dictionary = Collections.synchronizedMap(new TreeMap<String,String>());
+    public static Map<String,String> dictionary = Collections.synchronizedMap(new TreeMap<String,String>());
     Node root;
 
     public SymbolTableBuilder(Node root){
