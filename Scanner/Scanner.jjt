@@ -121,10 +121,11 @@ void IMPRT() #IMPORT:
 {}  
 { <IMPORT> FLNM() <IN> IDEN() (<ARGSSTART> (<EOL>)+ IMOPTIONS() <ARGSSTOP>)? (<EOL>)+ }
 
-void IMOPTIONS():
+void IMOPTIONS() #OPTIONS:
 {}
 {
-    <NOHEADERS> (<EOL>)+ (<IDKEY> (IDEN() | INTEGER()) (<EOL>)+)? | <IDKEY> (IDEN() | INTEGER()) (<EOL>)+ (<NOHEADERS> (<EOL>)+)?
+    NOHEADERS() (<EOL>)+ (<IDKEY> (IDEN() | INTEGER()) (<EOL>)+)? 
+|   <IDKEY> (IDEN() | INTEGER()) (<EOL>)+ (NOHEADERS() (<EOL>)+)?
 }
 
 void FLNM():    
@@ -134,6 +135,12 @@ void FLNM():
     {
         jjtThis.value = t.image;
     }
+}
+
+void NOHEADERS() #NOHEADERS:
+{}
+{
+    <NOHEADERS>
 }
 
 void MDL() #MODEL:     
@@ -177,30 +184,67 @@ void VALEXPR():
     | t = <COMPARISON> NUM()) { jjtThis.value = t.image;}
 }
 
-void REGEX():
+void REGEX() #void:
 {}
 {
-    <LPAREN> REGOREXPR() <RPAREN> | CONSTRAINTS() | STRING()
+    (<LPAREN> REGOREXPR() <RPAREN>)#REGEX | CONSTRAINTS() | STRING()
 }
 
-void REGOREXPR():
-{}
+void REGOREXPR() #void:
+{ int count = 0; }
 {
-    REGEXPR() (<OR> REGEXPR())*
+    (REGBRANCH() (<OR> {count++;} REGBRANCH())*)#REGEXOR(count>0)
 }
 
-void REGEXPR():
+void REGBRANCH() #void:
 {}
 {
-    <LPAREN> REGOREXPR() <RPAREN> REGEXPR()
-|   ((<NOT>)? ((<CONTAINS>)? STRING() | CONSTRAINTS() (<COMMA> LENGTH())?))*
+    (REGATOM())+
 }
 
-void LENGTH():
+void REGATOM() #void:
 {}
 {
-    <MINLENGTH> <EQUAL> INTEGER() (<COMMA> <MAXLENGTH> <EQUAL> INTEGER())?
-|   <MAXLENGTH> <EQUAL> INTEGER() (<COMMA> <MINLENGTH> <EQUAL> INTEGER())?
+    <LPAREN> REGOREXPR() <RPAREN>
+|   REGEXPR()
+}
+
+void REGEXPR() #PART:
+{}
+{
+    (NOT())? 
+    ((CONTAINS())? STRING() 
+|    CONSTRAINTS() (<COMMA> LENGTH())?)
+}
+
+void NOT():
+{}
+{
+    <NOT>
+}
+
+void CONTAINS():
+{}
+{
+    <CONTAINS>
+}
+
+void LENGTH() #void:
+{}
+{
+    MINLENGTH() <EQUAL> INTEGER() (<COMMA> MAXLENGTH() <EQUAL> INTEGER())?
+|   MAXLENGTH() <EQUAL> INTEGER() (<COMMA> MINLENGTH() <EQUAL> INTEGER())?
+}
+void MINLENGTH():
+{}
+{
+    <MINLENGTH>
+}
+
+void MAXLENGTH():
+{}
+{
+    <MAXLENGTH>
 }
 
 void CONSTRAINTS():
@@ -246,25 +290,25 @@ void ANLZ() #ANALYZE:
 {}
 { <ANALYZE> IDEN() <WITH> IDEN() (<ARGSSTART> (<EOL>)+ ANOPTIONS() <ARGSSTOP>)?}
 
-void ANOPTIONS():
+void ANOPTIONS() #OPTIONS:
 {}
 {
     RULEOPT() (ROWOPT() (COLOPT())? | COLOPT() (ROWOPT())?)
 }
 
-void RULEOPT():
+void RULEOPT() #RULES:
 {}
 {
     (IDEN() (<EOL>)+)+
 }
 
-void ROWOPT():
+void ROWOPT() #void:
 {}
 {
    ROWS() (<EOL>)+
 }
 
-void COLOPT():
+void COLOPT() #void:
 {}
 {
     COLS() (<EOL>)+
@@ -282,10 +326,10 @@ void COLS():
     <COL> ( IDEN()(<COMMA> IDEN())* | (INDEX()(<COMMA> INDEX())*))
 }
 
-void INDEX():
-{}
+void INDEX() #void:
+{ int count = 0; }
 {
-    INTEGER() (<TO> INTEGER())?
+    (INTEGER() (<TO> {count++;} INTEGER())?)#RANGE(count>0)
 }
 
 void IDEN():

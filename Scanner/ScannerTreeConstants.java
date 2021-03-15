@@ -3,38 +3,40 @@ public interface ScannerTreeConstants
 {
   public int JJTPROG = 0;
   public int JJTIMPORT = 1;
-  public int JJTIMOPTIONS = 2;
+  public int JJTOPTIONS = 2;
   public int JJTFLNM = 3;
-  public int JJTMODEL = 4;
-  public int JJTVOID = 5;
-  public int JJTRULE = 6;
-  public int JJTOR = 7;
-  public int JJTAND = 8;
-  public int JJTVALEXPR = 9;
-  public int JJTREGEX = 10;
-  public int JJTREGOREXPR = 11;
-  public int JJTREGEXPR = 12;
-  public int JJTLENGTH = 13;
-  public int JJTCONSTRAINTS = 14;
-  public int JJTSTRING = 15;
-  public int JJTINTEGER = 16;
-  public int JJTFLOATY = 17;
-  public int JJTANALYZE = 18;
-  public int JJTANOPTIONS = 19;
-  public int JJTRULEOPT = 20;
-  public int JJTROWOPT = 21;
-  public int JJTCOLOPT = 22;
-  public int JJTROWS = 23;
-  public int JJTCOLS = 24;
-  public int JJTINDEX = 25;
-  public int JJTIDEN = 26;
+  public int JJTNOHEADERS = 4;
+  public int JJTMODEL = 5;
+  public int JJTVOID = 6;
+  public int JJTRULE = 7;
+  public int JJTOR = 8;
+  public int JJTAND = 9;
+  public int JJTVALEXPR = 10;
+  public int JJTREGEX = 11;
+  public int JJTREGEXOR = 12;
+  public int JJTPART = 13;
+  public int JJTNOT = 14;
+  public int JJTCONTAINS = 15;
+  public int JJTMINLENGTH = 16;
+  public int JJTMAXLENGTH = 17;
+  public int JJTCONSTRAINTS = 18;
+  public int JJTSTRING = 19;
+  public int JJTINTEGER = 20;
+  public int JJTFLOATY = 21;
+  public int JJTANALYZE = 22;
+  public int JJTRULES = 23;
+  public int JJTROWS = 24;
+  public int JJTCOLS = 25;
+  public int JJTRANGE = 26;
+  public int JJTIDEN = 27;
 
 
   public String[] jjtNodeName = {
     "PROG",
     "IMPORT",
-    "IMOPTIONS",
+    "OPTIONS",
     "FLNM",
+    "NOHEADERS",
     "MODEL",
     "void",
     "RULE",
@@ -42,22 +44,22 @@ public interface ScannerTreeConstants
     "AND",
     "VALEXPR",
     "REGEX",
-    "REGOREXPR",
-    "REGEXPR",
-    "LENGTH",
+    "REGEXOR",
+    "PART",
+    "NOT",
+    "CONTAINS",
+    "MINLENGTH",
+    "MAXLENGTH",
     "CONSTRAINTS",
     "STRING",
     "INTEGER",
     "FLOATY",
     "ANALYZE",
-    "ANOPTIONS",
-    "RULEOPT",
-    "ROWOPT",
-    "COLOPT",
+    "RULES",
     "ROWS",
     "COLS",
-    "INDEX",
+    "RANGE",
     "IDEN",
   };
 }
-/* JavaCC - OriginalChecksum=53ae74c0d1c2c95de3e6dd29ae145b4f (do not edit this line) */
+/* JavaCC - OriginalChecksum=a101ff2370d18a204c1256d544c4eab0 (do not edit this line) */
