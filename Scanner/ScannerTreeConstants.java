@@ -3,37 +3,63 @@ public interface ScannerTreeConstants
 {
   public int JJTPROG = 0;
   public int JJTIMPORT = 1;
-  public int JJTFLNM = 2;
-  public int JJTMODEL = 3;
-  public int JJTVOID = 4;
-  public int JJTRULE = 5;
-  public int JJTOR = 6;
-  public int JJTAND = 7;
-  public int JJTVALEXPR = 8;
-  public int JJTCONSTRAINTS = 9;
-  public int JJTTYPES = 10;
-  public int JJTINTEGER = 11;
-  public int JJTFLOATY = 12;
-  public int JJTANALYZE = 13;
-  public int JJTIDEN = 14;
+  public int JJTOPTIONS = 2;
+  public int JJTFLNM = 3;
+  public int JJTNOHEADERS = 4;
+  public int JJTMODEL = 5;
+  public int JJTVOID = 6;
+  public int JJTRULE = 7;
+  public int JJTOR = 8;
+  public int JJTAND = 9;
+  public int JJTVALEXPR = 10;
+  public int JJTREGEX = 11;
+  public int JJTREGEXOR = 12;
+  public int JJTPART = 13;
+  public int JJTNOT = 14;
+  public int JJTCONTAINS = 15;
+  public int JJTMINLENGTH = 16;
+  public int JJTMAXLENGTH = 17;
+  public int JJTCONSTRAINTS = 18;
+  public int JJTSTRING = 19;
+  public int JJTINTEGER = 20;
+  public int JJTFLOATY = 21;
+  public int JJTANALYZE = 22;
+  public int JJTRULES = 23;
+  public int JJTROWS = 24;
+  public int JJTCOLS = 25;
+  public int JJTRANGE = 26;
+  public int JJTIDEN = 27;
 
 
   public String[] jjtNodeName = {
     "PROG",
     "IMPORT",
+    "OPTIONS",
     "FLNM",
+    "NOHEADERS",
     "MODEL",
     "void",
     "RULE",
     "OR",
     "AND",
     "VALEXPR",
+    "REGEX",
+    "REGEXOR",
+    "PART",
+    "NOT",
+    "CONTAINS",
+    "MINLENGTH",
+    "MAXLENGTH",
     "CONSTRAINTS",
-    "TYPES",
+    "STRING",
     "INTEGER",
     "FLOATY",
     "ANALYZE",
+    "RULES",
+    "ROWS",
+    "COLS",
+    "RANGE",
     "IDEN",
   };
 }
-/* JavaCC - OriginalChecksum=945c8378dda540603dbf513a8af4bcdc (do not edit this line) */
+/* JavaCC - OriginalChecksum=a101ff2370d18a204c1256d544c4eab0 (do not edit this line) */

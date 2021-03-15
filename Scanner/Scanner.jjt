@@ -38,10 +38,13 @@ TOKEN: /* Keywords */
     <IMPORT:        "IMPORT">
 |   <IN:            "IN">
 |   <MODEL:         "MODEL">
-|   <BLOCKSTART:    "BEGIN">
-|   <BLOCKSTOP:     "END">
 |   <ANALYZE:       "ANALYZE">
 |   <WITH:          "WITH">
+|   <ROW:           "ROW">
+|   <COL:           "COL">
+|   <NOHEADERS:     "NOHEADERS">
+|   <IDKEY:         "ID">
+|   <TO:            "TO">
 }
 
 TOKEN: /* Whitespace */
@@ -51,17 +54,30 @@ TOKEN: /* Whitespace */
 
 TOKEN: /* Operators */
 {
-    <COMPARISON:    "<=" | ">=" | "<" | ">" >
+    <COMPARISON:    "<=" | ">=" | "<" | ">" | "==">
 |   <EQUAL:         "=">
 |   <DEFINERULE:    ":" >
 |   <IS:            "IS" >
 |   <OR:            "OR">
 |   <AND:           "AND">
+|   <NOT:           "NOT">
 }
 
 TOKEN: /* Regex */
 {
-    <CONSTRAINT:    "LETTERS"|"NUMBERS">
+    <CONSTRAINT:    "LETTERS"|"NUMBERS"|"DECIMAL"|"INTEGER"|"EMPTY"|"LOWERCASE"|"UPPERCASE">
+|   <MAXLENGTH:      "MAXLENGTH">
+|   <MINLENGTH:      "MINLENGTH">
+|   <CONTAINS:      "CONTAINS">
+}
+
+TOKEN: /* Delimiters */
+{
+    <COMMA:      ",">
+|   <LPAREN:     "(">
+|   <RPAREN:     ")">
+|   <ARGSSTART:  "BEGIN">
+|   <ARGSSTOP:   "END">
 }
 
 TOKEN: /* Literals */
@@ -76,7 +92,6 @@ TOKEN: /* Identifiers */
     <FILENAME:      (["A"-"Z","a"-"z","0"-"9","-","_"])+".csv">
 |   <ID:            (["A"-"Z","a"-"z"](["A"-"Z","a"-"z","0"-"9","_"])*)|("_"(["A"-"Z","a"-"z","0"-"9"])(["A"-"Z","a"-"z","0"-"9","_"])*)>
 }
-
 
 
 MORE :
@@ -104,7 +119,14 @@ SimpleNode PROG():    {}
 
 void IMPRT() #IMPORT:   
 {}  
-{ <IMPORT> FLNM() <IN> IDEN() (<EOL>)+ }
+{ <IMPORT> FLNM() <IN> IDEN() (<ARGSSTART> (<EOL>)+ IMOPTIONS() <ARGSSTOP>)? (<EOL>)+ }
+
+void IMOPTIONS() #OPTIONS:
+{}
+{
+    NOHEADERS() (<EOL>)+ (<IDKEY> (IDEN() | INTEGER()) (<EOL>)+)? 
+|   <IDKEY> (IDEN() | INTEGER()) (<EOL>)+ (NOHEADERS() (<EOL>)+)?
+}
 
 void FLNM():    
 { Token t; }
@@ -115,9 +137,15 @@ void FLNM():
     }
 }
 
+void NOHEADERS() #NOHEADERS:
+{}
+{
+    <NOHEADERS>
+}
+
 void MDL() #MODEL:     
 {}  
-{ <MODEL> IDEN() <BLOCKSTART> (<EOL>)+ (RLE())* <BLOCKSTOP> (<EOL>)+}
+{ <MODEL> IDEN() <ARGSSTART> (<EOL>)+ (RLE())* <ARGSSTOP> (<EOL>)+}
 
 void RLE() #void:     
 {}
@@ -145,16 +173,78 @@ void VPEXPR() #void:
 {}
 {
     VALEXPR()
-    | "(" EXPR() ")"
+    | <LPAREN> EXPR() <RPAREN>
 }
 
 void VALEXPR():
 { Token t; }
 {
     IDEN()
-    (t = <IS> CONSTRAINTS()
-    | t = <EQUAL> TYPES()
+    (t = <IS> REGEX()
     | t = <COMPARISON> NUM()) { jjtThis.value = t.image;}
+}
+
+void REGEX() #void:
+{}
+{
+    (<LPAREN> REGOREXPR() <RPAREN>)#REGEX | CONSTRAINTS() | STRING()
+}
+
+void REGOREXPR() #void:
+{ int count = 0; }
+{
+    (REGBRANCH() (<OR> {count++;} REGBRANCH())*)#REGEXOR(count>0)
+}
+
+void REGBRANCH() #void:
+{}
+{
+    (REGATOM())+
+}
+
+void REGATOM() #void:
+{}
+{
+    <LPAREN> REGOREXPR() <RPAREN>
+|   REGEXPR()
+}
+
+void REGEXPR() #PART:
+{}
+{
+    (NOT())? 
+    ((CONTAINS())? STRING() 
+|    CONSTRAINTS() (<COMMA> LENGTH())?)
+}
+
+void NOT():
+{}
+{
+    <NOT>
+}
+
+void CONTAINS():
+{}
+{
+    <CONTAINS>
+}
+
+void LENGTH() #void:
+{}
+{
+    MINLENGTH() <EQUAL> INTEGER() (<COMMA> MAXLENGTH() <EQUAL> INTEGER())?
+|   MAXLENGTH() <EQUAL> INTEGER() (<COMMA> MINLENGTH() <EQUAL> INTEGER())?
+}
+void MINLENGTH():
+{}
+{
+    <MINLENGTH>
+}
+
+void MAXLENGTH():
+{}
+{
+    <MAXLENGTH>
 }
 
 void CONSTRAINTS():
@@ -164,11 +254,10 @@ void CONSTRAINTS():
     { jjtThis.value = t.image; }
 }
 
-void TYPES():
+void STRING():
 { Token t; }
 {
     (t = <STRING> { jjtThis.value = t.image; })
-    | NUM()
 }
 
 void NUM() #void:     
@@ -199,7 +288,49 @@ void STMT() #void:
 
 void ANLZ() #ANALYZE:
 {}
-{ <ANALYZE> IDEN() <WITH> IDEN() }
+{ <ANALYZE> IDEN() <WITH> IDEN() (<ARGSSTART> (<EOL>)+ ANOPTIONS() <ARGSSTOP>)?}
+
+void ANOPTIONS() #OPTIONS:
+{}
+{
+    RULEOPT() (ROWOPT() (COLOPT())? | COLOPT() (ROWOPT())?)
+}
+
+void RULEOPT() #RULES:
+{}
+{
+    (IDEN() (<EOL>)+)+
+}
+
+void ROWOPT() #void:
+{}
+{
+   ROWS() (<EOL>)+
+}
+
+void COLOPT() #void:
+{}
+{
+    COLS() (<EOL>)+
+}
+
+void ROWS():
+{}
+{
+    <ROW> INDEX()(<COMMA> INDEX())*
+}
+
+void COLS():
+{}
+{
+    <COL> ( IDEN()(<COMMA> IDEN())* | (INDEX()(<COMMA> INDEX())*))
+}
+
+void INDEX() #void:
+{ int count = 0; }
+{
+    (INTEGER() (<TO> {count++;} INTEGER())?)#RANGE(count>0)
+}
 
 void IDEN():
 { Token t; }
