@@ -3,6 +3,7 @@
 /* All AST nodes must implement this interface.  It provides basic
    machinery for constructing the parent and child relationships
    between nodes. */
+package SyntaxAnalysis.TreeFiles;
 
 public interface Node {
 
