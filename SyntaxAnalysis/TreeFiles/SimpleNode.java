@@ -4,8 +4,8 @@ package SyntaxAnalysis.TreeFiles;
 
 public class SimpleNode implements Node {
 
-  public final static int MODEL = 0, TABLE = 1, RULE = 2, NUMBER = 3, LETTERS = 4, NumbersAndLetters = 5, String = 6;
-
+  public final static int MODEL = 0, TABLE = 1, RULE = 2, NUMBER = 3, LETTERS = 4, NumbersAndLetters = 5, String = 6, TYPERROR = 7;
+  
   protected Node parent;
   protected Node[] children;
   protected int id;
