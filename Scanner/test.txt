@@ -1,8 +1,9 @@
 IMPORT people.csv IN people
 MODEL person BEGIN
-
-    rule2: name IS ("hej" OR LETTERS) AND name < 180.09
-    rule3: height IS (NOT LETTERS, MINLENGTH = 3 "123" LETTERS, MAXLENGTH = 5)
+    rule4 BEGIN
+        partRule: age IS NUMBERS
+        partRule2: age CONTAINS "hej"
+    END
 
 END
 

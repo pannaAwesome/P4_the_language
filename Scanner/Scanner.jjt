@@ -54,7 +54,7 @@ TOKEN: /* Whitespace */
 
 TOKEN: /* Operators */
 {
-    <COMPARISON:    "<=" | ">=" | "<" | ">" | "==">
+    <COMPARISON:    "<=" | ">=" | "<" | ">">
 |   <EQUAL:         "=">
 |   <DEFINERULE:    ":" >
 |   <IS:            "IS" >
@@ -66,8 +66,6 @@ TOKEN: /* Operators */
 TOKEN: /* Regex */
 {
     <CONSTRAINT:    "LETTERS"|"NUMBERS"|"DECIMAL"|"INTEGER"|"EMPTY"|"LOWERCASE"|"UPPERCASE">
-|   <MAXLENGTH:      "MAXLENGTH">
-|   <MINLENGTH:      "MINLENGTH">
 |   <CONTAINS:      "CONTAINS">
 }
 
@@ -147,9 +145,21 @@ void MDL() #MODEL:
 {}  
 { <MODEL> IDEN() <ARGSSTART> (<EOL>)+ (RLE())* <ARGSSTOP> (<EOL>)+}
 
-void RLE() #void:     
+void RLE() #void:
 {}
-{ (IDEN() <DEFINERULE> EXPR() (<EOL>)+)#RULE(>1) }
+{ 
+    (IDEN() (
+        <DEFINERULE> EXPR() (<EOL>)+
+    |   <ARGSSTART> (<EOL>)+ (PARTRLE())+ <ARGSSTOP> (<EOL>)+
+    )
+    )#RULE(>1) 
+}
+
+void PARTRLE() #PARTRULE:
+{}
+{
+    IDEN() <DEFINERULE> EXPR() (<EOL>)+
+}
 
 void EXPR() #void:
 {}
@@ -180,41 +190,42 @@ void VALEXPR():
 { Token t; }
 {
     IDEN()
-    (t = <IS> REGEX()
-    | t = <COMPARISON> NUM()) { jjtThis.value = t.image;}
+    (
+        t = <IS> CONSTRAINEXPR()
+    |   t = <EQUAL> TYPES()
+    |   t = <COMPARISON> ARITHMEXPR1()
+    |   t = <CONTAINS> STRING()
+    ) 
+    { jjtThis.value = t.image;}
 }
 
-void REGEX() #void:
+void TYPES():
 {}
 {
-    (<LPAREN> REGOREXPR() <RPAREN>)#REGEX | CONSTRAINTS() | STRING()
+    STRING() | ARITHMEXPR1()
 }
 
-void REGOREXPR() #void:
-{ int count = 0; }
-{
-    (REGBRANCH() (<OR> {count++;} REGBRANCH())*)#REGEXOR(count>0)
-}
-
-void REGBRANCH() #void:
+void CONSTRAINEXPR() #void:
 {}
 {
-    (REGATOM())+
+    (NOT())? CONSTRAINTS()
 }
 
-void REGATOM() #void:
-{}
+void ARITHMEXPR1() #void:
+{ Token t; }
 {
-    <LPAREN> REGOREXPR() <RPAREN>
-|   REGEXPR()
+    (
+        ARITHMEXPR2() (( t = "+" | t = "-") { jjtThis.value = t.image; } ARITHMEXPR2())*
+    )#ADD(>1)
 }
 
-void REGEXPR() #PART:
-{}
+void ARITHMEXPR2() #void:
+{ Token t; }
 {
-    (NOT())? 
-    ((CONTAINS())? STRING() 
-|    CONSTRAINTS() (<COMMA> LENGTH())?)
+    (
+        OPERANDS()((t = "*" | t = "/" | t = "%") { jjtThis.value = t.image; } OPERANDS())*
+    )#MULT(>1)
+    
 }
 
 void NOT():
@@ -229,29 +240,17 @@ void CONTAINS():
     <CONTAINS>
 }
 
-void LENGTH() #void:
-{}
-{
-    MINLENGTH() <EQUAL> INTEGER() (<COMMA> MAXLENGTH() <EQUAL> INTEGER())?
-|   MAXLENGTH() <EQUAL> INTEGER() (<COMMA> MINLENGTH() <EQUAL> INTEGER())?
-}
-void MINLENGTH():
-{}
-{
-    <MINLENGTH>
-}
-
-void MAXLENGTH():
-{}
-{
-    <MAXLENGTH>
-}
-
 void CONSTRAINTS():
 { Token t; }
 {
     t = <CONSTRAINT>
     { jjtThis.value = t.image; }
+}
+
+void OPERANDS() #void:
+{}
+{
+    <LPAREN> ARITHMEXPR1() <RPAREN> | IDEN() | NUM()
 }
 
 void STRING():

@@ -47,33 +47,29 @@ public interface ScannerConstants {
   /** RegularExpression Id. */
   int CONSTRAINT = 22;
   /** RegularExpression Id. */
-  int MAXLENGTH = 23;
+  int CONTAINS = 23;
   /** RegularExpression Id. */
-  int MINLENGTH = 24;
+  int COMMA = 24;
   /** RegularExpression Id. */
-  int CONTAINS = 25;
+  int LPAREN = 25;
   /** RegularExpression Id. */
-  int COMMA = 26;
+  int RPAREN = 26;
   /** RegularExpression Id. */
-  int LPAREN = 27;
+  int ARGSSTART = 27;
   /** RegularExpression Id. */
-  int RPAREN = 28;
+  int ARGSSTOP = 28;
   /** RegularExpression Id. */
-  int ARGSSTART = 29;
+  int INT = 29;
   /** RegularExpression Id. */
-  int ARGSSTOP = 30;
+  int FLOAT = 30;
   /** RegularExpression Id. */
-  int INT = 31;
+  int STRING = 31;
   /** RegularExpression Id. */
-  int FLOAT = 32;
+  int FILENAME = 32;
   /** RegularExpression Id. */
-  int STRING = 33;
+  int ID = 33;
   /** RegularExpression Id. */
-  int FILENAME = 34;
-  /** RegularExpression Id. */
-  int ID = 35;
-  /** RegularExpression Id. */
-  int COMMENT = 37;
+  int COMMENT = 35;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -105,8 +101,6 @@ public interface ScannerConstants {
     "\"AND\"",
     "\"NOT\"",
     "<CONSTRAINT>",
-    "\"MAXLENGTH\"",
-    "\"MINLENGTH\"",
     "\"CONTAINS\"",
     "\",\"",
     "\"(\"",
@@ -120,7 +114,12 @@ public interface ScannerConstants {
     "<ID>",
     "\"//\"",
     "\"//\"",
-    "<token of kind 38>",
+    "<token of kind 36>",
+    "\"+\"",
+    "\"-\"",
+    "\"*\"",
+    "\"/\"",
+    "\"%\"",
   };
 
 }
