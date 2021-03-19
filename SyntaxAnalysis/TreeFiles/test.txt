@@ -1,0 +1,17 @@
+MODEL person BEGIN
+    rule2: ID IS LETTERS
+    rule3: name = "Thomas" OR name IS NUMBERS  
+    rule4: name < 4 
+    rule5: name IS NUMBERS OR name IS LETTERS
+    rule6: alder IS LETTERS AND height < 6 AND height IS LETTERS OR alder IS LETTERS AND alder IS NUMBERS
+END
+
+IMPORT people.csv IN people
+
+ANALYZE people WITH person
+//
+dether AND dether AND ogsåDetHer
+
+AND 
+dether dether
+//
