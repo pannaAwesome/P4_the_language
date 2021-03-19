@@ -10,12 +10,14 @@ public class Scanner/* @bgen(jjtree) */ implements ScannerTreeConstants, Scanner
   protected static JJTScannerState jjtree = new JJTScannerState();
 
   public static void main(String[] args) throws ParseException, FileNotFoundException {
-    if (args.length < 1) {
-      System.out.println("Please pass in the filename for a parameter.");
-      System.exit(1);
-    }
+    // if (args.length < 1) {
+    // System.out.println("Please pass in the filename for a parameter.");
+    // System.exit(1);
+    // }
 
-    Scanner parser = new Scanner(new FileInputStream(args[0]));
+    File f = new File("SyntaxAnalysis/TreeFiles/test.txt");
+    FileInputStream stream = new FileInputStream(f);
+    Scanner parser = new Scanner(stream);
 
     try {
       ASTPROG n = parser.PROG();

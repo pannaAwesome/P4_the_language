@@ -42,4 +42,8 @@ public class SymbolTableBuilder {
             throw new Exception("Cannot use " + identifierName + " before it is declared");
         }
     }
+
+    public static boolean hasNodeBeenInserted(String identifierName){
+        return dictionary.get(identifierName) != null;
+    }
 }
