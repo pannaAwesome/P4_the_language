@@ -1,13 +1,14 @@
 public abstract class BaseType {
-    private final int type;
+    protected final int type;
 
     public BaseType(int currentType) {
         type = currentType;
     }
 
     @Override
-    public boolean equals(BaseType obj) {
-        return this.type == obj.type;
+    public boolean equals(Object obj) {
+        BaseType t = (BaseType) obj;
+        return this.type == t.type;
     }
 
     @Override

@@ -1,3 +1,10 @@
+options {
+    MULTI=true;
+    VISITOR=true;
+    NODE_PREFIX="";
+    VISITOR_DATA_TYPE="SimpleNode";
+    VISITOR_RETURN_TYPE="SimpleNode";
+}
 
 PARSER_BEGIN(Scanner)
 
@@ -125,7 +132,7 @@ void IMPRT() #IMPORT:
 {}  
 { <IMPORT> FLNM() <IN> IDEN() (<ARGSSTART> (<EOL>)+ IMOPTIONS() <ARGSSTOP>)? (<EOL>)+ }
 
-void IMOPTIONS() #OPTIONS:
+void IMOPTIONS() #IMPOPTIONS:
 {}
 {
     NOHEADERS() (<EOL>)+ (<IDKEY> (IDEN() | INTEGER()) (<EOL>)+)? 
@@ -309,18 +316,6 @@ void ARITHMEXPR2() #void:
     )#MULT(>1)
 }
 
-void NOT():
-{}
-{
-    <NOT>
-}
-
-void CONTAINS():
-{}
-{
-    <CONTAINS>
-}
-
 void CONSTRAINTS():
 { Token t; }
 {
@@ -372,16 +367,16 @@ void ANLZ() #ANALYZE:
 {}
 { <ANALYZE> IDEN() <WITH> IDEN() (<ARGSSTART> (<EOL>)+ ANOPTIONS() <ARGSSTOP>)?}
 
-void ANOPTIONS() #OPTIONS:
+void ANOPTIONS() #ANLZOPTIONS:
 {}
 {
     RULEOPT() (ROWOPT() (COLOPT())? | COLOPT() (ROWOPT())?)
 }
 
-void RULEOPT() #RULES:
+void RULEOPT():
 {}
 {
-    (IDEN() (<EOL>)+)+
+    (IDEN() (<EOL>)+)*
 }
 
 void ROWOPT() #void:

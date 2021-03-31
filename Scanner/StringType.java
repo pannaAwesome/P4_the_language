@@ -8,8 +8,9 @@ public class StringType extends BaseType {
 
     @Override
     public boolean equals(Object obj) {
-        if (this.type == obj.type) {
-            if (this.value.equals(obj.value)) {
+        StringType t = (StringType) obj;
+        if (this.type == t.type) {
+            if (this.value.equals(t.value)) {
                 return true;
             } else {
                 return false;

@@ -11,9 +11,10 @@ public class EmptyType extends BaseType {
     }
 
     @Override
-    public boolean equals(EmptyType obj) {
-        if (this.type == obj.type) {
-            if (this.notFlag == obj.notFlag) {
+    public boolean equals(Object obj) {
+        EmptyType t = (EmptyType) obj;
+        if (this.type == t.type) {
+            if (this.notFlag == t.notFlag) {
                 return true;
             } else {
                 return false;

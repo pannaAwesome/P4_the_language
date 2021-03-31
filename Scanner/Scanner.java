@@ -23,7 +23,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public SimpleNode PROG() throws ParseException {
                        /*@bgen(jjtree) PROG */
-  SimpleNode jjtn000 = new SimpleNode(JJTPROG);
+  PROG jjtn000 = new PROG(JJTPROG);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -70,7 +70,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void IMPRT() throws ParseException {
  /*@bgen(jjtree) IMPORT */
-  SimpleNode jjtn000 = new SimpleNode(JJTIMPORT);
+  IMPORT jjtn000 = new IMPORT(JJTIMPORT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -134,8 +134,8 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
   }
 
   static final public void IMOPTIONS() throws ParseException {
- /*@bgen(jjtree) OPTIONS */
-  SimpleNode jjtn000 = new SimpleNode(JJTOPTIONS);
+ /*@bgen(jjtree) IMPOPTIONS */
+  IMPOPTIONS jjtn000 = new IMPOPTIONS(JJTIMPOPTIONS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -262,7 +262,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void FLNM() throws ParseException {
  /*@bgen(jjtree) FLNM */
-  SimpleNode jjtn000 = new SimpleNode(JJTFLNM);
+  FLNM jjtn000 = new FLNM(JJTFLNM);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -279,7 +279,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void NOHEADERS() throws ParseException {
  /*@bgen(jjtree) NOHEADERS */
-  SimpleNode jjtn000 = new SimpleNode(JJTNOHEADERS);
+  NOHEADERS jjtn000 = new NOHEADERS(JJTNOHEADERS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -293,7 +293,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void MDL() throws ParseException {
  /*@bgen(jjtree) MODEL */
-  SimpleNode jjtn000 = new SimpleNode(JJTMODEL);
+  MODEL jjtn000 = new MODEL(JJTMODEL);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -371,7 +371,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
   }
 
   static final public void COLRLE() throws ParseException {
-      SimpleNode jjtn001 = new SimpleNode(JJTCOLRULE);
+      COLRULE jjtn001 = new COLRULE(JJTCOLRULE);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {
@@ -470,7 +470,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void COLPARTRLE() throws ParseException {
  /*@bgen(jjtree) PARTRULE */
-  SimpleNode jjtn000 = new SimpleNode(JJTPARTRULE);
+  PARTRULE jjtn000 = new PARTRULE(JJTPARTRULE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -524,7 +524,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void COLOREXPR() throws ParseException {
   int count = 0;
-      SimpleNode jjtn001 = new SimpleNode(JJTOR);
+      OR jjtn001 = new OR(JJTOR);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {
@@ -566,7 +566,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void COLANDEXPR() throws ParseException {
   int count = 0;
-      SimpleNode jjtn001 = new SimpleNode(JJTAND);
+      AND jjtn001 = new AND(JJTAND);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {
@@ -628,7 +628,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void COLVALEXPR() throws ParseException {
  /*@bgen(jjtree) COLVALEXPR */
-  SimpleNode jjtn000 = new SimpleNode(JJTCOLVALEXPR);
+  COLVALEXPR jjtn000 = new COLVALEXPR(JJTCOLVALEXPR);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -671,7 +671,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void WHERE() throws ParseException {
  /*@bgen(jjtree) WHERE */
-  SimpleNode jjtn000 = new SimpleNode(JJTWHERE);
+  WHERE jjtn000 = new WHERE(JJTWHERE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -700,7 +700,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void SACD() throws ParseException {
  /*@bgen(jjtree) SACD */
-  SimpleNode jjtn000 = new SimpleNode(JJTSACD);
+  SACD jjtn000 = new SACD(JJTSACD);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -751,7 +751,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void COLARITHMEXPR() throws ParseException {
   Token t;
-      SimpleNode jjtn001 = new SimpleNode(JJTADD);
+      ADD jjtn001 = new ADD(JJTADD);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {
@@ -805,7 +805,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void COLARITHMEXPR2() throws ParseException {
   Token t;
-      SimpleNode jjtn001 = new SimpleNode(JJTMULT);
+      MULT jjtn001 = new MULT(JJTMULT);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {
@@ -886,7 +886,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
   }
 
   static final public void RLE() throws ParseException {
-      SimpleNode jjtn001 = new SimpleNode(JJTRULE);
+      RULE jjtn001 = new RULE(JJTRULE);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {
@@ -976,7 +976,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void PARTRLE() throws ParseException {
  /*@bgen(jjtree) PARTRULE */
-  SimpleNode jjtn000 = new SimpleNode(JJTPARTRULE);
+  PARTRULE jjtn000 = new PARTRULE(JJTPARTRULE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -1022,7 +1022,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void OREXPR() throws ParseException {
   int count = 0;
-      SimpleNode jjtn001 = new SimpleNode(JJTOR);
+      OR jjtn001 = new OR(JJTOR);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {
@@ -1064,7 +1064,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void ANDEXPR() throws ParseException {
   int count = 0;
-      SimpleNode jjtn001 = new SimpleNode(JJTAND);
+      AND jjtn001 = new AND(JJTAND);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {
@@ -1123,7 +1123,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void VALEXPR() throws ParseException {
  /*@bgen(jjtree) VALEXPR */
-  SimpleNode jjtn000 = new SimpleNode(JJTVALEXPR);
+  VALEXPR jjtn000 = new VALEXPR(JJTVALEXPR);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -1198,7 +1198,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void ARITHMEXPR1() throws ParseException {
   Token t;
-      SimpleNode jjtn001 = new SimpleNode(JJTADD);
+      ADD jjtn001 = new ADD(JJTADD);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {
@@ -1252,7 +1252,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void ARITHMEXPR2() throws ParseException {
   Token t;
-      SimpleNode jjtn001 = new SimpleNode(JJTMULT);
+      MULT jjtn001 = new MULT(JJTMULT);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {
@@ -1308,37 +1308,9 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
     }
   }
 
-  static final public void NOT() throws ParseException {
- /*@bgen(jjtree) NOT */
-  SimpleNode jjtn000 = new SimpleNode(JJTNOT);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-    try {
-      jj_consume_token(NOT);
-    } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
-    }
-  }
-
-  static final public void CONTAINS() throws ParseException {
- /*@bgen(jjtree) CONTAINS */
-  SimpleNode jjtn000 = new SimpleNode(JJTCONTAINS);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-    try {
-      jj_consume_token(CONTAINS);
-    } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
-    }
-  }
-
   static final public void CONSTRAINTS() throws ParseException {
  /*@bgen(jjtree) CONSTRAINTS */
-  SimpleNode jjtn000 = new SimpleNode(JJTCONSTRAINTS);
+  CONSTRAINTS jjtn000 = new CONSTRAINTS(JJTCONSTRAINTS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -1403,7 +1375,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void STRING() throws ParseException {
  /*@bgen(jjtree) STRING */
-  SimpleNode jjtn000 = new SimpleNode(JJTSTRING);
+  STRING jjtn000 = new STRING(JJTSTRING);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -1435,7 +1407,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void INTEGER() throws ParseException {
  /*@bgen(jjtree) INTEGER */
-  SimpleNode jjtn000 = new SimpleNode(JJTINTEGER);
+  INTEGER jjtn000 = new INTEGER(JJTINTEGER);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -1452,7 +1424,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void FLOATY() throws ParseException {
  /*@bgen(jjtree) FLOATY */
-  SimpleNode jjtn000 = new SimpleNode(JJTFLOATY);
+  FLOATY jjtn000 = new FLOATY(JJTFLOATY);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -1508,7 +1480,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void ANLZ() throws ParseException {
  /*@bgen(jjtree) ANALYZE */
-  SimpleNode jjtn000 = new SimpleNode(JJTANALYZE);
+  ANALYZE jjtn000 = new ANALYZE(JJTANALYZE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -1560,8 +1532,8 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
   }
 
   static final public void ANOPTIONS() throws ParseException {
- /*@bgen(jjtree) OPTIONS */
-  SimpleNode jjtn000 = new SimpleNode(JJTOPTIONS);
+ /*@bgen(jjtree) ANLZOPTIONS */
+  ANLZOPTIONS jjtn000 = new ANLZOPTIONS(JJTANLZOPTIONS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -1616,13 +1588,21 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
   }
 
   static final public void RULEOPT() throws ParseException {
- /*@bgen(jjtree) RULES */
-  SimpleNode jjtn000 = new SimpleNode(JJTRULES);
+ /*@bgen(jjtree) RULEOPT */
+  RULEOPT jjtn000 = new RULEOPT(JJTRULEOPT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
       label_30:
       while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case ID:
+          ;
+          break;
+        default:
+          jj_la1[61] = jj_gen;
+          break label_30;
+        }
         IDEN();
         label_31:
         while (true) {
@@ -1632,17 +1612,9 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
             ;
             break;
           default:
-            jj_la1[61] = jj_gen;
+            jj_la1[62] = jj_gen;
             break label_31;
           }
-        }
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case ID:
-          ;
-          break;
-        default:
-          jj_la1[62] = jj_gen;
-          break label_30;
         }
       }
     } catch (Throwable jjte000) {
@@ -1700,7 +1672,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void ROWS() throws ParseException {
  /*@bgen(jjtree) ROWS */
-  SimpleNode jjtn000 = new SimpleNode(JJTROWS);
+  ROWS jjtn000 = new ROWS(JJTROWS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -1742,7 +1714,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void COLS() throws ParseException {
  /*@bgen(jjtree) COLS */
-  SimpleNode jjtn000 = new SimpleNode(JJTCOLS);
+  COLS jjtn000 = new COLS(JJTCOLS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -1808,7 +1780,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void INDEX() throws ParseException {
   int count = 0;
-      SimpleNode jjtn001 = new SimpleNode(JJTRANGE);
+      RANGE jjtn001 = new RANGE(JJTRANGE);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {
@@ -1846,7 +1818,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void IDEN() throws ParseException {
  /*@bgen(jjtree) IDEN */
-  SimpleNode jjtn000 = new SimpleNode(JJTIDEN);
+  IDEN jjtn000 = new IDEN(JJTIDEN);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);Token t;
     try {
@@ -1879,10 +1851,10 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x50,0x8000,0x0,0x8000,0x8000,0x0,0x8000,0x1000,0x0,0x8000,0x8000,0x800,0x1800,0x8000,0x400,0x400,0x8000,0x4000,0x8000,0x8000,0x0,0x8000,0x40000,0x4000,0x8000,0x100000,0x200000,0x87800000,0x30000,0x7800000,0x0,0x0,0x0,0x0,0x87800000,0x8000,0x8000,0x0,0x8000,0x40000,0x8000,0x100000,0x200000,0x80000000,0x87800000,0x200b0000,0x0,0x0,0x0,0x0,0x18400000,0x87800000,0x0,0x8000,0x8001,0x81,0x8000,0x0,0x400,0x200,0x600,0x8000,0x0,0x8000,0x8000,0x40000000,0x40000000,0x40000000,0x0,0x2000,};
+      jj_la1_0 = new int[] {0x50,0x8000,0x0,0x8000,0x8000,0x0,0x8000,0x1000,0x0,0x8000,0x8000,0x800,0x1800,0x8000,0x400,0x400,0x8000,0x4000,0x8000,0x8000,0x0,0x8000,0x40000,0x4000,0x8000,0x100000,0x200000,0x87800000,0x30000,0x7800000,0x0,0x0,0x0,0x0,0x87800000,0x8000,0x8000,0x0,0x8000,0x40000,0x8000,0x100000,0x200000,0x80000000,0x87800000,0x200b0000,0x0,0x0,0x0,0x0,0x18400000,0x87800000,0x0,0x8000,0x8001,0x81,0x8000,0x0,0x400,0x200,0x600,0x0,0x8000,0x8000,0x8000,0x40000000,0x40000000,0x40000000,0x0,0x2000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x2,0x0,0x0,0x88,0x0,0x0,0x88,0x0,0x0,0x0,0x0,0x0,0x80,0x80,0x0,0x0,0x0,0x0,0x80,0x0,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1800,0x1800,0xe000,0xe000,0x18,0x0,0x0,0x80,0x0,0x2,0x0,0x0,0x0,0x80,0xb8,0x0,0x1800,0x1800,0xe000,0xe000,0x0,0x98,0x18,0x0,0x0,0x0,0x0,0x2,0x0,0x0,0x0,0x0,0x80,0x0,0x0,0x0,0x0,0x0,0x88,0x0,};
+      jj_la1_1 = new int[] {0x0,0x0,0x2,0x0,0x0,0x88,0x0,0x0,0x88,0x0,0x0,0x0,0x0,0x0,0x80,0x80,0x0,0x0,0x0,0x0,0x80,0x0,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1800,0x1800,0xe000,0xe000,0x18,0x0,0x0,0x80,0x0,0x2,0x0,0x0,0x0,0x80,0xb8,0x0,0x1800,0x1800,0xe000,0xe000,0x0,0x98,0x18,0x0,0x0,0x0,0x0,0x2,0x0,0x0,0x0,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x88,0x0,};
    }
 
   /** Constructor with InputStream. */

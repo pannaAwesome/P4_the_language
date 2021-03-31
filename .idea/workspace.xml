@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ddb8d306-9fed-4ce1-a026-0028b5fe5377" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Scanner/Scanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/Scanner/Scanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scanner" beforeDir="false" afterPath="$PROJECT_DIR$/Scanner" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

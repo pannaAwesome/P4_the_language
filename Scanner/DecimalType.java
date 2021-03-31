@@ -8,23 +8,24 @@ public class DecimalType extends BaseType {
         super(2);
     }
 
-    public SetMinValue(double newMinValue, boolean withValue) {
+    public void SetMinValue(double newMinValue, boolean withValue) {
         minValue = newMinValue;
         withGivenMinValue = withValue;
     }
 
-    public SetMaxValue(double newMaxValue, boolean withValue) {
+    public void SetMaxValue(double newMaxValue, boolean withValue) {
         maxValue = newMaxValue;
         withGivenMaxValue = withValue;
     }
 
     @Override
-    public boolean equals(DecimalType obj) {
-        if (this.type == obj.type) {
-            if (obj.minValue == null && obj.maxValue == null) {
+    public boolean equals(Object obj) {
+        DecimalType t = (DecimalType) obj;
+        if (this.type == t.type) {
+            if (t.minValue == null && t.maxValue == null) {
                 return true;
-            } else if (this.minValue.equals(obj.minValue) && this.withGivenMinValue == obj.withGivenMinValue
-                    && this.maxValue.equals(obj.maxValue) && this.withGivenMaxValue == obj.withGivenMaxValue) {
+            } else if (this.minValue.equals(t.minValue) && this.withGivenMinValue == t.withGivenMinValue
+                    && this.maxValue.equals(t.maxValue) && this.withGivenMaxValue == t.withGivenMaxValue) {
                 return true;
             } else {
                 return false;

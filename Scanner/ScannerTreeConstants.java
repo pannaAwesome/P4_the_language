@@ -3,7 +3,7 @@ public interface ScannerTreeConstants
 {
   public int JJTPROG = 0;
   public int JJTIMPORT = 1;
-  public int JJTOPTIONS = 2;
+  public int JJTIMPOPTIONS = 2;
   public int JJTFLNM = 3;
   public int JJTNOHEADERS = 4;
   public int JJTMODEL = 5;
@@ -19,24 +19,23 @@ public interface ScannerTreeConstants
   public int JJTMULT = 15;
   public int JJTRULE = 16;
   public int JJTVALEXPR = 17;
-  public int JJTNOT = 18;
-  public int JJTCONTAINS = 19;
-  public int JJTCONSTRAINTS = 20;
-  public int JJTSTRING = 21;
-  public int JJTINTEGER = 22;
-  public int JJTFLOATY = 23;
-  public int JJTANALYZE = 24;
-  public int JJTRULES = 25;
-  public int JJTROWS = 26;
-  public int JJTCOLS = 27;
-  public int JJTRANGE = 28;
-  public int JJTIDEN = 29;
+  public int JJTCONSTRAINTS = 18;
+  public int JJTSTRING = 19;
+  public int JJTINTEGER = 20;
+  public int JJTFLOATY = 21;
+  public int JJTANALYZE = 22;
+  public int JJTANLZOPTIONS = 23;
+  public int JJTRULEOPT = 24;
+  public int JJTROWS = 25;
+  public int JJTCOLS = 26;
+  public int JJTRANGE = 27;
+  public int JJTIDEN = 28;
 
 
   public String[] jjtNodeName = {
     "PROG",
     "IMPORT",
-    "OPTIONS",
+    "IMPOPTIONS",
     "FLNM",
     "NOHEADERS",
     "MODEL",
@@ -52,18 +51,17 @@ public interface ScannerTreeConstants
     "MULT",
     "RULE",
     "VALEXPR",
-    "NOT",
-    "CONTAINS",
     "CONSTRAINTS",
     "STRING",
     "INTEGER",
     "FLOATY",
     "ANALYZE",
-    "RULES",
+    "ANLZOPTIONS",
+    "RULEOPT",
     "ROWS",
     "COLS",
     "RANGE",
     "IDEN",
   };
 }
-/* JavaCC - OriginalChecksum=a9b11a3c78f2bc81f291f3e5b5b32a5e (do not edit this line) */
+/* JavaCC - OriginalChecksum=40b17fd0c4b80b12c6de368a6b084175 (do not edit this line) */
