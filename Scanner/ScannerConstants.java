@@ -29,47 +29,59 @@ public interface ScannerConstants {
   /** RegularExpression Id. */
   int TO = 13;
   /** RegularExpression Id. */
-  int EOL = 14;
+  int WHERE = 14;
   /** RegularExpression Id. */
-  int COMPARISON = 15;
+  int EOL = 15;
   /** RegularExpression Id. */
-  int EQUAL = 16;
+  int COMPARISON = 16;
   /** RegularExpression Id. */
-  int DEFINERULE = 17;
+  int EQUAL = 17;
   /** RegularExpression Id. */
-  int IS = 18;
+  int DEFINERULE = 18;
   /** RegularExpression Id. */
-  int OR = 19;
+  int IS = 19;
   /** RegularExpression Id. */
-  int AND = 20;
+  int OR = 20;
   /** RegularExpression Id. */
-  int NOT = 21;
+  int AND = 21;
   /** RegularExpression Id. */
-  int CONSTRAINT = 22;
+  int NOT = 22;
   /** RegularExpression Id. */
-  int CONTAINS = 23;
+  int SUM = 23;
   /** RegularExpression Id. */
-  int COMMA = 24;
+  int AVG = 24;
   /** RegularExpression Id. */
-  int LPAREN = 25;
+  int COUNT = 25;
   /** RegularExpression Id. */
-  int RPAREN = 26;
+  int DISTINCT = 26;
   /** RegularExpression Id. */
-  int ARGSSTART = 27;
+  int CONSTRAINT = 27;
   /** RegularExpression Id. */
-  int ARGSSTOP = 28;
+  int EMPTY = 28;
   /** RegularExpression Id. */
-  int INT = 29;
+  int CONTAINS = 29;
   /** RegularExpression Id. */
-  int FLOAT = 30;
+  int COMMA = 30;
   /** RegularExpression Id. */
-  int STRING = 31;
+  int LPAREN = 31;
   /** RegularExpression Id. */
-  int FILENAME = 32;
+  int RPAREN = 32;
   /** RegularExpression Id. */
-  int ID = 33;
+  int ARGSSTART = 33;
   /** RegularExpression Id. */
-  int COMMENT = 35;
+  int ARGSSTOP = 34;
+  /** RegularExpression Id. */
+  int INT = 35;
+  /** RegularExpression Id. */
+  int FLOAT = 36;
+  /** RegularExpression Id. */
+  int STRING = 37;
+  /** RegularExpression Id. */
+  int FILENAME = 38;
+  /** RegularExpression Id. */
+  int ID = 39;
+  /** RegularExpression Id. */
+  int COMMENT = 41;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -92,6 +104,7 @@ public interface ScannerConstants {
     "\"NOHEADERS\"",
     "\"ID\"",
     "\"TO\"",
+    "\"WHERE\"",
     "\"\\n\"",
     "<COMPARISON>",
     "\"=\"",
@@ -100,7 +113,12 @@ public interface ScannerConstants {
     "\"OR\"",
     "\"AND\"",
     "\"NOT\"",
+    "\"SUM\"",
+    "\"AVG\"",
+    "\"COUNT\"",
+    "\"DISTINCT\"",
     "<CONSTRAINT>",
+    "\"EMPTY\"",
     "\"CONTAINS\"",
     "\",\"",
     "\"(\"",
@@ -114,7 +132,7 @@ public interface ScannerConstants {
     "<ID>",
     "\"//\"",
     "\"//\"",
-    "<token of kind 36>",
+    "<token of kind 42>",
     "\"+\"",
     "\"-\"",
     "\"*\"",
