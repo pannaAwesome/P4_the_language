@@ -8,26 +8,29 @@ public interface ScannerTreeConstants
   public int JJTNOHEADERS = 4;
   public int JJTMODEL = 5;
   public int JJTVOID = 6;
-  public int JJTRULE = 7;
+  public int JJTCOLRULE = 7;
   public int JJTPARTRULE = 8;
   public int JJTOR = 9;
   public int JJTAND = 10;
-  public int JJTVALEXPR = 11;
-  public int JJTTYPES = 12;
-  public int JJTADD = 13;
-  public int JJTMULT = 14;
-  public int JJTNOT = 15;
-  public int JJTCONTAINS = 16;
-  public int JJTCONSTRAINTS = 17;
-  public int JJTSTRING = 18;
-  public int JJTINTEGER = 19;
-  public int JJTFLOATY = 20;
-  public int JJTANALYZE = 21;
-  public int JJTRULES = 22;
-  public int JJTROWS = 23;
-  public int JJTCOLS = 24;
-  public int JJTRANGE = 25;
-  public int JJTIDEN = 26;
+  public int JJTCOLVALEXPR = 11;
+  public int JJTWHERE = 12;
+  public int JJTSACD = 13;
+  public int JJTADD = 14;
+  public int JJTMULT = 15;
+  public int JJTRULE = 16;
+  public int JJTVALEXPR = 17;
+  public int JJTNOT = 18;
+  public int JJTCONTAINS = 19;
+  public int JJTCONSTRAINTS = 20;
+  public int JJTSTRING = 21;
+  public int JJTINTEGER = 22;
+  public int JJTFLOATY = 23;
+  public int JJTANALYZE = 24;
+  public int JJTRULES = 25;
+  public int JJTROWS = 26;
+  public int JJTCOLS = 27;
+  public int JJTRANGE = 28;
+  public int JJTIDEN = 29;
 
 
   public String[] jjtNodeName = {
@@ -38,14 +41,17 @@ public interface ScannerTreeConstants
     "NOHEADERS",
     "MODEL",
     "void",
-    "RULE",
+    "COLRULE",
     "PARTRULE",
     "OR",
     "AND",
-    "VALEXPR",
-    "TYPES",
+    "COLVALEXPR",
+    "WHERE",
+    "SACD",
     "ADD",
     "MULT",
+    "RULE",
+    "VALEXPR",
     "NOT",
     "CONTAINS",
     "CONSTRAINTS",
@@ -60,4 +66,4 @@ public interface ScannerTreeConstants
     "IDEN",
   };
 }
-/* JavaCC - OriginalChecksum=afd234003f1e99ab8f4924f4d120e6fa (do not edit this line) */
+/* JavaCC - OriginalChecksum=a9b11a3c78f2bc81f291f3e5b5b32a5e (do not edit this line) */

@@ -45,6 +45,7 @@ TOKEN: /* Keywords */
 |   <NOHEADERS:     "NOHEADERS">
 |   <IDKEY:         "ID">
 |   <TO:            "TO">
+|   <WHERE:         "WHERE">
 }
 
 TOKEN: /* Whitespace */
@@ -61,11 +62,16 @@ TOKEN: /* Operators */
 |   <OR:            "OR">
 |   <AND:           "AND">
 |   <NOT:           "NOT">
+|   <SUM:           "SUM">
+|   <AVG:           "AVG">
+|   <COUNT:         "COUNT">
+|   <DISTINCT:      "DISTINCT">
 }
 
 TOKEN: /* Regex */
 {
-    <CONSTRAINT:    "LETTERS"|"NUMBERS"|"DECIMAL"|"INTEGER"|"EMPTY"|"LOWERCASE"|"UPPERCASE">
+    <CONSTRAINT:    "LETTERS"|"DECIMAL"|"INTEGER">
+|   <EMPTY:         "EMPTY">
 |   <CONTAINS:      "CONTAINS">
 }
 
@@ -143,7 +149,89 @@ void NOHEADERS() #NOHEADERS:
 
 void MDL() #MODEL:     
 {}  
-{ <MODEL> IDEN() <ARGSSTART> (<EOL>)+ (RLE())* <ARGSSTOP> (<EOL>)+}
+{ <MODEL> IDEN() <ARGSSTART> (<EOL>)+ (RLE() | COLRLE())* <ARGSSTOP> (<EOL>)+}
+
+void COLRLE() #void:
+{}
+{ 
+    ( <COL> IDEN() (
+        <DEFINERULE> COLEXPR() (WHERE())? (<EOL>)+
+    |   <ARGSSTART> (<EOL>)+ (COLPARTRLE())+ <ARGSSTOP> (<EOL>)+
+    )
+    )#COLRULE(>1) 
+}
+
+void COLPARTRLE() #PARTRULE:
+{}
+{
+    IDEN() <DEFINERULE> COLEXPR() (WHERE())? (<EOL>)+
+}
+
+void COLEXPR() #void:
+{}
+{
+   COLOREXPR()
+}
+
+void COLOREXPR() #void:
+{ int count = 0; }
+{
+    (COLANDEXPR() (<OR> { count++; } COLANDEXPR())*)#OR(count>0)
+}
+
+void COLANDEXPR() #void:
+{ int count = 0; }
+{
+    (COLVPEXPR() (<AND> { count++; } COLVPEXPR())*)#AND(count>0)
+}
+
+void COLVPEXPR() #void:
+{}
+{
+    COLVALEXPR()
+    | <LPAREN> COLEXPR() <RPAREN>
+}
+
+void COLVALEXPR():
+{ Token t; }
+{
+    SACD() (t = <EQUAL> { jjtThis.value = t.image;} | t = <COMPARISON> { jjtThis.value = t.image;}) COLARITHMEXPR()
+}
+
+void WHERE():
+{}
+{
+    <WHERE> EXPR()
+}
+
+void SACD():
+{ Token t; }
+{
+    (t = <SUM> | t = <AVG> | t = <COUNT> | t = <DISTINCT>) <LPAREN> IDEN() <RPAREN>
+    { jjtThis.value = t.image; }
+}
+
+void COLARITHMEXPR() #void:
+{ Token t; }
+{
+    (
+        COLARITHMEXPR2() (( t = "+" | t = "-") { jjtThis.value = t.image; } COLARITHMEXPR2())*
+    )#ADD(>1)
+}
+
+void COLARITHMEXPR2() #void:
+{ Token t; }
+{
+    (
+        COLOPERANDS()((t = "*" | t = "/" | t = "%") { jjtThis.value = t.image; } COLOPERANDS())*
+    )#MULT(>1)
+}
+
+void COLOPERANDS() #void:
+{}
+{
+    <LPAREN> COLARITHMEXPR() <RPAREN> | SACD() | NUM()
+}
 
 void RLE() #void:
 {}
@@ -192,23 +280,17 @@ void VALEXPR():
     IDEN()
     (
         t = <IS> CONSTRAINEXPR()
-    |   t = <EQUAL> TYPES()
+    |   t = <EQUAL> (STRING() | ARITHMEXPR1())
     |   t = <COMPARISON> ARITHMEXPR1()
     |   t = <CONTAINS> STRING()
     ) 
     { jjtThis.value = t.image;}
 }
 
-void TYPES():
-{}
-{
-    STRING() | ARITHMEXPR1()
-}
-
 void CONSTRAINEXPR() #void:
 {}
 {
-    (NOT())? CONSTRAINTS()
+    CONSTRAINTS() 
 }
 
 void ARITHMEXPR1() #void:
@@ -225,7 +307,6 @@ void ARITHMEXPR2() #void:
     (
         OPERANDS()((t = "*" | t = "/" | t = "%") { jjtThis.value = t.image; } OPERANDS())*
     )#MULT(>1)
-    
 }
 
 void NOT():
@@ -244,13 +325,15 @@ void CONSTRAINTS():
 { Token t; }
 {
     t = <CONSTRAINT>
-    { jjtThis.value = t.image; }
+    { jjtThis.value = t.image; } |
+    t = <EMPTY> { jjtThis.value = "EMPTY"; } |
+    t = <NOT> <EMPTY> { jjtThis.value = "NOTEMPTY"; }
 }
 
 void OPERANDS() #void:
 {}
 {
-    <LPAREN> ARITHMEXPR1() <RPAREN> | IDEN() | NUM()
+    <LPAREN> ARITHMEXPR1() <RPAREN> | (SACD()) | IDEN() | NUM()
 }
 
 void STRING():

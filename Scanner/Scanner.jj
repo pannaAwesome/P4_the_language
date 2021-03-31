@@ -49,6 +49,7 @@ TOKEN: /* Keywords */
 |   <NOHEADERS:     "NOHEADERS">
 |   <IDKEY:         "ID">
 |   <TO:            "TO">
+|   <WHERE:         "WHERE">
 }
 
 TOKEN: /* Whitespace */
@@ -65,11 +66,16 @@ TOKEN: /* Operators */
 |   <OR:            "OR">
 |   <AND:           "AND">
 |   <NOT:           "NOT">
+|   <SUM:           "SUM">
+|   <AVG:           "AVG">
+|   <COUNT:         "COUNT">
+|   <DISTINCT:      "DISTINCT">
 }
 
 TOKEN: /* Regex */
 {
-    <CONSTRAINT:    "LETTERS"|"NUMBERS"|"DECIMAL"|"INTEGER"|"EMPTY"|"LOWERCASE"|"UPPERCASE">
+    <CONSTRAINT:    "LETTERS"|"DECIMAL"|"INTEGER">
+|   <EMPTY:         "EMPTY">
 |   <CONTAINS:      "CONTAINS">
 }
 
@@ -265,7 +271,7 @@ void MDL()       :
 /*@egen*/}  
 {/*@bgen(jjtree) MODEL */
   try {
-/*@egen*/ <MODEL> IDEN() <ARGSSTART> (<EOL>)+ (RLE())* <ARGSSTOP> (<EOL>)+/*@bgen(jjtree)*/
+/*@egen*/ <MODEL> IDEN() <ARGSSTART> (<EOL>)+ (RLE() | COLRLE())* <ARGSSTOP> (<EOL>)+/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -286,6 +292,332 @@ void MDL()       :
     }
   }
 /*@egen*/}
+
+void COLRLE()      :
+{}
+{/*@bgen(jjtree) #COLRULE(> 1) */
+    {
+      SimpleNode jjtn001 = new SimpleNode(JJTCOLRULE);
+      boolean jjtc001 = true;
+      jjtree.openNodeScope(jjtn001);
+    }
+    try {
+/*@egen*/ 
+    ( <COL> IDEN() (
+        <DEFINERULE> COLEXPR() (WHERE())? (<EOL>)+
+    |   <ARGSSTART> (<EOL>)+ (COLPARTRLE())+ <ARGSSTOP> (<EOL>)+
+    )
+    )/*@bgen(jjtree)*/
+    } catch (Throwable jjte001) {
+      if (jjtc001) {
+        jjtree.clearNodeScope(jjtn001);
+        jjtc001 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte001 instanceof RuntimeException) {
+        throw (RuntimeException)jjte001;
+      }
+      if (jjte001 instanceof ParseException) {
+        throw (ParseException)jjte001;
+      }
+      throw (Error)jjte001;
+    } finally {
+      if (jjtc001) {
+        jjtree.closeNodeScope(jjtn001, jjtree.nodeArity() > 1);
+      }
+    }
+/*@egen*/             
+}
+
+void COLPARTRLE()          :
+{/*@bgen(jjtree) PARTRULE */
+  SimpleNode jjtn000 = new SimpleNode(JJTPARTRULE);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}
+{/*@bgen(jjtree) PARTRULE */
+    try {
+/*@egen*/
+    IDEN() <DEFINERULE> COLEXPR() (WHERE())? (<EOL>)+/*@bgen(jjtree)*/
+    } catch (Throwable jjte000) {
+      if (jjtc000) {
+        jjtree.clearNodeScope(jjtn000);
+        jjtc000 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte000 instanceof RuntimeException) {
+        throw (RuntimeException)jjte000;
+      }
+      if (jjte000 instanceof ParseException) {
+        throw (ParseException)jjte000;
+      }
+      throw (Error)jjte000;
+    } finally {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+      }
+    }
+/*@egen*/
+}
+
+void COLEXPR()      :
+{}
+{
+   COLOREXPR()
+}
+
+void COLOREXPR()      :
+{ int count = 0; }
+{/*@bgen(jjtree) #OR( count > 0) */
+    {
+      SimpleNode jjtn001 = new SimpleNode(JJTOR);
+      boolean jjtc001 = true;
+      jjtree.openNodeScope(jjtn001);
+    }
+    try {
+/*@egen*/
+    (COLANDEXPR() (<OR> { count++; } COLANDEXPR())*)/*@bgen(jjtree)*/
+    } catch (Throwable jjte001) {
+      if (jjtc001) {
+        jjtree.clearNodeScope(jjtn001);
+        jjtc001 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte001 instanceof RuntimeException) {
+        throw (RuntimeException)jjte001;
+      }
+      if (jjte001 instanceof ParseException) {
+        throw (ParseException)jjte001;
+      }
+      throw (Error)jjte001;
+    } finally {
+      if (jjtc001) {
+        jjtree.closeNodeScope(jjtn001,  count > 0);
+      }
+    }
+/*@egen*/            
+}
+
+void COLANDEXPR()      :
+{ int count = 0; }
+{/*@bgen(jjtree) #AND( count > 0) */
+    {
+      SimpleNode jjtn001 = new SimpleNode(JJTAND);
+      boolean jjtc001 = true;
+      jjtree.openNodeScope(jjtn001);
+    }
+    try {
+/*@egen*/
+    (COLVPEXPR() (<AND> { count++; } COLVPEXPR())*)/*@bgen(jjtree)*/
+    } catch (Throwable jjte001) {
+      if (jjtc001) {
+        jjtree.clearNodeScope(jjtn001);
+        jjtc001 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte001 instanceof RuntimeException) {
+        throw (RuntimeException)jjte001;
+      }
+      if (jjte001 instanceof ParseException) {
+        throw (ParseException)jjte001;
+      }
+      throw (Error)jjte001;
+    } finally {
+      if (jjtc001) {
+        jjtree.closeNodeScope(jjtn001,  count > 0);
+      }
+    }
+/*@egen*/             
+}
+
+void COLVPEXPR()      :
+{}
+{
+    COLVALEXPR()
+    | <LPAREN> COLEXPR() <RPAREN>
+}
+
+void COLVALEXPR():
+{/*@bgen(jjtree) COLVALEXPR */
+  SimpleNode jjtn000 = new SimpleNode(JJTCOLVALEXPR);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/ Token t; }
+{/*@bgen(jjtree) COLVALEXPR */
+    try {
+/*@egen*/
+    SACD() (t = <EQUAL> { jjtn000.value = t.image;} | t = <COMPARISON> { jjtn000.value = t.image;}) COLARITHMEXPR()/*@bgen(jjtree)*/
+    } catch (Throwable jjte000) {
+      if (jjtc000) {
+        jjtree.clearNodeScope(jjtn000);
+        jjtc000 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte000 instanceof RuntimeException) {
+        throw (RuntimeException)jjte000;
+      }
+      if (jjte000 instanceof ParseException) {
+        throw (ParseException)jjte000;
+      }
+      throw (Error)jjte000;
+    } finally {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+      }
+    }
+/*@egen*/
+}
+
+void WHERE():
+{/*@bgen(jjtree) WHERE */
+  SimpleNode jjtn000 = new SimpleNode(JJTWHERE);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}
+{/*@bgen(jjtree) WHERE */
+    try {
+/*@egen*/
+    <WHERE> EXPR()/*@bgen(jjtree)*/
+    } catch (Throwable jjte000) {
+      if (jjtc000) {
+        jjtree.clearNodeScope(jjtn000);
+        jjtc000 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte000 instanceof RuntimeException) {
+        throw (RuntimeException)jjte000;
+      }
+      if (jjte000 instanceof ParseException) {
+        throw (ParseException)jjte000;
+      }
+      throw (Error)jjte000;
+    } finally {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+      }
+    }
+/*@egen*/
+}
+
+void SACD():
+{/*@bgen(jjtree) SACD */
+  SimpleNode jjtn000 = new SimpleNode(JJTSACD);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/ Token t; }
+{/*@bgen(jjtree) SACD */
+    try {
+/*@egen*/
+    (t = <SUM> | t = <AVG> | t = <COUNT> | t = <DISTINCT>) <LPAREN> IDEN() <RPAREN>/*@bgen(jjtree)*/
+    {
+      jjtree.closeNodeScope(jjtn000, true);
+      jjtc000 = false;
+    }
+/*@egen*/
+    { jjtn000.value = t.image; }/*@bgen(jjtree)*/
+    } catch (Throwable jjte000) {
+      if (jjtc000) {
+        jjtree.clearNodeScope(jjtn000);
+        jjtc000 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte000 instanceof RuntimeException) {
+        throw (RuntimeException)jjte000;
+      }
+      if (jjte000 instanceof ParseException) {
+        throw (ParseException)jjte000;
+      }
+      throw (Error)jjte000;
+    } finally {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+      }
+    }
+/*@egen*/
+}
+
+void COLARITHMEXPR()      :
+{ Token t; }
+{/*@bgen(jjtree) #ADD(> 1) */
+    {
+      SimpleNode jjtn001 = new SimpleNode(JJTADD);
+      boolean jjtc001 = true;
+      jjtree.openNodeScope(jjtn001);
+    }
+    try {
+/*@egen*/
+    (
+        COLARITHMEXPR2() (( t = "+" | t = "-") { jjtn001.value = t.image; } COLARITHMEXPR2())*
+    )/*@bgen(jjtree)*/
+    } catch (Throwable jjte001) {
+      if (jjtc001) {
+        jjtree.clearNodeScope(jjtn001);
+        jjtc001 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte001 instanceof RuntimeException) {
+        throw (RuntimeException)jjte001;
+      }
+      if (jjte001 instanceof ParseException) {
+        throw (ParseException)jjte001;
+      }
+      throw (Error)jjte001;
+    } finally {
+      if (jjtc001) {
+        jjtree.closeNodeScope(jjtn001, jjtree.nodeArity() > 1);
+      }
+    }
+/*@egen*/        
+}
+
+void COLARITHMEXPR2()      :
+{ Token t; }
+{/*@bgen(jjtree) #MULT(> 1) */
+    {
+      SimpleNode jjtn001 = new SimpleNode(JJTMULT);
+      boolean jjtc001 = true;
+      jjtree.openNodeScope(jjtn001);
+    }
+    try {
+/*@egen*/
+    (
+        COLOPERANDS()((t = "*" | t = "/" | t = "%") { jjtn001.value = t.image; } COLOPERANDS())*
+    )/*@bgen(jjtree)*/
+    } catch (Throwable jjte001) {
+      if (jjtc001) {
+        jjtree.clearNodeScope(jjtn001);
+        jjtc001 = false;
+      } else {
+        jjtree.popNode();
+      }
+      if (jjte001 instanceof RuntimeException) {
+        throw (RuntimeException)jjte001;
+      }
+      if (jjte001 instanceof ParseException) {
+        throw (ParseException)jjte001;
+      }
+      throw (Error)jjte001;
+    } finally {
+      if (jjtc001) {
+        jjtree.closeNodeScope(jjtn001, jjtree.nodeArity() > 1);
+      }
+    }
+/*@egen*/         
+}
+
+void COLOPERANDS()      :
+{}
+{
+    <LPAREN> COLARITHMEXPR() <RPAREN> | SACD() | NUM()
+}
 
 void RLE()      :
 {}
@@ -447,7 +779,7 @@ void VALEXPR():
     IDEN()
     (
         t = <IS> CONSTRAINEXPR()
-    |   t = <EQUAL> TYPES()
+    |   t = <EQUAL> (STRING() | ARITHMEXPR1())
     |   t = <COMPARISON> ARITHMEXPR1()
     |   t = <CONTAINS> STRING()
     )/*@bgen(jjtree)*/
@@ -479,42 +811,10 @@ void VALEXPR():
 /*@egen*/
 }
 
-void TYPES():
-{/*@bgen(jjtree) TYPES */
-  SimpleNode jjtn000 = new SimpleNode(JJTTYPES);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/}
-{/*@bgen(jjtree) TYPES */
-    try {
-/*@egen*/
-    STRING() | ARITHMEXPR1()/*@bgen(jjtree)*/
-    } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte000 instanceof RuntimeException) {
-        throw (RuntimeException)jjte000;
-      }
-      if (jjte000 instanceof ParseException) {
-        throw (ParseException)jjte000;
-      }
-      throw (Error)jjte000;
-    } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
-    }
-/*@egen*/
-}
-
 void CONSTRAINEXPR()      :
 {}
 {
-    (NOT())? CONSTRAINTS()
+    CONSTRAINTS() 
 }
 
 void ARITHMEXPR1()      :
@@ -585,7 +885,6 @@ void ARITHMEXPR2()      :
       }
     }
 /*@egen*/         
-    
 }
 
 void NOT():
@@ -639,7 +938,19 @@ void CONSTRAINTS():
       jjtc000 = false;
     }
 /*@egen*/
-    { jjtn000.value = t.image; }/*@bgen(jjtree)*/
+    { jjtn000.value = t.image; } |
+    t = <EMPTY>/*@bgen(jjtree)*/
+                {
+                  jjtree.closeNodeScope(jjtn000, true);
+                  jjtc000 = false;
+                }
+/*@egen*/ { jjtn000.value = "EMPTY"; } |
+    t = <NOT> <EMPTY>/*@bgen(jjtree)*/
+                      {
+                        jjtree.closeNodeScope(jjtn000, true);
+                        jjtc000 = false;
+                      }
+/*@egen*/ { jjtn000.value = "NOTEMPTY"; }/*@bgen(jjtree)*/
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
@@ -651,7 +962,7 @@ void CONSTRAINTS():
 void OPERANDS()      :
 {}
 {
-    <LPAREN> ARITHMEXPR1() <RPAREN> | IDEN() | NUM()
+    <LPAREN> ARITHMEXPR1() <RPAREN> | (SACD()) | IDEN() | NUM()
 }
 
 void STRING():
