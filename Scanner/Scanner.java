@@ -14,6 +14,10 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
         try {
             SimpleNode n = parser.PROG();
             n.dump("");
+
+            System.out.println("Pretty printing:");
+            PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
+            n.jjtAccept(ppv, null);
             System.out.println("Finished succesfully");
         }catch(Exception e) {
             System.out.println(e.getMessage());
