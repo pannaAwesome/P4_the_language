@@ -16,4 +16,4 @@ class FLOATY extends SimpleNode {
     return visitor.visit(this, data);
   }
 }
-/* JavaCC - OriginalChecksum=3f752d1783d11f9eaed0b62938eb3347 (do not edit this line) */
+/* JavaCC - OriginalChecksum=9ea60f41266eb5a11e708ac71040608d (do not edit this line) */

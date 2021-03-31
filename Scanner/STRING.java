@@ -16,4 +16,4 @@ class STRING extends SimpleNode {
     return visitor.visit(this, data);
   }
 }
-/* JavaCC - OriginalChecksum=8a54c6194e6f1b08b2d03e97e1aada85 (do not edit this line) */
+/* JavaCC - OriginalChecksum=e5cda56b250ec5c58ca5ed31e6f85a61 (do not edit this line) */

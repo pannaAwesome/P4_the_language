@@ -16,4 +16,4 @@ class COLRULE extends SimpleNode {
     return visitor.visit(this, data);
   }
 }
-/* JavaCC - OriginalChecksum=022a31bc645301a44db638ebca01a862 (do not edit this line) */
+/* JavaCC - OriginalChecksum=68f580f1fec5d6b7f3faaca213d4f8dc (do not edit this line) */

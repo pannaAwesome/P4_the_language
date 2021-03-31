@@ -31,4 +31,4 @@ public interface ScannerVisitor
   public SimpleNode visit(RANGE node, SimpleNode data);
   public SimpleNode visit(IDEN node, SimpleNode data);
 }
-/* JavaCC - OriginalChecksum=03ae6234df2a080ee40288124506ce8c (do not edit this line) */
+/* JavaCC - OriginalChecksum=7471eaf91e07543490062a4b4faf774e (do not edit this line) */

@@ -16,4 +16,4 @@ class INTEGER extends SimpleNode {
     return visitor.visit(this, data);
   }
 }
-/* JavaCC - OriginalChecksum=e918301aa573921d67ad79b748aa555d (do not edit this line) */
+/* JavaCC - OriginalChecksum=c0664294ff597a58b019b8a935ebeb68 (do not edit this line) */
