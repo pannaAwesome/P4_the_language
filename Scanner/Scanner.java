@@ -473,8 +473,8 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
   }
 
   static final public void COLPARTRLE() throws ParseException {
- /*@bgen(jjtree) PARTRULE */
-  PARTRULE jjtn000 = new PARTRULE(JJTPARTRULE);
+ /*@bgen(jjtree) COLPARTRULE */
+  COLPARTRULE jjtn000 = new COLPARTRULE(JJTCOLPARTRULE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {

@@ -49,6 +49,12 @@ public class SymbolTableVisitor implements ScannerVisitor {
     }
 
     @Override
+    public SimpleNode visit(COLPARTRULE node, SimpleNode data) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
     public SimpleNode visit(PARTRULE node, SimpleNode data) {
         // TODO Auto-generated method stub
         return null;

@@ -9,7 +9,7 @@ public interface ScannerTreeConstants
   public int JJTMODEL = 5;
   public int JJTVOID = 6;
   public int JJTCOLRULE = 7;
-  public int JJTPARTRULE = 8;
+  public int JJTCOLPARTRULE = 8;
   public int JJTOR = 9;
   public int JJTAND = 10;
   public int JJTCOLVALEXPR = 11;
@@ -18,18 +18,19 @@ public interface ScannerTreeConstants
   public int JJTADD = 14;
   public int JJTMULT = 15;
   public int JJTRULE = 16;
-  public int JJTVALEXPR = 17;
-  public int JJTCONSTRAINTS = 18;
-  public int JJTSTRING = 19;
-  public int JJTINTEGER = 20;
-  public int JJTFLOATY = 21;
-  public int JJTANALYZE = 22;
-  public int JJTANLZOPTIONS = 23;
-  public int JJTRULEOPT = 24;
-  public int JJTROWS = 25;
-  public int JJTCOLS = 26;
-  public int JJTRANGE = 27;
-  public int JJTIDEN = 28;
+  public int JJTPARTRULE = 17;
+  public int JJTVALEXPR = 18;
+  public int JJTCONSTRAINTS = 19;
+  public int JJTSTRING = 20;
+  public int JJTINTEGER = 21;
+  public int JJTFLOATY = 22;
+  public int JJTANALYZE = 23;
+  public int JJTANLZOPTIONS = 24;
+  public int JJTRULEOPT = 25;
+  public int JJTROWS = 26;
+  public int JJTCOLS = 27;
+  public int JJTRANGE = 28;
+  public int JJTIDEN = 29;
 
 
   public String[] jjtNodeName = {
@@ -41,7 +42,7 @@ public interface ScannerTreeConstants
     "MODEL",
     "void",
     "COLRULE",
-    "PARTRULE",
+    "COLPARTRULE",
     "OR",
     "AND",
     "COLVALEXPR",
@@ -50,6 +51,7 @@ public interface ScannerTreeConstants
     "ADD",
     "MULT",
     "RULE",
+    "PARTRULE",
     "VALEXPR",
     "CONSTRAINTS",
     "STRING",
@@ -64,4 +66,4 @@ public interface ScannerTreeConstants
     "IDEN",
   };
 }
-/* JavaCC - OriginalChecksum=aa3ef05b4899fbda38d66df092a657b5 (do not edit this line) */
+/* JavaCC - OriginalChecksum=43efd367959794ea1bef8ac335ebd171 (do not edit this line) */

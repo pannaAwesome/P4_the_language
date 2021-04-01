@@ -1,4 +1,8 @@
-IMPORT people.csv IN people
+IMPORT people.csv IN people BEGIN
+    NOHEADERS
+    ID name
+END
+
 MODEL person BEGIN
     rule4 BEGIN
         partRule: age IS DECIMAL

@@ -9,7 +9,7 @@ public interface ScannerVisitor
   public SimpleNode visit(NOHEADERS node, SimpleNode data);
   public SimpleNode visit(MODEL node, SimpleNode data);
   public SimpleNode visit(COLRULE node, SimpleNode data);
-  public SimpleNode visit(PARTRULE node, SimpleNode data);
+  public SimpleNode visit(COLPARTRULE node, SimpleNode data);
   public SimpleNode visit(OR node, SimpleNode data);
   public SimpleNode visit(AND node, SimpleNode data);
   public SimpleNode visit(COLVALEXPR node, SimpleNode data);
@@ -18,6 +18,7 @@ public interface ScannerVisitor
   public SimpleNode visit(ADD node, SimpleNode data);
   public SimpleNode visit(MULT node, SimpleNode data);
   public SimpleNode visit(RULE node, SimpleNode data);
+  public SimpleNode visit(PARTRULE node, SimpleNode data);
   public SimpleNode visit(VALEXPR node, SimpleNode data);
   public SimpleNode visit(CONSTRAINTS node, SimpleNode data);
   public SimpleNode visit(STRING node, SimpleNode data);
@@ -31,4 +32,4 @@ public interface ScannerVisitor
   public SimpleNode visit(RANGE node, SimpleNode data);
   public SimpleNode visit(IDEN node, SimpleNode data);
 }
-/* JavaCC - OriginalChecksum=7471eaf91e07543490062a4b4faf774e (do not edit this line) */
+/* JavaCC - OriginalChecksum=6671ff6c3f17aa282c3be28c4eaa0eaf (do not edit this line) */

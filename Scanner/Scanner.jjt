@@ -172,7 +172,7 @@ void COLRLE() #void:
     )#COLRULE(>1) 
 }
 
-void COLPARTRLE() #PARTRULE:
+void COLPARTRLE() #COLPARTRULE:
 {}
 {
     IDEN() <DEFINERULE> COLEXPR() (WHERE())? (<EOL>)+

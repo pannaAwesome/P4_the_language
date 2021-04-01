@@ -18,7 +18,7 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
     public SimpleNode visit(IMPORT node, SimpleNode data) {
         System.out.print("IMPORT ");
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(" AS ");
+        System.out.print(" IN ");
         node.jjtGetChild(1).jjtAccept(this, data);
         
         int numOfChild = node.jjtGetNumChildren();
@@ -27,7 +27,7 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
             return node;
         }
 
-        System.out.println("BEGIN");
+        System.out.println(" BEGIN");
         node.jjtGetChild(2).jjtAccept(this, data);
         System.out.println("END");
         return node;
@@ -37,7 +37,13 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
     public SimpleNode visit(IMPOPTIONS node, SimpleNode data) {
         int numOfChild = node.jjtGetNumChildren();
         for (int i = 0; i < numOfChild; i++) {
-            node.jjtGetChild(i).jjtAccept(this, data);
+            if (node.jjtGetChild(i).toString().equals("IDEN") || node.jjtGetChild(i).toString().equals("INTEGER")) {
+                System.out.print("ID ");
+                node.jjtGetChild(i).jjtAccept(this, data);
+            }else {
+                node.jjtGetChild(i).jjtAccept(this, data);
+            }
+            System.out.println();
         }
         return node;
     }
@@ -50,7 +56,7 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(NOHEADERS node, SimpleNode data) {
-        System.out.println("NOHEADERS");
+        System.out.print("NOHEADERS");
         return node;
     }
 
@@ -73,20 +79,29 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
     public SimpleNode visit(COLRULE node, SimpleNode data) {
         System.out.print("COL ");
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(":");
 
         int numOfChild = node.jjtGetNumChildren();
-        for (int i = 1; i < numOfChild; i++) {
-            node.jjtGetChild(i).jjtAccept(this, data);
-        }
-        System.out.println();
+        if (node.jjtGetChild(1).toString().equals("COLPARTRULE")) {
+            System.out.println(" BEGIN");
+            for (int i = 1; i < numOfChild; i++) {
+                node.jjtGetChild(i).jjtAccept(this, data);
+            }
+            System.out.println("END");
+        } else {
+            System.out.print(": ");
+            for (int i = 1; i < numOfChild; i++) {
+                node.jjtGetChild(i).jjtAccept(this, data);
+            }
+            System.out.println();
+        }       
+        
         return node;
     }
 
     @Override
-    public SimpleNode visit(PARTRULE node, SimpleNode data) {
+    public SimpleNode visit(COLPARTRULE node, SimpleNode data) {
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(":");
+        System.out.print(": ");
         node.jjtGetChild(1).jjtAccept(this, data);
         System.out.println("");
         return node;
@@ -166,13 +181,31 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(RULE node, SimpleNode data) {
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(":");
 
         int numOfChild = node.jjtGetNumChildren();
-        for (int i = 1; i < numOfChild; i++) {
-            node.jjtGetChild(i).jjtAccept(this, data);
-        }
-        System.out.println();
+        if (node.jjtGetChild(1).toString().equals("PARTRULE")) {
+            System.out.println(" BEGIN");
+            for (int i = 1; i < numOfChild; i++) {
+                node.jjtGetChild(i).jjtAccept(this, data);
+            }
+            System.out.println("END");
+        } else {
+            System.out.print(": ");
+            for (int i = 1; i < numOfChild; i++) {
+                node.jjtGetChild(i).jjtAccept(this, data);
+            }
+            System.out.println();
+        }       
+        
+        return node;
+    }
+
+    @Override
+    public SimpleNode visit(PARTRULE node, SimpleNode data) {
+        node.jjtGetChild(0).jjtAccept(this, data);
+        System.out.print(": ");
+        node.jjtGetChild(1).jjtAccept(this, data);
+        System.out.println("");
         return node;
     }
 

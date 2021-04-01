@@ -341,13 +341,13 @@ void COLRLE()      :
 /*@egen*/             
 }
 
-void COLPARTRLE()          :
-{/*@bgen(jjtree) PARTRULE */
-  PARTRULE jjtn000 = new PARTRULE(JJTPARTRULE);
+void COLPARTRLE()             :
+{/*@bgen(jjtree) COLPARTRULE */
+  COLPARTRULE jjtn000 = new COLPARTRULE(JJTCOLPARTRULE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
 /*@egen*/}
-{/*@bgen(jjtree) PARTRULE */
+{/*@bgen(jjtree) COLPARTRULE */
     try {
 /*@egen*/
     IDEN() <DEFINERULE> COLEXPR() (WHERE())? (<EOL>)+/*@bgen(jjtree)*/
