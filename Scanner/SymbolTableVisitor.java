@@ -31,7 +31,7 @@ public class SymbolTableVisitor implements ScannerVisitor {
     }
 
     private String getRuleName(Node parentRule, SimpleNode data){
-        while (!(parentRule instanceof RULE)) {
+        while (!(parentRule instanceof RULE) && !(parentRule instanceof PARTRULE) && !(parentRule instanceof COLPARTRULE)) {
             parentRule = parentRule.jjtGetParent();
         }
         SimpleNode ruleNode = parentRule.jjtGetChild(0).jjtAccept(this, data);
@@ -43,7 +43,7 @@ public class SymbolTableVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(SimpleNode node, SimpleNode data) {
         // TODO Auto-generated method stub
-        return null;
+        return data;
     }
 
     @Override
@@ -59,25 +59,25 @@ public class SymbolTableVisitor implements ScannerVisitor {
         SimpleNode tableNode = node.jjtGetChild(1).jjtAccept(this, data);
         String tableName = tableNode.toString("");
         insertNode(tableName, new TableType());
-        return null;
+        return data;
     }
 
     @Override
     public SimpleNode visit(IMPOPTIONS node, SimpleNode data) {
         // TODO Auto-generated method stub
-        return null;
+        return data;
     }
 
     @Override
     public SimpleNode visit(FLNM node, SimpleNode data) {
         // TODO Auto-generated method stub
-        return null;
+        return data;
     }
 
     @Override
     public SimpleNode visit(NOHEADERS node, SimpleNode data) {
         // TODO Auto-generated method stub
-        return null;
+        return data;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class SymbolTableVisitor implements ScannerVisitor {
         for (int i = 1; i < node.jjtGetNumChildren(); i++){
             node.jjtGetChild(i).jjtAccept(this, null);
         }
-        return null;
+        return data;
     }
 
     @Override
@@ -98,79 +98,106 @@ public class SymbolTableVisitor implements ScannerVisitor {
         String idName = idNode.value.toString();
         insertNode(idName, new ColRuleType());
         node.jjtGetChild(1).jjtAccept(this, data);
-        return null;
+        return data;
     }
 
     @Override
     public SimpleNode visit(COLPARTRULE node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return null;
+        SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
+        String idName = idNode.value.toString();
+        insertNode(idName, new ColPartRuleType());
+        node.jjtGetChild(1).jjtAccept(this, data);
+        return data;
     }
 
     @Override
     public SimpleNode visit(PARTRULE node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return null;
+        SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
+        String idName = idNode.value.toString();
+        insertNode(idName, new PartRuleType());
+        node.jjtGetChild(1).jjtAccept(this, data);
+        return data;
     }
 
     @Override
     public SimpleNode visit(OR node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return null;
+        String parentName = getRuleName(node, data);
+
+        for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+            SimpleNode idNode = node.jjtGetChild(i).jjtAccept(this, data);
+            String idName = idNode.toString("");
+            String idType = idNode.type.toString();
+            insertNode(idName, idType, parentName);
+        }
+        return data;
     }
 
     @Override
     public SimpleNode visit(AND node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return null;
+        List<String> idNames = new ArrayList<String>();
+        int numChild = node.jjtGetNumChildren();
+        String parentName = getRuleName(node, data);
+
+        for (int i = 0; i < numChild; i++) {
+            SimpleNode currNode = node.jjtGetChild(i).jjtAccept(this, data);
+            String idName = currNode.value.toString();
+            String idType = currNode.type.toString();
+
+            if(!idNames.contains(idName)){
+                insertIdNode(idName, idType, parentName);
+            }
+
+            idNames.add(idName);
+        }
+        return node;
     }
 
     @Override
     public SimpleNode visit(COLVALEXPR node, SimpleNode data) {
         // TODO Auto-generated method stub
-        return null;
+        return data;
     }
 
     @Override
     public SimpleNode visit(WHERE node, SimpleNode data) {
         // TODO Auto-generated method stub
-        return null;
+        return data;
     }
 
     @Override
     public SimpleNode visit(SACD node, SimpleNode data) {
         // TODO Auto-generated method stub
-        return null;
+        return data;
     }
 
     @Override
     public SimpleNode visit(ADD node, SimpleNode data) {
         // TODO Auto-generated method stub
-        return null;
+        return data;
     }
 
     @Override
     public SimpleNode visit(MULT node, SimpleNode data) {
         // TODO Auto-generated method stub
-        return null;
+        return data;
     }
 
     @Override
     public SimpleNode visit(RULE node, SimpleNode data) {
         // TODO Auto-generated method stub
-        return null;
+        return data;
     }
 
     @Override
     public SimpleNode visit(VALEXPR node, SimpleNode data) {
         // TODO Auto-generated method stub
-        return null;
+        return data;
     }
 
     @Override
     public SimpleNode visit(CONSTRAINTS node, SimpleNode data) {
         // TODO Auto-generated method stub
-        return null;
+        return data;
     }
 
     @Override
@@ -212,7 +239,7 @@ public class SymbolTableVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(ANLZOPTIONS node, SimpleNode data) {
         node.jjtGetChild(1).jjtAccept(this, data);
-        return null;
+        return data;
     }
 
     @Override
@@ -230,7 +257,7 @@ public class SymbolTableVisitor implements ScannerVisitor {
                 error("An id with the name \"" + str + "\" has not been declared");
             }
         }
-        return null;
+        return data;
     }
 
     @Override

@@ -4,12 +4,13 @@ import java.io.*;
 public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerConstants {/*@bgen(jjtree)*/
   protected static JJTScannerState jjtree = new JJTScannerState();
     public static void main(String[] args) throws ParseException, FileNotFoundException {
-        if ( args.length < 1 ) {
+        /*if ( args.length < 1 ) {
            System.out.println("Please pass in the filename for a parameter.");
            System.exit(1);
-        }
+        }*/
 
-        Scanner parser = new Scanner( new FileInputStream(args[0]) );
+        File f = new File("test.txt");
+        Scanner parser = new Scanner( new FileInputStream(f));
 
         try {
             SimpleNode n = parser.PROG();
