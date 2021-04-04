@@ -1,4 +1,44 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class SymbolTableVisitor implements ScannerVisitor {
+
+    public static HashMap<String, STVal> ST = new HashMap<String, STVal>();
+
+    private void error(String message) {
+        throw new Error(message);
+    }
+
+    private void insertNode(String name, BaseType type) {
+        if (!SymbolTableVisitor.ST.containsKey(name)) {
+            SymbolTableVisitor.ST.put(name, new STVal(type));
+            //SymbolTableVisitor.ST.get(name).parentRule = type;
+        } else {
+            error("An id with the name \"" + name + "\" has already been declared");
+        }
+    }
+
+    private void insertColNode(String name, BaseType type, String parentName) {
+        if (!SymbolTableVisitor.ST.containsKey(name)) {
+            SymbolTableVisitor.ST.put(name, new STVal(type));
+            SymbolTableVisitor.ST.get(name).parentRule = parentName;
+        } else {
+            if (SymbolTableVisitor.ST.get(name).parentRule.equals(parentName)
+                    && !SymbolTableVisitor.ST.get(name).type.contains(type)) {
+                SymbolTableVisitor.ST.get(name).type.add(type);
+            }
+        }
+    }
+
+    private String getRuleName(Node parentRule, SimpleNode data){
+        while (!(parentRule instanceof RULE)) {
+            parentRule = parentRule.jjtGetParent();
+        }
+        SimpleNode ruleNode = parentRule.jjtGetChild(0).jjtAccept(this, data);
+        String parentName = ruleNode.value.toString();
+
+        return parentName;
+    }
 
     @Override
     public SimpleNode visit(SimpleNode node, SimpleNode data) {
@@ -8,13 +48,17 @@ public class SymbolTableVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(PROG node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return null;
+        for (int i = 0; i < node.jjtGetNumChildren(); i++){
+            node.jjtGetChild(i).jjtAccept(this, null);
+        }
+        return data;
     }
 
     @Override
     public SimpleNode visit(IMPORT node, SimpleNode data) {
-        // TODO Auto-generated method stub
+        SimpleNode tableNode = node.jjtGetChild(1).jjtAccept(this, data);
+        String tableName = tableNode.toString("");
+        insertNode(tableName, new TableType());
         return null;
     }
 
@@ -38,13 +82,22 @@ public class SymbolTableVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(MODEL node, SimpleNode data) {
-        // TODO Auto-generated method stub
+        SimpleNode modelNode = node.jjtGetChild(0).jjtAccept(this, data);
+        String modelName = modelNode.toString("");
+        insertNode(modelName, new ModelType());
+
+        for (int i = 1; i < node.jjtGetNumChildren(); i++){
+            node.jjtGetChild(i).jjtAccept(this, null);
+        }
         return null;
     }
 
     @Override
     public SimpleNode visit(COLRULE node, SimpleNode data) {
-        // TODO Auto-generated method stub
+        SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
+        String idName = idNode.value.toString();
+        insertNode(idName, new ColRuleType());
+        node.jjtGetChild(1).jjtAccept(this, data);
         return null;
     }
 
@@ -122,37 +175,61 @@ public class SymbolTableVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(STRING node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return null;
+        node.type = new StringType(node.jjtGetValue().toString());
+        return node;
     }
 
     @Override
     public SimpleNode visit(INTEGER node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return null;
+        node.type = new IntegerType();
+        return node;
     }
 
     @Override
     public SimpleNode visit(FLOATY node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return null;
+        node.type = new DecimalType();
+        return node;
     }
 
     @Override
     public SimpleNode visit(ANALYZE node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return null;
+        SimpleNode tableNode = node.jjtGetChild(0).jjtAccept(this, data);
+        String tableName = tableNode.toString("");
+
+        SimpleNode modelNode = node.jjtGetChild(1).jjtAccept(this, data);
+        String modelName = modelNode.toString("");
+
+        if(!SymbolTableVisitor.ST.containsKey(tableName)) {
+            error("An id with the name \"" + tableName + "\" has not been declared");
+        }else if (!SymbolTableVisitor.ST.containsKey(modelName)) {
+            error("An id with the name \"" + modelName + "\" has not been declared");
+        }
+
+        node.jjtGetChild(2).jjtAccept(this, data);
+        return data;
     }
 
     @Override
     public SimpleNode visit(ANLZOPTIONS node, SimpleNode data) {
-        // TODO Auto-generated method stub
+        node.jjtGetChild(1).jjtAccept(this, data);
         return null;
     }
 
     @Override
     public SimpleNode visit(RULEOPT node, SimpleNode data) {
-        // TODO Auto-generated method stub
+        ArrayList<String> rules = new ArrayList<String>();
+
+        for (int i = 0; i < node.jjtGetNumChildren(); i++){
+            SimpleNode n = node.jjtGetChild(i).jjtAccept(this, data);
+            String ruleName = n.toString("");
+            rules.add(ruleName);
+        }
+
+        for (String str : rules) {
+            if(!SymbolTableVisitor.ST.containsKey(str)) {
+                error("An id with the name \"" + str + "\" has not been declared");
+            }
+        }
         return null;
     }
 
@@ -176,8 +253,7 @@ public class SymbolTableVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(IDEN node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return null;
+        return node;
     }
 
 }
