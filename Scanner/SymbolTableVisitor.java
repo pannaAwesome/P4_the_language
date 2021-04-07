@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class SymbolTableVisitor implements ScannerVisitor {
 
@@ -31,7 +32,7 @@ public class SymbolTableVisitor implements ScannerVisitor {
     }
 
     private String getRuleName(Node parentRule, SimpleNode data){
-        while (!(parentRule instanceof RULE) && !(parentRule instanceof PARTRULE) && !(parentRule instanceof COLPARTRULE)) {
+        while (!(parentRule instanceof RULE) && !(parentRule instanceof COLRULE)) {
             parentRule = parentRule.jjtGetParent();
         }
         SimpleNode ruleNode = parentRule.jjtGetChild(0).jjtAccept(this, data);
@@ -49,7 +50,7 @@ public class SymbolTableVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(PROG node, SimpleNode data) {
         for (int i = 0; i < node.jjtGetNumChildren(); i++){
-            node.jjtGetChild(i).jjtAccept(this, null);
+            node.jjtGetChild(i).jjtAccept(this, data);
         }
         return data;
     }
@@ -57,7 +58,7 @@ public class SymbolTableVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(IMPORT node, SimpleNode data) {
         SimpleNode tableNode = node.jjtGetChild(1).jjtAccept(this, data);
-        String tableName = tableNode.toString("");
+        String tableName = tableNode.value.toString();
         insertNode(tableName, new TableType());
         return data;
     }
@@ -83,11 +84,11 @@ public class SymbolTableVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(MODEL node, SimpleNode data) {
         SimpleNode modelNode = node.jjtGetChild(0).jjtAccept(this, data);
-        String modelName = modelNode.toString("");
+        String modelName = modelNode.value.toString();
         insertNode(modelName, new ModelType());
 
         for (int i = 1; i < node.jjtGetNumChildren(); i++){
-            node.jjtGetChild(i).jjtAccept(this, null);
+            node.jjtGetChild(i).jjtAccept(this, data);
         }
         return data;
     }
@@ -97,7 +98,14 @@ public class SymbolTableVisitor implements ScannerVisitor {
         SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
         String idName = idNode.value.toString();
         insertNode(idName, new ColRuleType());
-        node.jjtGetChild(1).jjtAccept(this, data);
+
+        int numOfChild = node.jjtGetNumChildren();
+        if (node.jjtGetChild(1).toString().equals("COLPARTRULE")) {
+            for (int i = 1; i < numOfChild; i++) {
+                node.jjtGetChild(i).jjtAccept(this, data);
+            }
+        }
+        
         return data;
     }
 
@@ -106,7 +114,6 @@ public class SymbolTableVisitor implements ScannerVisitor {
         SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
         String idName = idNode.value.toString();
         insertNode(idName, new ColPartRuleType());
-        node.jjtGetChild(1).jjtAccept(this, data);
         return data;
     }
 
@@ -115,21 +122,25 @@ public class SymbolTableVisitor implements ScannerVisitor {
         SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
         String idName = idNode.value.toString();
         insertNode(idName, new PartRuleType());
-        node.jjtGetChild(1).jjtAccept(this, data);
+
+        String parentName = getRuleName(node, data);
+        SimpleNode idExprNode = node.jjtGetChild(1).jjtAccept(this, data);
+        String idExprName = idExprNode.value.toString();
+        insertColNode(idExprName, idExprNode.type, parentName);
         return data;
     }
 
     @Override
     public SimpleNode visit(OR node, SimpleNode data) {
         String parentName = getRuleName(node, data);
+        SimpleNode firstIdNode = node.jjtGetChild(0).jjtAccept(this, data);
 
-        for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+        for (int i = 1; i < node.jjtGetNumChildren(); i++) {
             SimpleNode idNode = node.jjtGetChild(i).jjtAccept(this, data);
-            String idName = idNode.toString("");
-            String idType = idNode.type.toString();
-            insertNode(idName, idType, parentName);
+            String idName = idNode.value.toString();
+            insertColNode(idName, idNode.type, parentName);
         }
-        return data;
+        return firstIdNode;
     }
 
     @Override
@@ -137,67 +148,167 @@ public class SymbolTableVisitor implements ScannerVisitor {
         List<String> idNames = new ArrayList<String>();
         int numChild = node.jjtGetNumChildren();
         String parentName = getRuleName(node, data);
+        SimpleNode firstIdNode = node.jjtGetChild(0).jjtAccept(this, data);
+        idNames.add(firstIdNode.value.toString());
 
-        for (int i = 0; i < numChild; i++) {
+        for (int i = 1; i < numChild; i++) {
             SimpleNode currNode = node.jjtGetChild(i).jjtAccept(this, data);
             String idName = currNode.value.toString();
-            String idType = currNode.type.toString();
 
             if(!idNames.contains(idName)){
-                insertIdNode(idName, idType, parentName);
+                insertColNode(idName, currNode.type, parentName);
             }
 
             idNames.add(idName);
         }
-        return node;
+        return firstIdNode;
     }
 
     @Override
     public SimpleNode visit(COLVALEXPR node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return data;
+        return node;
     }
-
+    
     @Override
     public SimpleNode visit(WHERE node, SimpleNode data) {
-        // TODO Auto-generated method stub
+        String parentName = getRuleName(node, data);
+        SimpleNode idExprNode = node.jjtGetChild(1).jjtAccept(this, data);
+        String idExprName = idExprNode.value.toString();
+        insertColNode(idExprName, idExprNode.type, parentName);
         return data;
     }
 
     @Override
     public SimpleNode visit(SACD node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return data;
+        if (node.value.toString().equals("SUM") || node.value.toString().equals("AVG")) {
+            node.type = new DecimalType();
+        } else {
+            node.type = new IntegerType();
+        }
+        return node;
     }
 
     @Override
     public SimpleNode visit(ADD node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return data;
+        node.type = new DecimalType();
+        return node;
     }
 
     @Override
     public SimpleNode visit(MULT node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return data;
+        node.type = new DecimalType();
+        return node;
     }
 
     @Override
     public SimpleNode visit(RULE node, SimpleNode data) {
-        // TODO Auto-generated method stub
+        SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
+        String idName = idNode.value.toString();
+        insertNode(idName, new RuleType());
+
+        String parentName = getRuleName(node, data);
+        int numOfChild = node.jjtGetNumChildren();
+        if (node.jjtGetChild(1).toString().equals("PARTRULE")) {
+            for (int i = 1; i < numOfChild; i++) {
+                node.jjtGetChild(i).jjtAccept(this, data);
+            }
+        } else {
+            SimpleNode idExprNode = node.jjtGetChild(1).jjtAccept(this, data);
+            String idExprName = idExprNode.value.toString();
+            insertColNode(idExprName, idExprNode.type, parentName);
+        }
+        
         return data;
     }
 
     @Override
     public SimpleNode visit(VALEXPR node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return data;
-    }
+        SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
+        SimpleNode typeNode = node.jjtGetChild(1).jjtAccept(this, data);
+        idNode.type = typeNode.type;
 
+        if (node.value.toString().equals("CONTAINS")) {
+            StringType type = (StringType) typeNode.type;
+            type.setOnlyContains(true);
+            idNode.type = type;
+        } else {
+            if (typeNode.type instanceof IntegerType) {
+                IntegerType type = (IntegerType) typeNode.type;
+                switch (node.value.toString()) {
+                    case "<=":
+                        type.SetMaxValue(type.equalValue, true);
+                        idNode.type = type;
+                        break;
+                    case ">=":
+                        type.SetMinValue(type.equalValue, true);
+                        idNode.type = type;
+                        break;
+                    case "<":
+                        type.SetMaxValue(type.equalValue, false);
+                        idNode.type = type;
+                        break;
+                    case ">":
+                        type.SetMinValue(type.equalValue, false);
+                        idNode.type = type;
+                        break;
+                    default:
+                        break;
+                }
+            } else if (typeNode.type instanceof DecimalType) {
+                IntegerType type = (IntegerType) typeNode.type;
+                switch (node.value.toString()) {
+                    case "<=":
+                        type.SetMaxValue(type.equalValue, true);
+                        idNode.type = type;
+                        break;
+                    case ">=":
+                        type.SetMinValue(type.equalValue, true);
+                        idNode.type = type;
+                        break;
+                    case "<":
+                        type.SetMaxValue(type.equalValue, false);
+                        idNode.type = type;
+                        break;
+                    case ">":
+                        type.SetMinValue(type.equalValue, false);
+                        idNode.type = type;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return idNode;
+    }
+    //regelnavn: hejsa >= 0
+    //           ----------- 
     @Override
     public SimpleNode visit(CONSTRAINTS node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return data;
+        switch (node.value.toString()) {
+            case "LETTERS":
+                node.type = new LetterType();
+                break;
+            case "INTEGER":
+                node.type = new IntegerType();
+                break;
+            case "DECIMAL":
+                node.type = new DecimalType();
+                break;
+            case "EMPTY":
+                EmptyType empty = new EmptyType();
+                empty.notFlag = false;
+                node.type = empty;                
+                break;
+            case "NOTEMPTY":
+                EmptyType notEmpty = new EmptyType();
+                notEmpty.notFlag = true;
+                node.type = notEmpty;
+                break;
+            default:
+                break;
+        }
+        return node;
     }
 
     @Override
