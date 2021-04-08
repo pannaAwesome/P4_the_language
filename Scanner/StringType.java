@@ -16,16 +16,6 @@ public class StringType extends BaseType {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        BaseType baseT = (BaseType) obj;
-        if (this.type == baseT.type) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
     public boolean compareTypes(BaseType type) {
         StringType t = (StringType) type;
         if (this.onlyContains == false && t.onlyContains == false) {
