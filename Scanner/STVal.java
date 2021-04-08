@@ -7,4 +7,9 @@ public class STVal {
     public STVal(BaseType t){
         type.add(t);
     }
+
+    @Override
+    public String toString() {
+        return type.toString();
+    }
 }

@@ -7,13 +7,14 @@ public class EmptyType extends BaseType {
 
     @Override
     public String toString() {
-        return "Empty";
+        return (notFlag ? "Not Empty" : "Empty");
     }
 
     @Override
     public boolean equals(Object obj) {
-        EmptyType t = (EmptyType) obj;
-        if (this.type == t.type) {
+        BaseType baseT = (BaseType) obj;
+        if (this.type == baseT.type) {
+            EmptyType t = (EmptyType) obj;
             if (this.notFlag == t.notFlag) {
                 return true;
             } else {

@@ -24,6 +24,20 @@ public class SymbolTableVisitor implements ScannerVisitor {
             SymbolTableVisitor.ST.put(name, new STVal(type));
             SymbolTableVisitor.ST.get(name).parentRule = parentName;
         } else {
+            /***
+             * Gælder kun for AND:
+             * IntegerType, min, max, equal som skal tjekkes
+             *  - Har ingen values, har max kun, har min kun -> (har en value), (har min kun), (har max kun) = Ændres
+             *  - Helt ens     = true
+             *  - har max kun,          har min kun,          har både max og min,            har equal kun -> 
+             *   (har max eller equal),(har min eller equal),(har enten max, min eller equal),(har min eller max)
+             *   (                                   har ingen værdier sat                                      )
+             *   = true
+             * DecimalType, min, max, equal som skal tjekkes
+             * StringType, onlyContains, equal som skal tjekkes
+             * LetterType, tjekke om den eksistere i forvejen
+             * EmptyType, notFlag on den er sand eller falsk
+             */
             if (SymbolTableVisitor.ST.get(name).parentRule.equals(parentName)
                     && !SymbolTableVisitor.ST.get(name).type.contains(type)) {
                 SymbolTableVisitor.ST.get(name).type.add(type);
@@ -151,7 +165,7 @@ public class SymbolTableVisitor implements ScannerVisitor {
         SimpleNode firstIdNode = node.jjtGetChild(0).jjtAccept(this, data);
         idNames.add(firstIdNode.value.toString());
 
-        for (int i = 1; i < numChild; i++) {
+        for (int i = 0; i < numChild; i++) {
             SimpleNode currNode = node.jjtGetChild(i).jjtAccept(this, data);
             String idName = currNode.value.toString();
 
@@ -224,65 +238,12 @@ public class SymbolTableVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(VALEXPR node, SimpleNode data) {
         SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
-        SimpleNode typeNode = node.jjtGetChild(1).jjtAccept(this, data);
+        SimpleNode typeNode = node.jjtGetChild(1).jjtAccept(this, node);
         idNode.type = typeNode.type;
-
-        if (node.value.toString().equals("CONTAINS")) {
-            StringType type = (StringType) typeNode.type;
-            type.setOnlyContains(true);
-            idNode.type = type;
-        } else {
-            if (typeNode.type instanceof IntegerType) {
-                IntegerType type = (IntegerType) typeNode.type;
-                switch (node.value.toString()) {
-                    case "<=":
-                        type.SetMaxValue(type.equalValue, true);
-                        idNode.type = type;
-                        break;
-                    case ">=":
-                        type.SetMinValue(type.equalValue, true);
-                        idNode.type = type;
-                        break;
-                    case "<":
-                        type.SetMaxValue(type.equalValue, false);
-                        idNode.type = type;
-                        break;
-                    case ">":
-                        type.SetMinValue(type.equalValue, false);
-                        idNode.type = type;
-                        break;
-                    default:
-                        break;
-                }
-            } else if (typeNode.type instanceof DecimalType) {
-                IntegerType type = (IntegerType) typeNode.type;
-                switch (node.value.toString()) {
-                    case "<=":
-                        type.SetMaxValue(type.equalValue, true);
-                        idNode.type = type;
-                        break;
-                    case ">=":
-                        type.SetMinValue(type.equalValue, true);
-                        idNode.type = type;
-                        break;
-                    case "<":
-                        type.SetMaxValue(type.equalValue, false);
-                        idNode.type = type;
-                        break;
-                    case ">":
-                        type.SetMinValue(type.equalValue, false);
-                        idNode.type = type;
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
 
         return idNode;
     }
-    //regelnavn: hejsa >= 0
-    //           ----------- 
+    
     @Override
     public SimpleNode visit(CONSTRAINTS node, SimpleNode data) {
         switch (node.value.toString()) {
@@ -313,19 +274,30 @@ public class SymbolTableVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(STRING node, SimpleNode data) {
-        node.type = new StringType(node.jjtGetValue().toString());
+        StringType type = new StringType();
+        //String operator = data.value.toString();
+        //type.setOnlyContains(operator);
+        node.type = type;
         return node;
     }
 
     @Override
     public SimpleNode visit(INTEGER node, SimpleNode data) {
-        node.type = new IntegerType();
+        IntegerType type = new IntegerType();
+        //int number = Integer.parseInt(node.value.toString());
+        //String operator = data.value.toString();
+        //type.SetValue(operator, number);
+        node.type = type;
         return node;
     }
 
     @Override
     public SimpleNode visit(FLOATY node, SimpleNode data) {
-        node.type = new DecimalType();
+        DecimalType type = new DecimalType();
+        //double number = Double.parseDouble(node.value.toString());
+        //String operator = data.value.toString();
+        //type.SetValue(operator, number);
+        node.type = type;
         return node;
     }
 
@@ -393,5 +365,4 @@ public class SymbolTableVisitor implements ScannerVisitor {
     public SimpleNode visit(IDEN node, SimpleNode data) {
         return node;
     }
-
 }

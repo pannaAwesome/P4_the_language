@@ -5,6 +5,6 @@ public class RuleType extends BaseType {
 
     @Override
     public String toString(){
-        return "RuleType";
+        return "Rule";
     }
 }

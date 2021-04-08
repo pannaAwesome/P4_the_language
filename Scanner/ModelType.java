@@ -5,6 +5,6 @@ public class ModelType extends BaseType {
 
     @Override
     public String toString(){
-        return "ModelType";
+        return "Model";
     }
 }

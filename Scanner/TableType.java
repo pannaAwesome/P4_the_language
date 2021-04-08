@@ -5,6 +5,6 @@ public class TableType extends BaseType{
 
     @Override
     public String toString(){
-        return "TableType";
+        return "Table";
     }
 }

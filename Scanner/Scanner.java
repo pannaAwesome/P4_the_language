@@ -4,21 +4,23 @@ import java.io.*;
 public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerConstants {/*@bgen(jjtree)*/
   protected static JJTScannerState jjtree = new JJTScannerState();
     public static void main(String[] args) throws ParseException, FileNotFoundException {
-        /*if ( args.length < 1 ) {
-           System.out.println("Please pass in the filename for a parameter.");
-           System.exit(1);
-        }*/
-
-        File f = new File("test.txt");
-        Scanner parser = new Scanner( new FileInputStream(f));
+        File file = new File("test.txt");
+        FileInputStream stream = new FileInputStream(file);
+        Scanner parser = new Scanner(stream);
 
         try {
             SimpleNode n = parser.PROG();
-            n.dump("");
+            //n.dump("");
 
-            System.out.println("Pretty printing:");
+            /*System.out.println("Pretty printing:");
             PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
             n.jjtAccept(ppv, null);
+            System.out.println();*/
+
+            System.out.println("Filling the symboltable:");
+            SymbolTableVisitor stv = new SymbolTableVisitor();
+            n.jjtAccept(stv, null);
+            System.out.println(SymbolTableVisitor.ST);
             System.out.println("Finished succesfully");
         }catch(Exception e) {
             System.out.println(e.getMessage());

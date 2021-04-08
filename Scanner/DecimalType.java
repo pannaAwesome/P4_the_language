@@ -9,24 +9,53 @@ public class DecimalType extends BaseType {
         super(2);
     }
 
-    public void SetMinValue(double newMinValue, boolean withValue) {
+    private void SetMinValue(double newMinValue, boolean withValue) {
         minValue = newMinValue;
         withGivenMinValue = withValue;
     }
 
-    public void SetMaxValue(double newMaxValue, boolean withValue) {
+    private void SetMaxValue(double newMaxValue, boolean withValue) {
         maxValue = newMaxValue;
         withGivenMaxValue = withValue;
     }
 
-    public void SetEqualValue(double newEqualValue) {
+    private void SetEqualValue(double newEqualValue) {
         equalValue = newEqualValue;
+    }
+
+    public void SetValue(String operator, double value) {
+        switch (operator) {
+            case ">=":
+                SetMinValue(value, true);
+                break;
+            case ">":
+                SetMinValue(value, false);
+                break;
+            case "<=":
+                SetMaxValue(value, true);
+                break;
+            case "<":
+                SetMaxValue(value, false);
+                break;
+            default:
+                SetEqualValue(value);
+                break;
+        }
     }
 
     @Override
     public boolean equals(Object obj) {
-        DecimalType t = (DecimalType) obj;
-        if (this.type == t.type) {
+        BaseType baseT = (BaseType) obj;
+        if (this.type == baseT.type) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean compareTypes(BaseType type) {
+        DecimalType t = (DecimalType) type;
             if (t.minValue == null && t.maxValue == null && t.equalValue == null) {
                 return true;
             } else if (this.equalValue.equals(t.equalValue) 
@@ -39,9 +68,6 @@ public class DecimalType extends BaseType {
             } else {
                 return false;
             }
-        } else {
-            return false;
-        }
     }
 
     @Override

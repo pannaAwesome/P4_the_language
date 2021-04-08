@@ -15,4 +15,12 @@ public abstract class BaseType {
     public String toString() {
         return "No type was given";
     }
+
+    public boolean compareTypes(BaseType type){
+        return false;
+    }
+
+    public void changeTypeConstraints(BaseType newType) {
+        //Doing nothing!
+    }
 }

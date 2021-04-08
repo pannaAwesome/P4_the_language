@@ -3,42 +3,69 @@ public class IntegerType extends BaseType {
     private boolean withGivenMinValue = false;
     private Integer maxValue = null;
     private boolean withGivenMaxValue = false;
-    public Integer equalValue = null;
+    private Integer equalValue = null;
 
     public IntegerType() {
         super(3);
     }
 
-    public void SetMinValue(int newMinValue, boolean withValue) {
+    private void SetMinValue(int newMinValue, boolean withValue) {
         minValue = newMinValue;
         withGivenMinValue = withValue;
     }
 
-    public void SetMaxValue(int newMaxValue, boolean withValue) {
+    private void SetMaxValue(int newMaxValue, boolean withValue) {
         maxValue = newMaxValue;
         withGivenMaxValue = withValue;
     }
 
-    public void SetEqualValue(int newEqualValue) {
+    private void SetEqualValue(int newEqualValue) {
         equalValue = newEqualValue;
+    }
+
+    public void SetValue(String operator, int value){
+        switch (operator) {
+            case ">=":
+                SetMinValue(value, true);
+                break;
+            case ">":
+                SetMinValue(value, false);
+                break;
+            case "<=":
+                SetMaxValue(value, true);
+                break;
+            case "<":
+                SetMaxValue(value, false);
+                break;
+            default:
+                SetEqualValue(value);
+                break;
+        }
     }
 
     @Override
     public boolean equals(Object obj) {
-        IntegerType t = (IntegerType) obj;
-        if (this.type == t.type) {
-            if (t.minValue == null && t.maxValue == null && t.equalValue == null) {
-                return true;
-            } else if (this.equalValue.equals(t.equalValue) 
-                    && this.minValue == null && this.maxValue == null
-                    && t.minValue == null && t.maxValue == null) {
-                return true;
-            } else if (this.minValue.equals(t.minValue) && this.withGivenMinValue == t.withGivenMinValue
-                    && this.maxValue.equals(t.maxValue) && this.withGivenMaxValue == t.withGivenMaxValue) {
-                return true;
-            } else {
-                return false;
-            }
+        BaseType baseT = (BaseType) obj;
+        if (this.type == baseT.type) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean compareTypes(BaseType type) {
+        IntegerType t = (IntegerType) type;
+        if (t.minValue == null && t.maxValue == null && t.equalValue == null
+            && this.minValue == null && this.maxValue == null && this.equalValue == null) {
+            return true;
+        } else if (this.equalValue.equals(t.equalValue) 
+                && this.minValue == null && this.maxValue == null
+                && t.minValue == null && t.maxValue == null) {
+            return true;
+        } else if (this.minValue.equals(t.minValue) && this.withGivenMinValue == t.withGivenMinValue
+                && this.maxValue.equals(t.maxValue) && this.withGivenMaxValue == t.withGivenMaxValue) {
+            return true;
         } else {
             return false;
         }
