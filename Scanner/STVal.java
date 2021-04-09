@@ -8,8 +8,20 @@ public class STVal {
         type.add(t);
     }
 
-    @Override
     public String toString() {
         return type.toString();
+    }
+
+    public String toString(String all) {
+        String types = "";
+        if (type.size() == 1) {
+            types += "type " + type.get(0);
+        } else {
+            types += " types: ";
+            for (BaseType type : type) {
+                types += type.toString();
+            }
+        }
+        return types;
     }
 }

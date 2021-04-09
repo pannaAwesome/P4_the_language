@@ -1,5 +1,5 @@
 public class EmptyType extends BaseType {
-    public boolean notFlag = false;
+    public boolean notFlag = true;
 
     public EmptyType() {
         super(5);

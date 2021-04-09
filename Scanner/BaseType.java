@@ -16,7 +16,11 @@ public abstract class BaseType {
         return "No type was given";
     }
 
-    public boolean compareTypes(BaseType type){
+    public boolean compareTypesAnd(BaseType type){
+        return false;
+    }
+
+    public boolean compareTypesOr(BaseType type){
         return false;
     }
 

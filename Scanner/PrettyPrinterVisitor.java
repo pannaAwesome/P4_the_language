@@ -1,5 +1,5 @@
 public class PrettyPrinterVisitor implements ScannerVisitor {
-
+    public String print = "";
     @Override
     public SimpleNode visit(SimpleNode node, SimpleNode data) {
         throw new RuntimeException("Visit SimpleNode");
@@ -16,20 +16,20 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(IMPORT node, SimpleNode data) {
-        System.out.print("IMPORT ");
+        print +="IMPORT ";
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(" IN ");
+        print +=" IN ";
         node.jjtGetChild(1).jjtAccept(this, data);
         
         int numOfChild = node.jjtGetNumChildren();
         if (numOfChild == 2) {
-            System.out.println();
+            print += "\n";
             return node;
         }
 
-        System.out.println(" BEGIN");
+        print +=" BEGIN\n";
         node.jjtGetChild(2).jjtAccept(this, data);
-        System.out.println("END");
+        print +="END\n";
         return node;
     }
 
@@ -38,61 +38,61 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
         int numOfChild = node.jjtGetNumChildren();
         for (int i = 0; i < numOfChild; i++) {
             if (node.jjtGetChild(i).toString().equals("IDEN") || node.jjtGetChild(i).toString().equals("INTEGER")) {
-                System.out.print("ID ");
+                print +="ID ";
                 node.jjtGetChild(i).jjtAccept(this, data);
             }else {
                 node.jjtGetChild(i).jjtAccept(this, data);
             }
-            System.out.println();
+            print +="\n";
         }
         return node;
     }
 
     @Override
     public SimpleNode visit(FLNM node, SimpleNode data) {
-        System.out.print(node.value.toString());
+        print += node.value.toString();
         return node;
     }
 
     @Override
     public SimpleNode visit(NOHEADERS node, SimpleNode data) {
-        System.out.print("NOHEADERS");
+        print += "NOHEADERS ";
         return node;
     }
 
     @Override
     public SimpleNode visit(MODEL node, SimpleNode data) {
-        System.out.print("MODEL ");
+        print += "MODEL ";
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.println(" BEGIN");
+        print += " BEGIN\n";
 
         int numOfChild = node.jjtGetNumChildren();
         for (int i = 1; i < numOfChild; i++) {
             node.jjtGetChild(i).jjtAccept(this, data);
         }
 
-        System.out.println("END");
+        print +="END\n";
         return node;
     }
 
     @Override
     public SimpleNode visit(COLRULE node, SimpleNode data) {
-        System.out.print("COL ");
+        print += "COL ";
         node.jjtGetChild(0).jjtAccept(this, data);
 
         int numOfChild = node.jjtGetNumChildren();
         if (node.jjtGetChild(1).toString().equals("COLPARTRULE")) {
-            System.out.println(" BEGIN");
+            print +=" BEGIN\n";
             for (int i = 1; i < numOfChild; i++) {
                 node.jjtGetChild(i).jjtAccept(this, data);
             }
-            System.out.println("END");
+            print +="END\n";
         } else {
-            System.out.print(": ");
+            print +=": ";
             for (int i = 1; i < numOfChild; i++) {
                 node.jjtGetChild(i).jjtAccept(this, data);
             }
-            System.out.println();
+            print +="\n";
         }       
         
         return node;
@@ -101,9 +101,9 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(COLPARTRULE node, SimpleNode data) {
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(": ");
+        print +=": ";
         node.jjtGetChild(1).jjtAccept(this, data);
-        System.out.println("");
+        print += "\n";
         return node;
     }
 
@@ -113,7 +113,7 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
 
         int numOfChild = node.jjtGetNumChildren();
         for (int i = 1; i < numOfChild; i++) {
-            System.out.print(" OR ");
+            print += " OR ";
             node.jjtGetChild(i).jjtAccept(this, data);
         }
         return node;
@@ -125,7 +125,7 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
 
         int numOfChild = node.jjtGetNumChildren();
         for (int i = 1; i < numOfChild; i++) {
-            System.out.print(" AND ");
+            print += " AND ";
             node.jjtGetChild(i).jjtAccept(this, data);
         }
         return node;
@@ -134,23 +134,23 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(COLVALEXPR node, SimpleNode data) {
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(" " + node.value.toString() + " ");
+        print += " " + node.value.toString() + " ";
         node.jjtGetChild(1).jjtAccept(this, data);
         return node;
     }
 
     @Override
     public SimpleNode visit(WHERE node, SimpleNode data) {
-        System.out.print(" WHERE ");
+        print += " WHERE ";
         node.jjtGetChild(0).jjtAccept(this, data);
         return node;
     }
 
     @Override
     public SimpleNode visit(SACD node, SimpleNode data) {
-        System.out.print(node.value.toString() + "(");
+        print += node.value.toString() + "(";
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(")");
+        print += ")";
         return node;
     }
 
@@ -160,7 +160,7 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
 
         int numOfChild = node.jjtGetNumChildren();
         for (int i = 1; i < numOfChild; i++) {
-            System.out.print(" " + node.value.toString() + " ");
+            print += " " + node.value.toString() + " ";
             node.jjtGetChild(i).jjtAccept(this, data);
         }
         return node;
@@ -172,7 +172,7 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
 
         int numOfChild = node.jjtGetNumChildren();
         for (int i = 1; i < numOfChild; i++) {
-            System.out.print(" " + node.value.toString() + " ");
+            print += " " + node.value.toString() + " ";
             node.jjtGetChild(i).jjtAccept(this, data);
         }
         return node;
@@ -184,17 +184,17 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
 
         int numOfChild = node.jjtGetNumChildren();
         if (node.jjtGetChild(1).toString().equals("PARTRULE")) {
-            System.out.println(" BEGIN");
+            print += " BEGIN\n";
             for (int i = 1; i < numOfChild; i++) {
                 node.jjtGetChild(i).jjtAccept(this, data);
             }
-            System.out.println("END");
+            print += "END\n";
         } else {
-            System.out.print(": ");
+            print += ": ";
             for (int i = 1; i < numOfChild; i++) {
                 node.jjtGetChild(i).jjtAccept(this, data);
             }
-            System.out.println();
+            print += "\n";
         }       
         
         return node;
@@ -203,16 +203,16 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(PARTRULE node, SimpleNode data) {
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(": ");
+        print +=": ";
         node.jjtGetChild(1).jjtAccept(this, data);
-        System.out.println("");
+        print += "\n";
         return node;
     }
 
     @Override
     public SimpleNode visit(VALEXPR node, SimpleNode data) {
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(" " + node.value.toString() + " ");
+        print += " " + node.value.toString() + " ";
         node.jjtGetChild(1).jjtAccept(this, data);
         return node;
     }
@@ -220,47 +220,47 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(CONSTRAINTS node, SimpleNode data) {
         if (node.value.toString().equals("NOTEMPTY")) {
-            System.out.print("NOT EMPTY");
+            print += "NOT EMPTY";
         }else {
-            System.out.print(node.value.toString());
+            print += node.value.toString();
         }
         return node;
     }
 
     @Override
     public SimpleNode visit(STRING node, SimpleNode data) {
-        System.out.print(node.value.toString());
+        print += node.value.toString();
         return node;
     }
 
     @Override
     public SimpleNode visit(INTEGER node, SimpleNode data) {
-        System.out.print(node.value.toString());
+        print += node.value.toString();
         return node;
     }
 
     @Override
     public SimpleNode visit(FLOATY node, SimpleNode data) {
-        System.out.print(node.value.toString());
+        print += node.value.toString();
         return node;
     }
 
     @Override
     public SimpleNode visit(ANALYZE node, SimpleNode data) {
-        System.out.print("ANALYZE ");
+        print += "ANALYZE ";
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(" WITH ");
+        print += " WITH ";
         node.jjtGetChild(1).jjtAccept(this, data);
         
         int numOfChild = node.jjtGetNumChildren();
         if (numOfChild == 2) {
-            System.out.println();
+            print += "\n";
             return node;
         }
 
-        System.out.println(" BEGIN");
+        print += " BEGIN\n";
         node.jjtGetChild(2).jjtAccept(this, data);
-        System.out.println("END");
+        print += "END\n";
         return node;
     }
 
@@ -278,50 +278,50 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
         int numOfChild = node.jjtGetNumChildren();
         for (int i = 0; i < numOfChild; i++) {
             node.jjtGetChild(i).jjtAccept(this, data);
-            System.out.println();
+            print += "\n";
         }
         return node;
     }
 
     @Override
     public SimpleNode visit(ROWS node, SimpleNode data) {
-        System.out.print("ROW ");
+        print += "ROW ";
         node.jjtGetChild(0).jjtAccept(this, data);
 
         int numOfChild = node.jjtGetNumChildren();
         for (int i = 1; i < numOfChild; i++) {
-            System.out.print(", ");
+            print += ", ";
             node.jjtGetChild(i).jjtAccept(this, data);
         }
-        System.out.println();
+        print+="\n";
         return node;
     }
 
     @Override
     public SimpleNode visit(COLS node, SimpleNode data) {
-        System.out.print("COL ");
+        print +="COL ";
         node.jjtGetChild(0).jjtAccept(this, data);
 
         int numOfChild = node.jjtGetNumChildren();
         for (int i = 1; i < numOfChild; i++) {
-            System.out.print(", ");
+            print +=", ";
             node.jjtGetChild(i).jjtAccept(this, data);
         }
-        System.out.println();
+        print += "\n";
         return node;
     }
 
     @Override
     public SimpleNode visit(RANGE node, SimpleNode data) {
         node.jjtGetChild(0).jjtAccept(this, data);
-        System.out.print(" TO ");
+        print += " TO ";
         node.jjtGetChild(1).jjtAccept(this, data);
         return node;
     }
 
     @Override
     public SimpleNode visit(IDEN node, SimpleNode data) {
-        System.out.print(node.value.toString());
+        print += node.value.toString();
         return node;
     }
     

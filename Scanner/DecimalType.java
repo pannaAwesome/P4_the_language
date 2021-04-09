@@ -44,7 +44,7 @@ public class DecimalType extends BaseType {
     }
 
     @Override
-    public boolean compareTypes(BaseType type) {
+    public boolean compareTypesAnd(BaseType type) {
         DecimalType t = (DecimalType) type;
             if (t.minValue == null && t.maxValue == null && t.equalValue == null) {
                 return true;
@@ -60,17 +60,20 @@ public class DecimalType extends BaseType {
             }
     }
 
-    @Override
     public String toString() {
-        String values = "";
-        if (equalValue != null) {
-            values = ", where value is " + equalValue.toString();
-        } else {
-            values += (minValue != null) ? ", where minimum value is " + minValue.toString() : "";
-            values += (maxValue != null && values.equals("")) ? ", where maximum value is " + maxValue.toString()
-                    : (maxValue != null) ? " and maximum value is " + maxValue.toString() : "";
+        return "Decimal";
+    }
+
+    public String toString(String minOrMaxOrEqual){
+        switch (minOrMaxOrEqual) {
+            case "min":
+                return minValue.toString();
+            case "max":
+                return maxValue.toString();
+            case "equal":
+                return equalValue.toString();
+            default:
+                return "";
         }
-        
-        return "Decimal" + values;
     }
 }

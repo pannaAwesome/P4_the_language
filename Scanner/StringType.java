@@ -30,9 +30,12 @@ public class StringType extends BaseType {
             return false;
         }
     }
-    @Override
+    
     public String toString() {
+        return "String";
+    }
 
-        return "String, where string " + (onlyContains ? "contains" : "is") + " " + value;
+    public String toString(String withValue) {
+        return value;
     }
 }

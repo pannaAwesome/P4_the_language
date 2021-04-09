@@ -61,16 +61,20 @@ public class IntegerType extends BaseType {
         }
     }
 
-    @Override
     public String toString() {
-        String values = "";
-        if (equalValue != null) {
-            values = ", where value is " + equalValue.toString();
-        } else {
-            values += (minValue != null) ? ", where minimum value is " + minValue.toString() : "";
-            values += (maxValue != null && values.equals("")) ? ", where maximum value is " + maxValue.toString()
-                    : (maxValue != null) ? " and maximum value is " + maxValue.toString() : "";
+        return "Integer";
+    }
+
+    public String toString(String minOrMaxOrEqual){
+        switch (minOrMaxOrEqual){
+            case "min": 
+                return minValue.toString();
+            case "max": 
+                return maxValue.toString();
+            case "equal": 
+                return equalValue.toString();
+            default: 
+                return "";
         }
-        return "Integer" + values;
     }
 }
