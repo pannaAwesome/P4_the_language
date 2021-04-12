@@ -324,5 +324,29 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
         print += node.value.toString();
         return node;
     }
+
+    @Override
+    public SimpleNode visit(COLOR node, SimpleNode data) {
+        node.jjtGetChild(0).jjtAccept(this, data);
+
+        int numOfChild = node.jjtGetNumChildren();
+        for (int i = 1; i < numOfChild; i++) {
+            print += " OR ";
+            node.jjtGetChild(i).jjtAccept(this, data);
+        }
+        return node;
+    }
+
+    @Override
+    public SimpleNode visit(COLAND node, SimpleNode data) {
+        node.jjtGetChild(0).jjtAccept(this, data);
+
+        int numOfChild = node.jjtGetNumChildren();
+        for (int i = 1; i < numOfChild; i++) {
+            print += " AND ";
+            node.jjtGetChild(i).jjtAccept(this, data);
+        }
+        return node;
+    }
     
 }

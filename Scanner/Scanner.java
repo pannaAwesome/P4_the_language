@@ -531,7 +531,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void COLOREXPR() throws ParseException {
   int count = 0;
-      OR jjtn001 = new OR(JJTOR);
+      COLOR jjtn001 = new COLOR(JJTCOLOR);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {
@@ -573,7 +573,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void COLANDEXPR() throws ParseException {
   int count = 0;
-      AND jjtn001 = new AND(JJTAND);
+      COLAND jjtn001 = new COLAND(JJTCOLAND);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     try {

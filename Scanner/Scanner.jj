@@ -384,9 +384,9 @@ void COLEXPR()      :
 
 void COLOREXPR()      :
 { int count = 0; }
-{/*@bgen(jjtree) #OR( count > 0) */
+{/*@bgen(jjtree) #COLOR( count > 0) */
     {
-      OR jjtn001 = new OR(JJTOR);
+      COLOR jjtn001 = new COLOR(JJTCOLOR);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     }
@@ -412,14 +412,14 @@ void COLOREXPR()      :
         jjtree.closeNodeScope(jjtn001,  count > 0);
       }
     }
-/*@egen*/            
+/*@egen*/               
 }
 
 void COLANDEXPR()      :
 { int count = 0; }
-{/*@bgen(jjtree) #AND( count > 0) */
+{/*@bgen(jjtree) #COLAND( count > 0) */
     {
-      AND jjtn001 = new AND(JJTAND);
+      COLAND jjtn001 = new COLAND(JJTCOLAND);
       boolean jjtc001 = true;
       jjtree.openNodeScope(jjtn001);
     }
@@ -445,7 +445,7 @@ void COLANDEXPR()      :
         jjtree.closeNodeScope(jjtn001,  count > 0);
       }
     }
-/*@egen*/             
+/*@egen*/                
 }
 
 void COLVPEXPR()      :

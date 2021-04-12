@@ -2,8 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TypeCheckVisitor implements ScannerVisitor {
-    
-
 
     @Override
     public SimpleNode visit(SimpleNode node, SimpleNode data) {
@@ -21,9 +19,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(IMPORT node, SimpleNode data) {
-        SimpleNode tableNode = node.jjtGetChild(1).jjtAccept(this, data);
-        String tableName = tableNode.value.toString();
-        insertNode(tableName, new TableType());
+        // TODO Auto-generated method stub
         return data;
     }
 
@@ -47,9 +43,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(MODEL node, SimpleNode data) {
-        SimpleNode modelNode = node.jjtGetChild(0).jjtAccept(this, data);
-        String modelName = modelNode.value.toString();
-        insertNode(modelName, new ModelType());
+        node.jjtGetChild(0).jjtAccept(this, data);
 
         for (int i = 1; i < node.jjtGetNumChildren(); i++){
             node.jjtGetChild(i).jjtAccept(this, data);
@@ -59,130 +53,90 @@ public class TypeCheckVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(COLRULE node, SimpleNode data) {
-        SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
-        String idName = idNode.value.toString();
-        insertNode(idName, new ColRuleType());
-
         int numOfChild = node.jjtGetNumChildren();
-        if (node.jjtGetChild(1).toString().equals("COLPARTRULE")) {
-            for (int i = 1; i < numOfChild; i++) {
-                node.jjtGetChild(i).jjtAccept(this, data);
-            }
+        for (int i = 1; i < numOfChild; i++) {
+            node.jjtGetChild(i).jjtAccept(this, node);
         }
         
-        return data;
+        return node;
     }
 
     @Override
     public SimpleNode visit(COLPARTRULE node, SimpleNode data) {
-        SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
-        String idName = idNode.value.toString();
-        insertNode(idName, new ColPartRuleType());
-        return data;
-    }
-
-    @Override
-    public SimpleNode visit(PARTRULE node, SimpleNode data) {
-        SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
-        String idName = idNode.value.toString();
-        insertNode(idName, new PartRuleType());
-
-        String parentName = getRuleName(node, data);
-        SimpleNode idExprNode = node.jjtGetChild(1).jjtAccept(this, data);
-        String idExprName = idExprNode.value.toString();
-        insertColNode(idExprName, idExprNode.type, parentName);
-        return data;
-    }
-
-    @Override
-    public SimpleNode visit(OR node, SimpleNode data) {
-        String parentName = getRuleName(node, data);
-        SimpleNode firstIdNode = node.jjtGetChild(0).jjtAccept(this, data);
-
-        for (int i = 1; i < node.jjtGetNumChildren(); i++) {
-            SimpleNode idNode = node.jjtGetChild(i).jjtAccept(this, data);
-            String idName = idNode.value.toString();
-            insertColNode(idName, idNode.type, parentName);
+        int numOfChild = node.jjtGetNumChildren();
+        for (int i = 1; i < numOfChild; i++) {
+            node.jjtGetChild(i).jjtAccept(this, node);
         }
-        return firstIdNode;
-    }
-
-    @Override
-    public SimpleNode visit(AND node, SimpleNode data) {
-        List<String> idNames = new ArrayList<String>();
-        int numChild = node.jjtGetNumChildren();
-        String parentName = getRuleName(node, data);
-        SimpleNode firstIdNode = node.jjtGetChild(0).jjtAccept(this, data);
-        idNames.add(firstIdNode.value.toString());
-
-        for (int i = 0; i < numChild; i++) {
-            SimpleNode currNode = node.jjtGetChild(i).jjtAccept(this, data);
-            String idName = currNode.value.toString();
-
-            if(!idNames.contains(idName)){
-                insertColNode(idName, currNode.type, parentName);
-            }
-
-            idNames.add(idName);
-        }
-        return firstIdNode;
+        return node;
     }
 
     @Override
     public SimpleNode visit(COLVALEXPR node, SimpleNode data) {
+        int numOfChild = node.jjtGetNumChildren();
+        for (int i = 1; i < numOfChild; i++) {
+            node.jjtGetChild(i).jjtAccept(this, node);
+        }
         return node;
     }
     
     @Override
+    public SimpleNode visit(COLOR node, SimpleNode data) {
+        int numOfChild = node.jjtGetNumChildren();
+        for (int i = 1; i < numOfChild; i++) {
+            node.jjtGetChild(i).jjtAccept(this, node);
+        }
+        return null;
+    }
+
+    @Override
+    public SimpleNode visit(COLAND node, SimpleNode data) {
+        int numOfChild = node.jjtGetNumChildren();
+        for (int i = 1; i < numOfChild; i++) {
+            node.jjtGetChild(i).jjtAccept(this, node);
+        }
+        return null;
+    }
+
+    @Override
     public SimpleNode visit(WHERE node, SimpleNode data) {
-        String parentName = getRuleName(node, data);
-        SimpleNode idExprNode = node.jjtGetChild(1).jjtAccept(this, data);
-        String idExprName = idExprNode.value.toString();
-        insertColNode(idExprName, idExprNode.type, parentName);
+        if (!node.jjtGetChild(1).toString().equals("OR") || !node.jjtGetChild(1).toString().equals("AND")) {
+            node.jjtGetChild(1).jjtAccept(this, data);
+        } else {
+            SimpleNode idNode = node.jjtGetChild(1).jjtAccept(this, data);
+            checkAndColNode(idNode);
+        }
         return data;
     }
 
-    @Override
-    public SimpleNode visit(SACD node, SimpleNode data) {
-        if (node.value.toString().equals("SUM") || node.value.toString().equals("AVG")) {
-            node.type = new DecimalType();
-        } else {
-            node.type = new IntegerType();
-        }
-        return node;
-    }
-
-    @Override
-    public SimpleNode visit(ADD node, SimpleNode data) {
-        node.type = new DecimalType();
-        return node;
-    }
-
-    @Override
-    public SimpleNode visit(MULT node, SimpleNode data) {
-        node.type = new DecimalType();
-        return node;
-    }
 
     @Override
     public SimpleNode visit(RULE node, SimpleNode data) {
-        SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
-        String idName = idNode.value.toString();
-        insertNode(idName, new RuleType());
-
-        String parentName = getRuleName(node, data);
         int numOfChild = node.jjtGetNumChildren();
         if (node.jjtGetChild(1).toString().equals("PARTRULE")) {
             for (int i = 1; i < numOfChild; i++) {
                 node.jjtGetChild(i).jjtAccept(this, data);
             }
-        } else {
-            SimpleNode idExprNode = node.jjtGetChild(1).jjtAccept(this, data);
-            String idExprName = idExprNode.value.toString();
-            insertColNode(idExprName, idExprNode.type, parentName);
+        }else {
+            if (!node.jjtGetChild(1).toString().equals("OR") || !node.jjtGetChild(1).toString().equals("AND")) {
+                node.jjtGetChild(1).jjtAccept(this, data);
+            } else {
+                SimpleNode idNode = node.jjtGetChild(1).jjtAccept(this, data);
+                checkAndColNode(idNode);
+            }
         }
         
-        return data;
+        return node;
+    }
+
+    @Override
+    public SimpleNode visit(PARTRULE node, SimpleNode data) {
+        if (!node.jjtGetChild(1).toString().equals("OR") || !node.jjtGetChild(1).toString().equals("AND")) {
+            node.jjtGetChild(1).jjtAccept(this, data);
+        } else {
+            SimpleNode idNode = node.jjtGetChild(1).jjtAccept(this, data);
+            checkOrColNode(idNode);
+        }
+        return node;
     }
 
     @Override
@@ -193,6 +147,72 @@ public class TypeCheckVisitor implements ScannerVisitor {
 
         return idNode;
     } 
+
+    @Override
+    public SimpleNode visit(OR node, SimpleNode data) {
+        try {
+            int numOfChild = node.jjtGetNumChildren();
+        for (int i = 1; i < numOfChild; i++) {
+            SimpleNode idNode = node.jjtGetChild(i).jjtAccept(this, data);
+            checkOrColNode(idNode);
+        }
+
+        if (numOfChild > 2) {
+            SimpleNode parentRule = getRule(node, data);
+            String ruleName = parentRule.jjtGetChild(0).jjtAccept(this, data).value.toString();
+            if (parentRule instanceof PARTRULE) {
+                throw new TipException(parentRule, "partrule", ruleName);
+            } else {
+                throw new TipException(parentRule, "rule", ruleName);
+            }            
+        }
+        } catch (TipException e) {
+            System.err.println(e.getMessage());
+        }
+        
+        return data;
+    }
+
+    @Override
+    public SimpleNode visit(AND node, SimpleNode data) {
+        for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+            SimpleNode currNode = node.jjtGetChild(i).jjtAccept(this, data);
+            checkAndColNode(currNode);
+        }
+        return data;
+    }
+
+    @Override
+    public SimpleNode visit(SACD node, SimpleNode data) {
+        if (node.value.toString().equals("SUM") || node.value.toString().equals("AVG")) {
+            SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
+            checkCalcExprNode(idNode, node);
+            node.type = new DecimalType();
+        } else {
+            node.type = new IntegerType();
+        }
+        return node;
+    }
+
+    @Override
+    public SimpleNode visit(ADD node, SimpleNode data) {
+        for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+            SimpleNode currNode = node.jjtGetChild(i).jjtAccept(this, data);
+            checkCalcExprNode(currNode, node);
+        }
+        node.type = new DecimalType();
+        return node;
+    }
+
+    @Override
+    public SimpleNode visit(MULT node, SimpleNode data) {
+        for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+            SimpleNode currNode = node.jjtGetChild(i).jjtAccept(this, data);
+            checkCalcExprNode(currNode, node);
+        }
+        node.type = new DecimalType();
+        return node;
+    }
     
     @Override
     public SimpleNode visit(CONSTRAINTS node, SimpleNode data) {
@@ -225,8 +245,8 @@ public class TypeCheckVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(STRING node, SimpleNode data) {
         StringType type = new StringType();
-        //String operator = data.value.toString();
-        //type.setOnlyContains(operator);
+        String operator = data.value.toString();
+        type.setStringValues(operator, node.value.toString());
         node.type = type;
         return node;
     }
@@ -234,9 +254,9 @@ public class TypeCheckVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(INTEGER node, SimpleNode data) {
         IntegerType type = new IntegerType();
-        //int number = Integer.parseInt(node.value.toString());
-        //String operator = data.value.toString();
-        //type.SetValue(operator, number);
+        int number = Integer.parseInt(node.value.toString());
+        String operator = data.value.toString();
+        type.SetValue(operator, number);
         node.type = type;
         return node;
     }
@@ -244,9 +264,9 @@ public class TypeCheckVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(FLOATY node, SimpleNode data) {
         DecimalType type = new DecimalType();
-        //double number = Double.parseDouble(node.value.toString());
-        //String operator = data.value.toString();
-        //type.SetValue(operator, number);
+        double number = Double.parseDouble(node.value.toString());
+        String operator = data.value.toString();
+        type.SetValue(operator, number);
         node.type = type;
         return node;
     }
@@ -325,13 +345,10 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 int index = idTypes.type.indexOf(type);
                 idTypes.type.get(index).compareTypesAnd(type);
             } else {
+                SimpleNode parentNode = getRule(idNode, null);
                 throw new TypeException(idName, idTypes, type, idNode);
             }
-        } catch (TypeException e) {
-            System.err.println(e.getMessage());
-        } catch(ConstraintException e) {
-            System.err.println(e.getMessage());
-        } catch (DuplicationException e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }
@@ -345,13 +362,10 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 int index = idTypes.type.indexOf(type);
                 idTypes.type.get(index).compareTypesOr(type);
             } else {
-                throw new TypeException(idName, idTypes, type, idNode);
+                SimpleNode parentNode = getRule(idNode, null);
+                throw new TypeException(idName, idTypes, type, parentNode);
             }
-        }catch (TypeException e) {
-            System.err.println(e.getMessage());
-        } catch (RedundantSyntaxException e) {
-            System.err.println(e.getMessage());
-        } catch(DuplicationException e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }
@@ -359,22 +373,30 @@ public class TypeCheckVisitor implements ScannerVisitor {
     private void checkCalcExprNode(SimpleNode idNode, SimpleNode currNode) {
         try {
             String idName = idNode.value.toString();
-            STVal idTypes = SymbolTableVisitor.ST.get(idName);
-            if (idTypes.type.contains(new LetterType()) || idTypes.type.contains(new StringType()) || idTypes.type.contains(new EmptyType())) {
-                throw new TypeException(idName, currNode);
+            if (SymbolTableVisitor.ST.containsKey(idName)) {
+                STVal idTypes = SymbolTableVisitor.ST.get(idName);
+
+                if (idTypes.type.contains(new LetterType()) || idTypes.type.contains(new StringType()) || idTypes.type.contains(new EmptyType())) {
+                    SimpleNode parentNode = getRule(currNode, null);
+                    throw new TypeException(idName, parentNode, currNode.value.toString().toLowerCase());
+                }
             }
-        } catch (Exception e) {
-            //TODO: handle exception
+            
+        } catch (TypeException e) {
+            System.err.println(e.getMessage());
         }
     }
 
-    private String getRuleName(Node parentRule, SimpleNode data){
-        while (!(parentRule instanceof RULE) && !(parentRule instanceof COLRULE)) {
+    private SimpleNode getRule(Node parentRule, SimpleNode data){
+        while (!(parentRule instanceof RULE) 
+            && !(parentRule instanceof COLRULE) 
+            && !(parentRule instanceof PARTRULE) 
+            && !(parentRule instanceof COLPARTRULE)) {
             parentRule = parentRule.jjtGetParent();
         }
-        SimpleNode ruleNode = parentRule.jjtGetChild(0).jjtAccept(this, data);
-        String parentName = ruleNode.value.toString();
 
-        return parentName;
+        SimpleNode parentNode = parentRule.jjtAccept(this, data);
+        
+        return parentNode;
     }
 }

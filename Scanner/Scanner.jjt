@@ -190,13 +190,13 @@ void COLEXPR() #void:
 void COLOREXPR() #void:
 { int count = 0; }
 {
-    (COLANDEXPR() (<OR> { count++; } COLANDEXPR())*)#OR(count>0)
+    (COLANDEXPR() (<OR> { count++; } COLANDEXPR())*)#COLOR(count>0)
 }
 
 void COLANDEXPR() #void:
 { int count = 0; }
 {
-    (COLVPEXPR() (<AND> { count++; } COLVPEXPR())*)#AND(count>0)
+    (COLVPEXPR() (<AND> { count++; } COLVPEXPR())*)#COLAND(count>0)
 }
 
 void COLVPEXPR() #void:

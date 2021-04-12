@@ -7,27 +7,16 @@ public class StringType extends BaseType {
     }
 
     public void setStringValues(String operator, String newValue) {
-        if (operator.equals("CONTAINS")) {
-            onlyContains = true;
-        } else {
-            onlyContains = false;
-        }
+        onlyContains = operator.equals("CONTAINS");
         value = newValue;
     }
 
-    @Override
     public boolean compareTypes(BaseType type) {
         StringType t = (StringType) type;
         if (this.onlyContains == false && t.onlyContains == false) {
-            if (this.value.equals(t.value)) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if (this.onlyContains && t.onlyContains) {
-            return true;
+            return this.value.equals(t.value);
         } else {
-            return false;
+            return this.onlyContains && t.onlyContains;
         }
     }
     
@@ -37,5 +26,30 @@ public class StringType extends BaseType {
 
     public String toString(String withValue) {
         return value;
+    }
+
+    @Override
+    public boolean compareTypesAnd(String id, BaseType type, SimpleNode parentNode){
+        if (this.onlyContains && type.onlyContains){
+            if (this.value.equals(type.value)) throw new DuplicationException(id, parentNode, "contain "+type.value);          
+        } else if (!this.onlyContains && !type.onlyContains){
+            this.value.equals(type.value) ? return throw DuplicationException(id, parentNode, "be defined as "+"\""+this.value+"\"") : throw new ConstraintException(id, this.value, type.value, parentNode); 
+        } else if (this.onlyContains && !type.onlyContains){
+            if (type.value.contains(this.value)) throw new RedundantSyntaxException(id, type.value);
+        } else if (!this.onlyContains && type.onlyContains){
+            if ((type.value.contains(this.value)) throw new RedundantSyntaxException(id, this.value);
+        }
+        return true; 
+    }
+
+    public boolean compareTypesOr(BaseType type){
+        if (this.onlyContains && type.onlyContains){
+            if (this.value.equals(type.value)) throw new DuplicationException(id, parentNode, "contain "+type.value); 
+        } else if (!this.onlyContains && !type.onlyContains){
+            if (this.value.equals(type.value)) {
+                throw DuplicationException(id, parentNode, "be defined as "+"\""+this.value+"\""); 
+            }
+        }
+        return true;
     }
 }

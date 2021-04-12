@@ -24,20 +24,6 @@ public class SymbolTableVisitor implements ScannerVisitor {
             SymbolTableVisitor.ST.put(name, new STVal(type));
             SymbolTableVisitor.ST.get(name).parentRule = parentName;
         } else {
-            /***
-             * Gælder kun for AND:
-             * IntegerType, min, max, equal som skal tjekkes
-             *  - Har ingen values, har max kun, har min kun -> (har en value), (har min kun), (har max kun) = Ændres
-             *  - Helt ens     = true
-             *  - har max kun,          har min kun,          har både max og min,            har equal kun -> 
-             *   (har max eller equal),(har min eller equal),(har enten max, min eller equal),(har min eller max)
-             *   (                                   har ingen værdier sat                                      )
-             *   = true
-             * DecimalType, min, max, equal som skal tjekkes
-             * StringType, onlyContains, equal som skal tjekkes
-             * LetterType, tjekke om den eksistere i forvejen
-             * EmptyType, notFlag on den er sand eller falsk
-             */
             if (SymbolTableVisitor.ST.get(name).parentRule.equals(parentName)
                     && !SymbolTableVisitor.ST.get(name).type.contains(type)) {
                 SymbolTableVisitor.ST.get(name).type.add(type);
@@ -364,5 +350,17 @@ public class SymbolTableVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(IDEN node, SimpleNode data) {
         return node;
+    }
+
+    @Override
+    public SimpleNode visit(COLOR node, SimpleNode data) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public SimpleNode visit(COLAND node, SimpleNode data) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

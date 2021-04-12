@@ -9,6 +9,10 @@ public class TypeException extends Exception {
         super(typeExceptionRedeclaration(id, types, newType, node));
     }
 
+    public TypeException(String id, SimpleNode node, String choice) {
+        super(typeExceptionNumOrSA(id, node, choice));
+    }
+
     private static String typeExceptionRedeclaration(String id, STVal types, BaseType newType, SimpleNode node) {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "ERROR:";
@@ -22,25 +26,25 @@ public class TypeException extends Exception {
         return newMessage;
     }
 
-    private static String typeExceptionNumOper(String id, SimpleNode node){
+    private static String typeExceptionNumOrSA(String id, SimpleNode node, String choice){
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "ERROR:";
-        newMessage += "TYPE ERROR: Cannot use numeric operators +, -, *, / with non-numeric coloumn "+id+"\n";
-        newMessage += "At line: ";
-        node.jjtAccept(ppv, null);
-        newMessage += ppv.print;
-        newMessage += "\n";
-        return newMessage;
-    }
-
-    private static String typeExceptionSumAverage(String id, SimpleNode node){
-        PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
-        String newMessage = "ERROR:";
-        newMessage += "TYPE ERROR: Can only use AVERAGE and SUM coloumns of numeric or empty values\n";
-        newMessage += "At line: ";
-        node.jjtAccept(ppv, null);
-        newMessage += ppv.print;
-        newMessage += "\n";
-        return newMessage;
+        if (choice.equals("num")){
+            newMessage += "TYPE ERROR: Cannot use numeric operators +, -, *, / with non-numeric coloumn "+id+"\n";
+            newMessage += "At line: ";
+            node.jjtAccept(ppv, null);
+            newMessage += ppv.print;
+            newMessage += "\n";
+            return newMessage;
+        } else if (choice.equals("sum") || choice.equals("avg")) {
+            newMessage += "TYPE ERROR: Can only use "+choice+" coloumns of numeric or empty values\n";
+            newMessage += "At line: ";
+            node.jjtAccept(ppv, null);
+            newMessage += ppv.print;
+            newMessage += "\n";
+            return newMessage;
+        } else {
+            throw new IllegalArgumentException("TypeException was not given \"sum\" or \"num\"");
+        }
     }
 }

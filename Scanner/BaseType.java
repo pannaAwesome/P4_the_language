@@ -16,12 +16,12 @@ public abstract class BaseType {
         return "No type was given";
     }
 
-    public boolean compareTypesAnd(BaseType type){
-        return false;
+    public boolean compareTypesAnd(String id, BaseType type, SimpleNode parentNode) throws Exception {
+        return true;
     }
 
-    public boolean compareTypesOr(BaseType type){
-        return false;
+    public boolean compareTypesOr(BaseType type) throws Exception{
+        return true;
     }
 
     public void changeTypeConstraints(BaseType newType) {
