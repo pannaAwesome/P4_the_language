@@ -20,11 +20,7 @@ public abstract class BaseType {
         return true;
     }
 
-    public boolean compareTypesOr(BaseType type) throws Exception{
+    public boolean compareTypesOr(String id, BaseType type, SimpleNode parentNode) throws Exception{
         return true;
-    }
-
-    public void changeTypeConstraints(BaseType newType) {
-        //Doing nothing!
     }
 }

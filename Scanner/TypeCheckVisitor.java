@@ -161,9 +161,9 @@ public class TypeCheckVisitor implements ScannerVisitor {
             SimpleNode parentRule = getRule(node, data);
             String ruleName = parentRule.jjtGetChild(0).jjtAccept(this, data).value.toString();
             if (parentRule instanceof PARTRULE) {
-                throw new TipException(parentRule, "partrule", ruleName);
+                throw new TipException(parentRule, "partrule", ruleName, false, true);
             } else {
-                throw new TipException(parentRule, "rule", ruleName);
+                throw new TipException(parentRule, "rule", ruleName, true, false);
             }            
         }
         } catch (TipException e) {
@@ -279,13 +279,20 @@ public class TypeCheckVisitor implements ScannerVisitor {
         SimpleNode modelNode = node.jjtGetChild(1).jjtAccept(this, data);
         String modelName = modelNode.toString("");
 
-        if(!SymbolTableVisitor.ST.containsKey(tableName)) {
-            //error("An id with the name \"" + tableName + "\" has not been declared");
-        }else if (!SymbolTableVisitor.ST.containsKey(modelName)) {
-            //error("An id with the name \"" + modelName + "\" has not been declared");
+        try {
+            if(!SymbolTableVisitor.ST.get(tableName).type.contains(new TableType())) {
+                STVal types = SymbolTableVisitor.ST.get(tableName);
+                throw new TypeException(tableName, types, new TableType(), node);
+            }
+            if (!SymbolTableVisitor.ST.get(modelName).type.contains(new ModelType())) {
+                STVal types = SymbolTableVisitor.ST.get(modelName);
+                throw new TypeException(modelName, types, new ModelType(), node);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
 
-        node.jjtGetChild(2).jjtAccept(this, data);
+        node.jjtGetChild(2).jjtAccept(this, node);
         return data;
     }
 
@@ -297,19 +304,21 @@ public class TypeCheckVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(RULEOPT node, SimpleNode data) {
-        ArrayList<String> rules = new ArrayList<String>();
 
-        for (int i = 0; i < node.jjtGetNumChildren(); i++){
-            SimpleNode n = node.jjtGetChild(i).jjtAccept(this, data);
-            String ruleName = n.toString("");
-            rules.add(ruleName);
-        }
-
-        for (String str : rules) {
-            if(!SymbolTableVisitor.ST.containsKey(str)) {
-                //error("An id with the name \"" + str + "\" has not been declared");
+        try {
+            for (int i = 0; i < node.jjtGetNumChildren(); i++){
+                SimpleNode idNode = node.jjtGetChild(i).jjtAccept(this, data);
+                String idName = idNode.value.toString();
+                STVal types = SymbolTableVisitor.ST.get(idName);
+                if (!types.type.contains(new RuleType()) && !types.type.contains(new PartRuleType())) {
+                    throw new TypeException(idName, "rule", data);
+                }
             }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
+
+        
         return data;
     }
 
@@ -343,10 +352,10 @@ public class TypeCheckVisitor implements ScannerVisitor {
             STVal idTypes = SymbolTableVisitor.ST.get(idName);
             if (idTypes.type.contains(type)) {
                 int index = idTypes.type.indexOf(type);
-                idTypes.type.get(index).compareTypesAnd(type);
+                idTypes.type.get(index).compareTypesAnd(idName,type, idNode);
             } else {
                 SimpleNode parentNode = getRule(idNode, null);
-                throw new TypeException(idName, idTypes, type, idNode);
+                throw new TypeException(idName, idTypes, type, parentNode);
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -360,7 +369,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             STVal idTypes = SymbolTableVisitor.ST.get(idName);
             if (idTypes.type.contains(type)) {
                 int index = idTypes.type.indexOf(type);
-                idTypes.type.get(index).compareTypesOr(type);
+                idTypes.type.get(index).compareTypesOr(idName, type, idNode);
             } else {
                 SimpleNode parentNode = getRule(idNode, null);
                 throw new TypeException(idName, idTypes, type, parentNode);

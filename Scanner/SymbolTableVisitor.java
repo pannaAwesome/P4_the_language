@@ -313,17 +313,11 @@ public class SymbolTableVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(RULEOPT node, SimpleNode data) {
-        ArrayList<String> rules = new ArrayList<String>();
-
         for (int i = 0; i < node.jjtGetNumChildren(); i++){
             SimpleNode n = node.jjtGetChild(i).jjtAccept(this, data);
             String ruleName = n.toString("");
-            rules.add(ruleName);
-        }
-
-        for (String str : rules) {
-            if(!SymbolTableVisitor.ST.containsKey(str)) {
-                error("An id with the name \"" + str + "\" has not been declared");
+            if(!SymbolTableVisitor.ST.containsKey(ruleName)) {
+                error("An id with the name \"" + ruleName + "\" has not been declared");
             }
         }
         return data;

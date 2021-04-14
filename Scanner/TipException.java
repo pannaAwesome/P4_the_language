@@ -17,13 +17,7 @@ public class TipException extends Exception {
         newMessage += (isPartRule ? PartRuleSplit(node) : RuleSplit(node, isColRule)) +"\n";
         return newMessage;
     }
-    //rule5: height > 5 OR height < 160 OR height IS INTEGER 
-    //rulenode 
-    /**rule5 BEGIN
-    partrule1: height > 5 OR height < 6 OR name = "goddag"
-    partrule2: height < 160
-    partrule3: height IS INTEGER
-    END */
+    
     private static String RuleSplit(SimpleNode Rulenode, boolean IsColRule){
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         Rulenode.jjtAccept(ppv, null);

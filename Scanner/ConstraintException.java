@@ -2,10 +2,44 @@ public class ConstraintException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
-    public ConstraintException(String id, SimpleNode node, String typeValue, int value){ 
-        super(constraintException(id, node, typeValue, value));
+    //###############################################################################################
+    /**
+     * StringType Exceptions
+     */
+    public ConstraintException(String id, String currentVal, String newVal, SimpleNode node){
+        super(stringConstrain(id, currentVal, newVal, node));
     }
 
+    public ConstraintException(String id, String exactString, SimpleNode node){
+        super(stringContainsRedefinedToExact(id, exactString, node));
+    }
+
+    private static String stringConstrain(String id, String currentVal, String newVal, SimpleNode node) {
+        PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
+        String newMessage = "ERROR:";
+        newMessage += "CONSTRAINT ERROR: \"" + id +"\" is already \"" + currentVal.toString() + "\", and cannot be \"" + newVal.toString() + "\"";
+        newMessage += "At line: ";
+        node.jjtAccept(ppv, null);
+        newMessage += ppv.print;
+        newMessage += "\n";
+        return newMessage;
+    }
+
+    private static String stringContainsRedefinedToExact(String id, String exactString, SimpleNode node) {
+        PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
+        String newMessage = "ERROR:";
+        newMessage += "CONSTRAINT ERROR: \"" + id +"\" is already defined to contains different values. Cannot change \"" + id + "\""+ "to be exact \"" + exactString + "\"";
+        newMessage += "At line: ";
+        node.jjtAccept(ppv, null);
+        newMessage += ppv.print;
+        newMessage += "\n";
+        return newMessage;
+    }
+
+    //###############################################################################################
+    /**
+     * DecimalType Exceptions
+     */
     public ConstraintException(String id, SimpleNode node, String firstConstrain, double wrongValue, String secondConstrain, double value){
         super(constrainDecimal(id, node, firstConstrain, wrongValue, secondConstrain, value));
     }
@@ -18,31 +52,6 @@ public class ConstraintException extends Exception {
         super(minBiggerThanMaxConstrainDecimal(id, max, min));
     }
 
-    public ConstraintException(String id, StringType newType, StringType type, SimpleNode node){
-        super(constraintException(id, newType, type, node));
-    }
-
-    private static <T> String constraintException(String id, SimpleNode node, String typeValue, T value) {
-        PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
-        String newMessage = "ERROR:";
-        newMessage += "CONSTRAINT ERROR: Cannot redefine " + typeValue + " value for \"" + id +"\" as it is already defined as " + value;
-        newMessage += "At line: ";
-        node.jjtAccept(ppv, null);
-        newMessage += ppv.print;
-        newMessage += "\n";
-        return newMessage;
-    }
-
-    private static String constraintExceptionInt(String id, SimpleNode node, String typeValue, int value) {
-        PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
-        String newMessage = "ERROR:";
-        newMessage += "CONSTRAINT ERROR: Cannot redefine " + typeValue + " value for \"" + id +"\" as it is already defined as " + value;
-        newMessage += "At line: ";
-        node.jjtAccept(ppv, null);
-        newMessage += ppv.print;
-        newMessage += "\n";
-        return newMessage;
-    }
     private static String constrainDecimal(String id, SimpleNode node, String firstConstrain, double wrongValue, String secondConstrain, double value) {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "ERROR:";
@@ -72,10 +81,14 @@ public class ConstraintException extends Exception {
         return newMessage;
     }
 
-    private static String constraintException(String id, StringType newType, StringType type, SimpleNode node) {
+    //###############################################################################################
+    /**
+     * IntegerType Exceptions
+     */
+    private static String constraintExceptionInt(String id, SimpleNode node, String typeValue, int value) {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "ERROR:";
-        newMessage += "CONSTRAINT ERROR: \"" + id +"\" is already \"" + type.toString() + "\", and cannot be \"" + newType.toString() + "\"";
+        newMessage += "CONSTRAINT ERROR: Cannot redefine " + typeValue + " value for \"" + id +"\" as it is already defined as " + value;
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;
