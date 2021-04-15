@@ -5,24 +5,23 @@ END
 
 MODEL person BEGIN
     rule4 BEGIN
-        partRule:  age > 3 OR age IS DECIMAL AND age > 2.0
+        partRule:  age < 3.0 OR age > 2.0 OR age IS DECIMAL
         partRule2: age CONTAINS "hej"
     END
     COL rule1: AVG(hoejde) > SUM(hans)   
     COL rule2: COUNT(transaktioner) > 180 WHERE maned = "marts"
     COL goodMonth BEGIN 
         option1: COUNT(transaktioner) > 10000 WHERE maned = "februar"
-        option2: SUM(transaktioner) > 100000 WHERE maned = "februar" 
+        option2: SUM(transaktioner) > 100000 WHERE maned = "februar"
     END
     rule28: tom IS LETTERS
-    rule57: tom = "hej2"
     rule29: hoejde > sum - SUM(EMPY) 
 END
 
 
 ANALYZE people WITH person BEGIN
-    rule2
-    rule3
-    ROW 1, 20
+    rule4
+    rule28
+    ROW 1 TO 20
     COL 2 TO 10
 END

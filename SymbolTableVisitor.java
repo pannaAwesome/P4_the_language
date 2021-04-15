@@ -104,6 +104,8 @@ public class SymbolTableVisitor implements ScannerVisitor {
             for (int i = 1; i < numOfChild; i++) {
                 node.jjtGetChild(i).jjtAccept(this, data);
             }
+        } else if(numOfChild == 3){
+            node.jjtGetChild(2).jjtAccept(this, data);
         }
         
         return data;
@@ -114,6 +116,11 @@ public class SymbolTableVisitor implements ScannerVisitor {
         SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
         String idName = idNode.value.toString();
         insertNode(idName, new ColPartRuleType());
+
+        int numOfChild = node.jjtGetNumChildren();
+        if(numOfChild == 3){
+            node.jjtGetChild(2).jjtAccept(this, data);
+        }
         return data;
     }
 
@@ -172,7 +179,7 @@ public class SymbolTableVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(WHERE node, SimpleNode data) {
         String parentName = getRuleName(node, data);
-        SimpleNode idExprNode = node.jjtGetChild(1).jjtAccept(this, data);
+        SimpleNode idExprNode = node.jjtGetChild(0).jjtAccept(this, data);
         String idExprName = idExprNode.value.toString();
         insertColNode(idExprName, idExprNode.type, parentName);
         return data;
@@ -243,13 +250,11 @@ public class SymbolTableVisitor implements ScannerVisitor {
                 node.type = new DecimalType();
                 break;
             case "EMPTY":
-                EmptyType empty = new EmptyType();
-                empty.notFlag = false;
+                EmptyType empty = new EmptyType(false);
                 node.type = empty;                
                 break;
             case "NOTEMPTY":
-                EmptyType notEmpty = new EmptyType();
-                notEmpty.notFlag = true;
+                EmptyType notEmpty = new EmptyType(true);
                 node.type = notEmpty;
                 break;
             default:
@@ -261,8 +266,6 @@ public class SymbolTableVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(STRING node, SimpleNode data) {
         StringType type = new StringType();
-        //String operator = data.value.toString();
-        //type.setOnlyContains(operator);
         node.type = type;
         return node;
     }
@@ -270,9 +273,6 @@ public class SymbolTableVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(INTEGER node, SimpleNode data) {
         IntegerType type = new IntegerType();
-        //int number = Integer.parseInt(node.value.toString());
-        //String operator = data.value.toString();
-        //type.SetValue(operator, number);
         node.type = type;
         return node;
     }
@@ -280,9 +280,6 @@ public class SymbolTableVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(FLOATY node, SimpleNode data) {
         DecimalType type = new DecimalType();
-        //double number = Double.parseDouble(node.value.toString());
-        //String operator = data.value.toString();
-        //type.SetValue(operator, number);
         node.type = type;
         return node;
     }

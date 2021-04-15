@@ -12,15 +12,20 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
             SimpleNode n = parser.PROG();
             //n.dump("");
 
-            System.out.println("Pretty printing:");
+            /*System.out.println("Pretty printing:");
             PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
             n.jjtAccept(ppv, null);
-            System.out.println(ppv.print);
+            System.out.println(ppv.print);*/
 
             System.out.println("Filling the symboltable:");
             SymbolTableVisitor stv = new SymbolTableVisitor();
             n.jjtAccept(stv, null);
             System.out.println(SymbolTableVisitor.ST);
+
+            System.out.println();
+            System.out.println("Checking types:");
+            TypeCheckVisitor tcv = new TypeCheckVisitor();
+            n.jjtAccept(tcv, null);
             System.out.println("Finished succesfully");
         }catch(Exception e) {
             System.out.println(e.getMessage());

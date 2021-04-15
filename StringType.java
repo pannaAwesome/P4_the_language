@@ -24,7 +24,7 @@ public class StringType extends BaseType {
     }
 
     @Override
-    public boolean compareTypesAnd(String id, BaseType type, SimpleNode parentNode) throws Exception{
+    public boolean compareTypesAnd(String id, BaseType type, SimpleNode parentNode) throws DuplicationException, ConstraintException, RedundantSyntaxException{
         StringType t = (StringType) type;
         String tContainedVal = t.onlyContains ? t.containValue.get(0) : null;
         String tExactVal = !t.onlyContains ? t.exactValue.get(0) : null;
@@ -58,7 +58,7 @@ public class StringType extends BaseType {
         return true; 
     }
 
-    public boolean compareTypesOr(String id, BaseType type, SimpleNode parentNode) throws Exception{
+    public boolean compareTypesOr(String id, BaseType type, SimpleNode parentNode) throws DuplicationException{
         StringType t = (StringType) type;
         if (this.containValue.size()!=0 && t.onlyContains){ // if both are contains
             if (this.containValue.contains(t.containValue.get(0))){ // and values are the same

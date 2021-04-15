@@ -73,7 +73,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(COLVALEXPR node, SimpleNode data) {
         int numOfChild = node.jjtGetNumChildren();
-        for (int i = 1; i < numOfChild; i++) {
+        for (int i = 0; i < numOfChild; i++) {
             node.jjtGetChild(i).jjtAccept(this, node);
         }
         return node;
@@ -82,7 +82,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(COLOR node, SimpleNode data) {
         int numOfChild = node.jjtGetNumChildren();
-        for (int i = 1; i < numOfChild; i++) {
+        for (int i = 0; i < numOfChild; i++) {
             node.jjtGetChild(i).jjtAccept(this, node);
         }
         return null;
@@ -91,7 +91,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(COLAND node, SimpleNode data) {
         int numOfChild = node.jjtGetNumChildren();
-        for (int i = 1; i < numOfChild; i++) {
+        for (int i = 0; i < numOfChild; i++) {
             node.jjtGetChild(i).jjtAccept(this, node);
         }
         return null;
@@ -99,10 +99,10 @@ public class TypeCheckVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(WHERE node, SimpleNode data) {
-        if (!node.jjtGetChild(1).toString().equals("OR") || !node.jjtGetChild(1).toString().equals("AND")) {
-            node.jjtGetChild(1).jjtAccept(this, data);
+        if (node.jjtGetChild(0).toString().equals("OR") || node.jjtGetChild(0).toString().equals("AND")) {
+            node.jjtGetChild(0).jjtAccept(this, data);
         } else {
-            SimpleNode idNode = node.jjtGetChild(1).jjtAccept(this, data);
+            SimpleNode idNode = node.jjtGetChild(0).jjtAccept(this, data);
             checkAndColNode(idNode);
         }
         return data;
@@ -117,7 +117,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 node.jjtGetChild(i).jjtAccept(this, data);
             }
         }else {
-            if (!node.jjtGetChild(1).toString().equals("OR") || !node.jjtGetChild(1).toString().equals("AND")) {
+            if (node.jjtGetChild(1).toString().equals("OR") || node.jjtGetChild(1).toString().equals("AND")) {
                 node.jjtGetChild(1).jjtAccept(this, data);
             } else {
                 SimpleNode idNode = node.jjtGetChild(1).jjtAccept(this, data);
@@ -130,7 +130,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(PARTRULE node, SimpleNode data) {
-        if (!node.jjtGetChild(1).toString().equals("OR") || !node.jjtGetChild(1).toString().equals("AND")) {
+        if (node.jjtGetChild(1).toString().equals("OR") || node.jjtGetChild(1).toString().equals("AND")) {
             node.jjtGetChild(1).jjtAccept(this, data);
         } else {
             SimpleNode idNode = node.jjtGetChild(1).jjtAccept(this, data);
@@ -152,32 +152,40 @@ public class TypeCheckVisitor implements ScannerVisitor {
     public SimpleNode visit(OR node, SimpleNode data) {
         try {
             int numOfChild = node.jjtGetNumChildren();
-        for (int i = 1; i < numOfChild; i++) {
-            SimpleNode idNode = node.jjtGetChild(i).jjtAccept(this, data);
-            checkOrColNode(idNode);
-        }
+            for (int i = 0; i < numOfChild; i++) {
+                if (node.jjtGetChild(i).toString().equals("AND")) {
+                    node.jjtGetChild(i).jjtAccept(this, data);
+                } else {
+                    SimpleNode idNode = node.jjtGetChild(i).jjtAccept(this, data);
+                    checkOrColNode(idNode);
+                }              
+            }
 
-        if (numOfChild > 2) {
-            SimpleNode parentRule = getRule(node, data);
-            String ruleName = parentRule.jjtGetChild(0).jjtAccept(this, data).value.toString();
-            if (parentRule instanceof PARTRULE) {
-                throw new TipException(parentRule, "partrule", ruleName, false, true);
-            } else {
-                throw new TipException(parentRule, "rule", ruleName, true, false);
-            }            
-        }
+            if (numOfChild > 2) {
+                SimpleNode parentRule = getRule(node, data);
+                String ruleName = parentRule.jjtGetChild(0).jjtAccept(this, data).value.toString();
+                if (parentRule instanceof PARTRULE) {
+                    throw new TipException(parentRule, "partrule", ruleName, false, true);
+                } else {
+                    throw new TipException(parentRule, "rule", ruleName, true, false);
+                }            
+            }
         } catch (TipException e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
-        
         return data;
     }
 
     @Override
     public SimpleNode visit(AND node, SimpleNode data) {
         for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-            SimpleNode currNode = node.jjtGetChild(i).jjtAccept(this, data);
-            checkAndColNode(currNode);
+            if (node.jjtGetChild(i).toString().equals("OR")) {
+                node.jjtGetChild(i).jjtAccept(this, data);
+            } else {
+                SimpleNode idNode = node.jjtGetChild(i).jjtAccept(this, data);
+                checkOrColNode(idNode);
+            }
         }
         return data;
     }
@@ -227,13 +235,11 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 node.type = new DecimalType();
                 break;
             case "EMPTY":
-                EmptyType empty = new EmptyType();
-                empty.notFlag = false;
+                EmptyType empty = new EmptyType(false);
                 node.type = empty;                
                 break;
             case "NOTEMPTY":
-                EmptyType notEmpty = new EmptyType();
-                notEmpty.notFlag = true;
+                EmptyType notEmpty = new EmptyType(true);
                 node.type = notEmpty;
                 break;
             default:
@@ -290,6 +296,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         node.jjtGetChild(2).jjtAccept(this, node);
@@ -304,7 +311,6 @@ public class TypeCheckVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(RULEOPT node, SimpleNode data) {
-
         try {
             for (int i = 0; i < node.jjtGetNumChildren(); i++){
                 SimpleNode idNode = node.jjtGetChild(i).jjtAccept(this, data);
@@ -316,11 +322,11 @@ public class TypeCheckVisitor implements ScannerVisitor {
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
-
         
         return data;
-    }
+    }       
 
     @Override
     public SimpleNode visit(ROWS node, SimpleNode data) {
@@ -359,6 +365,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -374,25 +381,26 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 SimpleNode parentNode = getRule(idNode, null);
                 throw new TypeException(idName, idTypes, type, parentNode);
             }
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
-
+    
     private void checkCalcExprNode(SimpleNode idNode, SimpleNode currNode) {
         try {
             String idName = idNode.value.toString();
             if (SymbolTableVisitor.ST.containsKey(idName)) {
                 STVal idTypes = SymbolTableVisitor.ST.get(idName);
-
-                if (idTypes.type.contains(new LetterType()) || idTypes.type.contains(new StringType()) || idTypes.type.contains(new EmptyType())) {
+                
+                if (!idTypes.type.contains(new DecimalType()) && !idTypes.type.contains(new IntegerType()) && !idTypes.type.contains(new EmptyType(true)) && !idTypes.type.contains(new EmptyType(false))) {
                     SimpleNode parentNode = getRule(currNode, null);
                     throw new TypeException(idName, parentNode, currNode.value.toString().toLowerCase());
                 }
             }
-            
-        } catch (TypeException e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 

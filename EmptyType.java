@@ -1,8 +1,9 @@
 public class EmptyType extends BaseType {
-    public boolean notFlag = true;
+    public boolean notFlag;
 
-    public EmptyType() {
+    public EmptyType(boolean notflag) {
         super(5);
+        notFlag = notflag;
     }
 
     @Override
