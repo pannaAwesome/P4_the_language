@@ -1,0 +1,18 @@
+IMPORT people.csv IN people BEGIN
+    NOHEADERS
+    ID name
+END
+
+MODEL person BEGIN
+    rule4: hej IS LETTERS
+    rule5: hej = "hello"
+    rule6: hello IS DECIMAL OR hej IS DECIMAL
+    COL rule7: SUM(hej) > 10
+    rule8: hej < hej + 10
+END
+
+ANALYZE rule4 WITH rule5 BEGIN
+    people
+    ROW 1 TO 20
+    COL 2 TO 10
+END

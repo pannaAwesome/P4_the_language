@@ -1,0 +1,54 @@
+IMPORT people.csv IN people BEGIN
+    NOHEADERS
+    ID name
+END
+
+MODEL person BEGIN
+//Minimumsværdier//
+    rule1: age >= 3.0   //Helt fint//
+    rule2: age <= 3.0   //RedundantSyntaxException//
+    rule3: age = 3.0    //ConstraintException//
+    rule4: age >= 3.0   //DuplicationException//
+    rule5: age >= 4.0   //ConstraintException//
+    rule6: age > 4.0    //ConstraintException//
+
+    rule7: height > 3.0   //Helt fint//
+    rule9: height = 3.0    //ConstraintException//
+    rule10: height > 3.0  //DuplicationException//
+    rule11: height >= 4.0  //ConstraintException//
+    rule12: height > 4.0   //ConstraintException//
+
+//Maximumværdier//
+    rule8: size <= 3.0   //Helt fint//
+    rule13: size = 3.0    //ConstraintException//
+    rule14: size <= 3.0   //DuplicationException//
+    rule21: size <= 4.0   //ConstraintException//
+    rule22: size < 4.0    //ConstraintException//
+
+    rule23: feet > 3.0   //Helt fint//
+    rule24: feet = 3.0    //ConstraintException//
+    rule25: feet > 3.0  //DuplicationException//
+    rule26: feet >= 4.0  //ConstraintException//
+    rule27: feet > 4.0   //ConstraintException//
+
+//Equalværdier//
+    rule28: hand = 3.0   //Helt fint//
+    rule30: hand = 3.0  //DuplicationException//
+    rule31: hand = 4.0  //ConstraintException//
+
+    rule32: hand >= 3.0   //RedundantSyntaxException//
+    rule33: hand > 3.0    //ConstraintException//
+    rule38: hand >= 4.0   //ConstraintException//
+    rule39: hand > 4.0    //ConstraintException//
+
+    rule34: hand <= 3.0   //RedundantSyntaxException//
+    rule35: hand < 3.0    //ConstraintException//
+    rule36: hand <= 4.0   //ConstraintException//
+    rule37: hand < 4.0    //ConstraintException//
+END
+
+ANALYZE people WITH person BEGIN
+    rule4
+    ROW 1 TO 20
+    COL 2 TO 10
+END

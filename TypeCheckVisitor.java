@@ -172,7 +172,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             }
         } catch (TipException e) {
             System.err.println(e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return data;
     }
@@ -184,7 +184,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 node.jjtGetChild(i).jjtAccept(this, data);
             } else {
                 SimpleNode idNode = node.jjtGetChild(i).jjtAccept(this, data);
-                checkOrColNode(idNode);
+                checkAndColNode(idNode);
             }
         }
         return data;
@@ -294,9 +294,14 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 STVal types = SymbolTableVisitor.ST.get(modelName);
                 throw new TypeException(modelName, types, new ModelType(), node);
             }
+
+            int numOfChild = node.jjtGetNumChildren();
+            if (numOfChild == 3) {
+                node.jjtGetChild(2).jjtAccept(this, data);
+            }
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         node.jjtGetChild(2).jjtAccept(this, node);
@@ -322,7 +327,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         
         return data;
@@ -358,14 +363,15 @@ public class TypeCheckVisitor implements ScannerVisitor {
             STVal idTypes = SymbolTableVisitor.ST.get(idName);
             if (idTypes.type.contains(type)) {
                 int index = idTypes.type.indexOf(type);
-                idTypes.type.get(index).compareTypesAnd(idName,type, idNode);
+                SimpleNode parentNode = getRule(idNode, null);
+                idTypes.type.get(index).compareTypesAnd(idName,type, parentNode);
             } else {
                 SimpleNode parentNode = getRule(idNode, null);
                 throw new TypeException(idName, idTypes, type, parentNode);
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -376,14 +382,15 @@ public class TypeCheckVisitor implements ScannerVisitor {
             STVal idTypes = SymbolTableVisitor.ST.get(idName);
             if (idTypes.type.contains(type)) {
                 int index = idTypes.type.indexOf(type);
-                idTypes.type.get(index).compareTypesOr(idName, type, idNode);
+                SimpleNode parentNode = getRule(idNode, null);
+                idTypes.type.get(index).compareTypesOr(idName, type, parentNode);
             } else {
                 SimpleNode parentNode = getRule(idNode, null);
                 throw new TypeException(idName, idTypes, type, parentNode);
             }
         } catch(Exception e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
     
@@ -400,7 +407,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -412,7 +419,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             parentRule = parentRule.jjtGetParent();
         }
 
-        SimpleNode parentNode = parentRule.jjtAccept(this, data);
+        SimpleNode parentNode = (SimpleNode) parentRule;
         
         return parentNode;
     }

@@ -1,0 +1,28 @@
+IMPORT people.csv IN people BEGIN
+    NOHEADERS
+    ID name
+END
+
+MODEL person BEGIN
+
+// STRING typer //
+    rule22: id CONTAINS "bye" 
+    rule15: name = "hej" 
+    rule16: name = "hej" //DuplicationException//
+    rule17: name = "hejsa" //ConstraintException//
+    //rule18: name CONTAINS "peter" ConstraintExceptionX//
+    //rule19: name CONTAINS "hej" RedundantSyntaxException//
+    
+    //rule20: id CONTAINS "hej"// 
+    //rule23: id CONTAINS "hej" DuplicationException//
+    rule21: id = "hejsa"        //RedundantSyntaxException//
+    rule24: id = "hello"        //ConstraintException//
+    
+
+END
+
+ANALYZE people WITH person BEGIN
+    rule15
+    ROW 1 TO 20
+    COL 2 TO 10
+END

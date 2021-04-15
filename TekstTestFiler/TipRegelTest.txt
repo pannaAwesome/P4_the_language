@@ -1,0 +1,22 @@
+IMPORT people.csv IN people BEGIN
+    NOHEADERS
+    ID name
+END
+
+MODEL person BEGIN
+
+//for almindelige regler//
+rule: name = "hej" OR name > 2 OR name IS NOT EMPTY OR name IS LETTERS
+
+//for partrules//
+ruLe BEGIN
+    partrule: alder = "hej" OR alder > 2 OR alder IS NOT EMPTY OR alder IS LETTERS
+END
+
+END
+
+ANALYZE people WITH person BEGIN
+    rule4
+    ROW 1 TO 20
+    COL 2 TO 10
+END

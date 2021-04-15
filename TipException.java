@@ -8,8 +8,8 @@ public class TipException extends Exception {
 
     private static String ReadabilityTip(SimpleNode node, String id, String ruleName, boolean isColRule, boolean isPartRule){
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
-        String newMessage = "TIP:";
-        newMessage += "READABILITY ERROR: Long OR-chains can be rewritten as part rules in \"" + ruleName + "\"";
+        String newMessage = "TIP:\n";
+        newMessage += "READABILITY ERROR: Long OR-chains can be rewritten as part rules in \"" + ruleName + "\"\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;

@@ -13,8 +13,8 @@ public class DuplicationException extends Exception{
 
     private static String stringDuplication(String id, SimpleNode node, String definedAs){
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
-        String newMessage = "WARNING:";
-        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined to "+definedAs;
+        String newMessage = "WARNING:\n";
+        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined to "+definedAs + "\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;
@@ -36,8 +36,8 @@ public class DuplicationException extends Exception{
 
     private static String constrainDuplicationDecimal(String id, SimpleNode node, String constrain, double value){
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
-        String newMessage = "WARNING:";
-        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined to be " + constrain + " " + value;
+        String newMessage = "WARNING:\n";
+        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined to be " + constrain + " " + value + "\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;
@@ -47,8 +47,8 @@ public class DuplicationException extends Exception{
 
     private static String equalDuplicationDecimal(String id, SimpleNode node, double value){
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
-        String newMessage = "WARNING:";
-        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined as " + value;
+        String newMessage = "WARNING:\n";
+        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined as " + value + "\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;
@@ -70,8 +70,8 @@ public class DuplicationException extends Exception{
     
     private static String constrainDuplicationInteger(String id, SimpleNode node, String constrain, int value){
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
-        String newMessage = "WARNING:";
-        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined to " + constrain + " " + value;
+        String newMessage = "WARNING:\n";
+        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined to " + constrain + " " + value + "\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;
@@ -81,8 +81,8 @@ public class DuplicationException extends Exception{
 
     private static String equalDuplicationInteger(String id, SimpleNode node, int value){
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
-        String newMessage = "WARNING:";
-        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined as " + value;
+        String newMessage = "WARNING:\n";
+        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined as " + value + "\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;

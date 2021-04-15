@@ -95,7 +95,7 @@ public class IntegerType extends BaseType {
             if (t.equalValue.size() != 0) { // den nye indeholder en lig med værdi
                 throw new ConstraintException(id, parentNode, "", t.equalValue.get(0), "less than", minValue);
             }else if (t.minValue != null) { // den nye indeholder en minimumværdi
-                if (this.minValue.equals(t.minValue) && !t.withGivenMinValue) {
+                if (this.minValue.equals(t.minValue) && !t.withGivenMinValue) { // minimumværdierne er helt ens
                     throw new DuplicationException(id, parentNode, "less than", this.minValue);
                 } else if (t.withGivenMinValue) { // minimum værdierne er ikke helt ens
                     throw new ConstraintException(id, parentNode, "less than or equal", t.minValue, "less than", minValue);
@@ -110,7 +110,9 @@ public class IntegerType extends BaseType {
 
     private void compareMaxValue (String id, IntegerType t, SimpleNode parentNode) throws Exception {
         if (this.maxValue != null && this.withGivenMaxValue) { // <= for den nuværende
-            if (t.equalValue.size() != 0) { // den nye indeholder en lig med værdi
+            if (t.minValue != null && this.maxValue.equals(t.minValue) && t.withGivenMinValue) { // min og max værdierne er lig hinanden
+                throw new RedundantSyntaxException(id, parentNode, this.minValue);
+            }else if (t.equalValue.size() != 0) { // den nye indeholder en lig med værdi
                 throw new ConstraintException(id, parentNode, "", t.equalValue.get(0), "bigger than or equal", maxValue);
             }else if (t.maxValue != null) { // den nye indeholder en maksimumsværdi
                 if (this.maxValue.equals(t.maxValue) && t.withGivenMaxValue) { // maksimumsværdierne er helt ens
@@ -125,15 +127,15 @@ public class IntegerType extends BaseType {
             if (t.equalValue.size() != 0) { // den nye indeholder en lig med værdi
                 throw new ConstraintException(id, parentNode, "", t.equalValue.get(0), "bigger than or equal", maxValue);
             }else if (t.maxValue != null) { // den nye indeholder en maksimumværdi
-                if (this.maxValue.equals(t.maxValue) && !t.withGivenMaxValue) { // 
+                if (this.maxValue.equals(t.maxValue) && !t.withGivenMaxValue) { // maksimumværdierne er helt ens
                     throw new DuplicationException(id, parentNode, "bigger than", this.maxValue);
-                } else if (t.withGivenMaxValue) { // makismumværdierne er ikke helt ens
+                } else if (t.withGivenMaxValue) { // maksimumværdierne er ikke helt ens
                     throw new ConstraintException(id, parentNode, "bigger than or equal", t.maxValue, "bigger than or equal", maxValue);
                 } else { // makismumværdierne er ikke helt ens
                     throw new ConstraintException(id, parentNode, "bigger than", t.maxValue, "bigger than", maxValue);
                 }
             }
-        } else if (t.maxValue != null) { // alt er okay og derfor kan maksimumværdien sættes
+        } else if (t.maxValue != null)  { // alt er okay og derfor kan maksimumværdien sættes
             this.SetMaxValue(t.maxValue, t.withGivenMaxValue);
         }
     }
@@ -143,19 +145,51 @@ public class IntegerType extends BaseType {
             if (this.equalValue.contains(t.equalValue.get(0))) { // lig med værdierne er de samme
                 throw new DuplicationException(id, parentNode, t.equalValue.get(0));
             }else { // lig med værdierne er ikke de samme
-                String equalValues = "";
-                for (int i = 0; i < equalValue.size(); i++) {
-                    if (i == 0) {
-                        equalValues += equalValue.get(i).toString();
-                    } else {
-                        equalValues += " or " + equalValue.get(i).toString();
-                    }
-                }
-                throw new ConstraintException(id, parentNode, t.equalValue.get(0), equalValues);
+                throw new ConstraintException(id, parentNode, t.equalValue.get(0), equalValuesToString());
             }    
-        }else if (t.equalValue.size() != 0) { // alt er okay og derfor kan lig med værdien sættes
+        } else if (this.equalValue.size() > 0 && t.minValue != null) { // den nye har en minimumværdi
+            if (this.equalValue.contains(t.minValue)) { // en af lig med værdierne er ens med minimumværdien
+                if (t.withGivenMinValue) { // >=
+                    throw new RedundantSyntaxException( id, parentNode, t.minValue);
+                } else { // >
+                    throw new ConstraintException(id, parentNode, "less than", t.minValue, equalValuesToString());
+                }
+            }else { // lig med værdien og minimumværdien er ikke de samme
+                if (t.withGivenMinValue) { // >=
+                    throw new ConstraintException(id, parentNode, "less than or equal", t.minValue, equalValuesToString());
+                } else { // >
+                    throw new ConstraintException(id, parentNode, "less than", t.minValue, equalValuesToString());
+                }
+            }   
+        } else if (this.equalValue.size() > 0 && t.maxValue != null) { // den nye har en maximumværdi
+            if (this.equalValue.contains(t.maxValue)) { // en af lig med værdierne er ens med maximumværdien
+                if (t.withGivenMaxValue) { // <=
+                    throw new RedundantSyntaxException( id, parentNode, t.maxValue);
+                } else { // <
+                    throw new ConstraintException(id, parentNode, "bigger than", t.maxValue, equalValuesToString());
+                }
+            }else { // lig med værdien og maximumværdien er ikke de samme
+                if (t.withGivenMaxValue) { // <=
+                    throw new ConstraintException(id, parentNode, "bigger than or equal", t.maxValue, equalValuesToString());
+                } else { // <
+                    throw new ConstraintException(id, parentNode, "bigger than", t.maxValue, equalValuesToString());
+                }
+            }   
+        } else if (t.equalValue.size() != 0) { // alt er okay og derfor kan lig med værdien sættes
             this.equalValue.add(t.equalValue.get(0));
         }
+    }
+    
+    private String equalValuesToString() {
+        String equalValues = "";
+        for (int i = 0; i < equalValue.size(); i++) {
+            if (i == 0) {
+                equalValues += equalValue.get(i).toString();
+            } else {
+                equalValues += " or " + equalValue.get(i).toString();
+            }
+        }
+        return equalValues;
     }
 
     @Override

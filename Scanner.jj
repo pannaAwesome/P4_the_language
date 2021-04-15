@@ -10,40 +10,52 @@
 PARSER_BEGIN(Scanner)
 
 import java.io.*;
+import java.util.HashMap;
 
 public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants/*@egen*/ {/*@bgen(jjtree)*/
   protected static JJTScannerState jjtree = new JJTScannerState();
 
 /*@egen*/
-
+static Scanner parser = null;
     public static void main(String[] args) throws ParseException, FileNotFoundException {
-        File file = new File("test.txt");
-        FileInputStream stream = new FileInputStream(file);
-        Scanner parser = new Scanner(stream);
+        File folder = new File("./TekstTestFiler");
+        File[] listOfFiles = folder.listFiles();
 
-        try {
-            SimpleNode n = parser.PROG();
-            //n.dump("");
+        for (File file : listOfFiles) {
+            FileInputStream stream = new FileInputStream(file);
+            
+            if (parser == null) {
+              parser = new Scanner(stream);
+            } else {
+              parser.ReInit(stream);
+              SymbolTableVisitor.ST =  new HashMap<String, STVal>();
+            }
 
-            /*System.out.println("Pretty printing:");
-            PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
-            n.jjtAccept(ppv, null);
-            System.out.println(ppv.print);*/
+            System.out.println(file.getName());
+            try {
+                SimpleNode n = parser.PROG();
+                //n.dump("");
 
-            System.out.println("Filling the symboltable:");
-            SymbolTableVisitor stv = new SymbolTableVisitor();
-            n.jjtAccept(stv, null);
-            System.out.println(SymbolTableVisitor.ST);
+                /*System.out.println("Pretty printing:");
+                PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
+                n.jjtAccept(ppv, null);
+                System.out.println(ppv.print);*/
 
-            System.out.println();
-            System.out.println("Checking types:");
-            TypeCheckVisitor tcv = new TypeCheckVisitor();
-            n.jjtAccept(tcv, null);
-            System.out.println("Finished succesfully");
-        }catch(Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
+                System.out.println("Filling the symboltable:");
+                SymbolTableVisitor stv = new SymbolTableVisitor();
+                n.jjtAccept(stv, null);
+                System.out.println(SymbolTableVisitor.ST);
+
+                System.out.println();
+                System.out.println("Checking types:");
+                TypeCheckVisitor tcv = new TypeCheckVisitor();
+                n.jjtAccept(tcv, null);
+                System.out.println("Finished succesfully");
+            }catch(Exception e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            }
+        }        
     }
 }
 
