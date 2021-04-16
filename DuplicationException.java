@@ -7,14 +7,14 @@ public class DuplicationException extends Exception{
     /**
      * StringType Exceptions
      */
-    public DuplicationException(String id, SimpleNode node, String definedAs){
-        super(stringDuplication(id, node, definedAs));
+    public DuplicationException(String id, SimpleNode node, String constrainString, String valueString){
+        super(stringDuplication(id, node, constrainString, valueString));
     }
 
-    private static String stringDuplication(String id, SimpleNode node, String definedAs){
+    private static String stringDuplication(String id, SimpleNode node, String constrainString, String valueString){
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "WARNING:\n";
-        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined to "+definedAs + "\n";
+        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been declared " + constrainString + " \"" + valueString + "\"\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;

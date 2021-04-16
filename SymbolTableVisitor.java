@@ -5,9 +5,11 @@ import java.util.List;
 public class SymbolTableVisitor implements ScannerVisitor {
 
     public static HashMap<String, STVal> ST = new HashMap<String, STVal>();
+    public static boolean error = false;
 
     private void error(String message) {
-        throw new Error(message);
+        System.err.println(message);
+        error = true;
     }
 
     private void insertNode(String name, BaseType type) {
@@ -298,13 +300,16 @@ public class SymbolTableVisitor implements ScannerVisitor {
             error("An id with the name \"" + modelName + "\" has not been declared");
         }
 
-        node.jjtGetChild(2).jjtAccept(this, data);
+        int numOfChild = node.jjtGetNumChildren();
+        if (numOfChild == 3) {
+            node.jjtGetChild(2).jjtAccept(this, node);
+        }
         return data;
     }
 
     @Override
     public SimpleNode visit(ANLZOPTIONS node, SimpleNode data) {
-        node.jjtGetChild(1).jjtAccept(this, data);
+        node.jjtGetChild(0).jjtAccept(this, data);
         return data;
     }
 

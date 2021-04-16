@@ -6,19 +6,21 @@ END
 MODEL person BEGIN
 
 // STRING typer //
-    rule22: id CONTAINS "bye" 
     rule15: name = "hej" 
     rule16: name = "hej" //DuplicationException//
     rule17: name = "hejsa" //ConstraintException//
-    //rule18: name CONTAINS "peter" ConstraintExceptionX//
-    //rule19: name CONTAINS "hej" RedundantSyntaxException//
+    rule18: name CONTAINS "peter" //ConstraintExceptionX//
+    rule19: name CONTAINS "hej" //RedundantSyntaxException//
     
-    //rule20: id CONTAINS "hej"// 
-    //rule23: id CONTAINS "hej" DuplicationException//
+    rule20: id CONTAINS "hej" 
+    rule23: id CONTAINS "hej"   //DuplicationException//
     rule21: id = "hejsa"        //RedundantSyntaxException//
     rule24: id = "hello"        //ConstraintException//
-    
+    rule22: id CONTAINS "bye"
 
+    //OR//
+    regel: alder CONTAINS "years" OR alder CONTAINS "years" //DuplicationException//
+    regel1: alder = "years" OR alder = "years" //DuplicationException//
 END
 
 ANALYZE people WITH person BEGIN

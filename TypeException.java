@@ -45,21 +45,19 @@ public class TypeException extends Exception {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "ERROR:\n";
         if (choice.equals("num")){
-            newMessage += "TYPE ERROR: Cannot use numeric operators +, -, *, / with non-numeric coloumn "+id+"\n";
-            newMessage += "At line: ";
-            node.jjtAccept(ppv, null);
-            newMessage += ppv.print;
-            newMessage += "\n";
-            return newMessage;
-        } else if (choice.equals("sum") || choice.equals("avg")) {
-            newMessage += "TYPE ERROR: Can only use " + choice + " coloumns of numeric or empty values\n";
+            newMessage += "TYPE ERROR: Cannot use numeric operators +, -, *, / with non-numeric column \"" + id + "\"\n";
             newMessage += "At line: ";
             node.jjtAccept(ppv, null);
             newMessage += ppv.print;
             newMessage += "\n";
             return newMessage;
         } else {
-            throw new IllegalArgumentException("TypeException was not given \"sum\" or \"num\"");
+            newMessage += "TYPE ERROR: Cannot use " + choice + " on non-numeric column \"" + id + "\"\n";
+            newMessage += "At line: ";
+            node.jjtAccept(ppv, null);
+            newMessage += ppv.print;
+            newMessage += "\n";
+            return newMessage;
         }
     }
 }

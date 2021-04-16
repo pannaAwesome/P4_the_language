@@ -6,14 +6,14 @@ public class RedundantSyntaxException extends Exception {
     /**
      * StringType Exceptions
      */
-    public RedundantSyntaxException(String id,  SimpleNode node) {
-        super(ContainsSameAsEqualString(id,  node));
+    public RedundantSyntaxException(String id,  SimpleNode node, String containValue, String exactValue) {
+        super(ContainsSameAsEqualString(id,  node, containValue, exactValue));
     }
 
-    private static String ContainsSameAsEqualString(String id, SimpleNode node) {
+    private static String ContainsSameAsEqualString(String id, SimpleNode node, String containValue, String exactValue) {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
-        String newMessage = "WARNING:";
-        newMessage += "REDUNDANT SYNTAX WARNING: CONTAINS and EQUALS operations with \"" + id + "\" has been given the same value with and is unnecessary. Contains operation can be omitted";
+        String newMessage = "WARNING:\n";
+        newMessage += "REDUNDANT SYNTAX WARNING: \"" + id + "\" has been given the exact value \"" + exactValue + "\" and it should contain the value \"" + containValue + "\", this is redundant. Therefore one of the operations can be omitted.\n";
         newMessage += "At line: "; // ikke sikker på om det bliver contains linjen som bliver udskrevet 
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;
@@ -36,7 +36,7 @@ public class RedundantSyntaxException extends Exception {
     private static String RedundantSyntaxExceptionDecimal(String id, SimpleNode node, double value) {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "WARNING:\n";
-        newMessage += "REDUNDANT SYNTAX WARNING: \"" + id + "\" will always be equal to \"" + value + "\" and can be rewritten as \"" + id + "\" equal \"" + value + "\"\n";
+        newMessage += "REDUNDANT SYNTAX WARNING: \"" + id + "\" will always be equal to " + value + " and can be rewritten as \"" + id + " = " + value + "\"\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;
@@ -59,14 +59,29 @@ public class RedundantSyntaxException extends Exception {
     /**
      * IntegerType Exceptions
      */
-    public RedundantSyntaxException(String id, SimpleNode node, int value) {
-        super(RedundantSyntaxExceptionInt(id, node, value));
+    public RedundantSyntaxException(String id,  SimpleNode node, int value) {
+        super(RedundantSyntaxExceptionDecimal(id,  node, value));
+    }
+    
+    public RedundantSyntaxException(String id, SimpleNode node, int firstValue, String firstConstrain, int secondValue, String secondConstrain) {
+        super(multipleValuesDefinedDecimal(id, node, firstValue, firstConstrain, secondValue, secondConstrain));
     }
 
-    private static String RedundantSyntaxExceptionInt(String id, SimpleNode node, int value) {
+    private static String RedundantSyntaxExceptionDecimal(String id, SimpleNode node, int value) {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
-        String newMessage = "WARNING:";
-        newMessage += "REDUNDANT SYNTAX WARNING: \"" + id + "\" will always be equal to \"" + value + "\" and is unnecessary and can be rewritten as \"" + id + "\" equal \"" + value + "\"";
+        String newMessage = "WARNING:\n";
+        newMessage += "REDUNDANT SYNTAX WARNING: \"" + id + "\" will always be equal to " + value + " and can be rewritten as \"" + id + " = " + value + "\"\n";
+        newMessage += "At line: ";
+        node.jjtAccept(ppv, null);
+        newMessage += ppv.print;
+        newMessage += "\n";
+        return newMessage;
+    }
+
+    private static String multipleValuesDefinedDecimal(String id, SimpleNode node, int firstValue, String firstConstrain, int secondValue, String secondConstrain) {
+        PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
+        String newMessage = "WARNING:\n";
+        newMessage += "REDUNDANT SYNTAX WARNING: \"" + id + "\" has already been defined as " + firstConstrain + firstValue + " and " + secondConstrain + secondValue + ". This can be simplified\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;

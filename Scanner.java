@@ -5,10 +5,16 @@ import java.util.HashMap;
 public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerConstants {/*@bgen(jjtree)*/
   protected static JJTScannerState jjtree = new JJTScannerState();static Scanner parser = null;
     public static void main(String[] args) throws ParseException, FileNotFoundException {
-        File folder = new File("./TekstTestFiler");
-        File[] listOfFiles = folder.listFiles();
+        String[] files = {
+            "StringRegelTest.txt",
+            "DecimalRegelTest.txt",
+            "IntegerRegelTest.txt",
+            "TypeRegelTest.txt",
+            "TipRegelTest.txt"
+        };
 
-        for (File file : listOfFiles) {
+        for (String fileName : files) {
+            File file = new File("./TekstTestFiler/" + fileName);
             FileInputStream stream = new FileInputStream(file);
 
             if (parser == null) {
@@ -33,11 +39,19 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
                 n.jjtAccept(stv, null);
                 System.out.println(SymbolTableVisitor.ST);
 
-                System.out.println();
-                System.out.println("Checking types:");
-                TypeCheckVisitor tcv = new TypeCheckVisitor();
-                n.jjtAccept(tcv, null);
-                System.out.println("Finished succesfully");
+                if(!SymbolTableVisitor.error) {
+                    System.out.println();
+                    System.out.println("Checking types:");
+                    TypeCheckVisitor tcv = new TypeCheckVisitor();
+                    n.jjtAccept(tcv, null);
+                    if(!TypeCheckVisitor.error) {
+                        System.out.println("Finished succesfully");
+                    }else {
+                        System.out.println("Found multiple errors in code, please fix them!");
+                    }
+                } else {
+                    System.out.println("Found multiple errors in code, please fix them!");
+                }
             }catch(Exception e) {
                 System.out.println(e.getMessage());
                 e.printStackTrace();

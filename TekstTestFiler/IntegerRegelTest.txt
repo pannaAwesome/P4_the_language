@@ -45,6 +45,21 @@ MODEL person BEGIN
     rule333: hand < 3    //ConstraintException//
     rule328: hand <= 4   //ConstraintException//
     rule337: hand < 4    //ConstraintException//
+
+    //OR//
+    rule40 BEGIN
+        partrule1: nose > 5
+        partrule2: nose > 5 //DuplicationException//
+        partrule3: nose >= 5 //RedundantSyntaxException//
+        partrule4: nose > 6 //RedundantSyntaxException//
+        partrule5: nose >= 6 //RedundantSyntaxException//
+
+        partrule6: head < 5
+        partrule7: head < 5 //DuplicationException//
+        partrule8: head <= 5 //RedundantSyntaxException//
+        partrule9: head < 6 //RedundantSyntaxException//
+        partrule10: head <= 6 //RedundantSyntaxException//
+    END
 END
 
 ANALYZE people WITH person BEGIN

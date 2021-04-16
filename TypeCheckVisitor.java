@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TypeCheckVisitor implements ScannerVisitor {
+    public static boolean error = false;
 
     @Override
     public SimpleNode visit(SimpleNode node, SimpleNode data) {
@@ -150,8 +151,8 @@ public class TypeCheckVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(OR node, SimpleNode data) {
+        int numOfChild = node.jjtGetNumChildren();
         try {
-            int numOfChild = node.jjtGetNumChildren();
             for (int i = 0; i < numOfChild; i++) {
                 if (node.jjtGetChild(i).toString().equals("AND")) {
                     node.jjtGetChild(i).jjtAccept(this, data);
@@ -165,15 +166,15 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 SimpleNode parentRule = getRule(node, data);
                 String ruleName = parentRule.jjtGetChild(0).jjtAccept(this, data).value.toString();
                 if (parentRule instanceof PARTRULE) {
-                    throw new TipException(parentRule, "partrule", ruleName, false, true);
+                    throw new TipException(parentRule, "partrule", ruleName, true);
                 } else {
-                    throw new TipException(parentRule, "rule", ruleName, true, false);
+                    throw new TipException(parentRule, "rule", ruleName, false);
                 }            
             }
         } catch (TipException e) {
-            System.err.println(e.getMessage());
-            //e.printStackTrace();
+            System.err.println(e.getMessage());            
         }
+        
         return data;
     }
 
@@ -288,29 +289,33 @@ public class TypeCheckVisitor implements ScannerVisitor {
         try {
             if(!SymbolTableVisitor.ST.get(tableName).type.contains(new TableType())) {
                 STVal types = SymbolTableVisitor.ST.get(tableName);
+                TypeCheckVisitor.error = true;
                 throw new TypeException(tableName, types, new TableType(), node);
-            }
-            if (!SymbolTableVisitor.ST.get(modelName).type.contains(new ModelType())) {
-                STVal types = SymbolTableVisitor.ST.get(modelName);
-                throw new TypeException(modelName, types, new ModelType(), node);
-            }
-
-            int numOfChild = node.jjtGetNumChildren();
-            if (numOfChild == 3) {
-                node.jjtGetChild(2).jjtAccept(this, data);
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            //e.printStackTrace();
         }
 
-        node.jjtGetChild(2).jjtAccept(this, node);
+        try {
+            if (!SymbolTableVisitor.ST.get(modelName).type.contains(new ModelType())) {
+                STVal types = SymbolTableVisitor.ST.get(modelName);
+                TypeCheckVisitor.error = true;
+                throw new TypeException(modelName, types, new ModelType(), node);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+        int numOfChild = node.jjtGetNumChildren();
+        if (numOfChild == 3) {
+            node.jjtGetChild(2).jjtAccept(this, node);
+        }
         return data;
     }
 
     @Override
     public SimpleNode visit(ANLZOPTIONS node, SimpleNode data) {
-        node.jjtGetChild(1).jjtAccept(this, data);
+        node.jjtGetChild(0).jjtAccept(this, data);
         return data;
     }
 
@@ -322,12 +327,12 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 String idName = idNode.value.toString();
                 STVal types = SymbolTableVisitor.ST.get(idName);
                 if (!types.type.contains(new RuleType()) && !types.type.contains(new PartRuleType())) {
-                    throw new TypeException(idName, "rule", data);
+                    TypeCheckVisitor.error = true;
+                    throw new TypeException(idName, types, new RuleType(), data);
                 }
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            //e.printStackTrace();
         }
         
         return data;
@@ -367,11 +372,11 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 idTypes.type.get(index).compareTypesAnd(idName,type, parentNode);
             } else {
                 SimpleNode parentNode = getRule(idNode, null);
+                TypeCheckVisitor.error = true;
                 throw new TypeException(idName, idTypes, type, parentNode);
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            //e.printStackTrace();
         }
     }
 
@@ -386,11 +391,11 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 idTypes.type.get(index).compareTypesOr(idName, type, parentNode);
             } else {
                 SimpleNode parentNode = getRule(idNode, null);
+                TypeCheckVisitor.error = true;
                 throw new TypeException(idName, idTypes, type, parentNode);
             }
         } catch(Exception e) {
             System.out.println(e.getMessage());
-            //e.printStackTrace();
         }
     }
     
@@ -402,12 +407,18 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 
                 if (!idTypes.type.contains(new DecimalType()) && !idTypes.type.contains(new IntegerType()) && !idTypes.type.contains(new EmptyType(true)) && !idTypes.type.contains(new EmptyType(false))) {
                     SimpleNode parentNode = getRule(currNode, null);
-                    throw new TypeException(idName, parentNode, currNode.value.toString().toLowerCase());
+                    if (currNode instanceof ADD || currNode instanceof MULT) {
+                        TypeCheckVisitor.error = true;
+                        throw new TypeException(idName, parentNode, "num");
+                    } else {
+                        TypeCheckVisitor.error = true;
+                        throw new TypeException(idName, parentNode, currNode.value.toString().toLowerCase());
+                    }
+                    
                 }
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            //e.printStackTrace();
         }
     }
 
