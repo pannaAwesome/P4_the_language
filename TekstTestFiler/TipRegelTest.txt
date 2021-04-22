@@ -11,6 +11,9 @@ MODEL person BEGIN
     ruLe BEGIN
         partrule: alder = "hej" OR alder > 2 OR alder IS NOT EMPTY OR alder IS LETTERS
     END
+
+    rule1: height < 3
+    rule2: height IS INTEGER
 END
 
 ANALYZE people WITH person BEGIN

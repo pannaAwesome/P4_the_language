@@ -369,7 +369,9 @@ public class TypeCheckVisitor implements ScannerVisitor {
             if (idTypes.type.contains(type)) {
                 int index = idTypes.type.indexOf(type);
                 SimpleNode parentNode = getRule(idNode, null);
-                idTypes.type.get(index).compareTypesAnd(idName,type, parentNode);
+                if(parentNode instanceof RULE || parentNode instanceof PARTRULE) {
+                    idTypes.type.get(index).compareTypesAnd(idName,type, parentNode);
+                }
             } else {
                 SimpleNode parentNode = getRule(idNode, null);
                 TypeCheckVisitor.error = true;
@@ -388,7 +390,9 @@ public class TypeCheckVisitor implements ScannerVisitor {
             if (idTypes.type.contains(type)) {
                 int index = idTypes.type.indexOf(type);
                 SimpleNode parentNode = getRule(idNode, null);
-                idTypes.type.get(index).compareTypesOr(idName, type, parentNode);
+                if(parentNode instanceof RULE || parentNode instanceof PARTRULE) {
+                    idTypes.type.get(index).compareTypesOr(idName,type, parentNode);
+                }
             } else {
                 SimpleNode parentNode = getRule(idNode, null);
                 TypeCheckVisitor.error = true;
