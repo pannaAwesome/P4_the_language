@@ -6,15 +6,16 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
   protected static JJTScannerState jjtree = new JJTScannerState();static Scanner parser = null;
     public static void main(String[] args) throws ParseException, FileNotFoundException {
         String[] files = {
-            "StringRegelTest.txt",
-            "DecimalRegelTest.txt",
-            "IntegerRegelTest.txt",
-            "TypeRegelTest.txt",
-            "TipRegelTest.txt"
+            //"./TekstTestFiler/StringRegelTest.txt",
+            //"./TekstTestFiler/DecimalRegelTest.txt",
+            //"./TekstTestFiler/IntegerRegelTest.txt",
+            //"./TekstTestFiler/TypeRegelTest.txt",
+            //"./TekstTestFiler/TipRegelTest.txt",
+            "test.txt"
         };
 
         for (String fileName : files) {
-            File file = new File("./TekstTestFiler/" + fileName);
+            File file = new File(fileName);
             FileInputStream stream = new FileInputStream(file);
 
             if (parser == null) {
