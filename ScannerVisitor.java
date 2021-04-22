@@ -22,6 +22,9 @@ public interface ScannerVisitor
   public SimpleNode visit(OR node, SimpleNode data);
   public SimpleNode visit(AND node, SimpleNode data);
   public SimpleNode visit(VALEXPR node, SimpleNode data);
+  public SimpleNode visit(MINUS node, SimpleNode data);
+  public SimpleNode visit(DIVIDE node, SimpleNode data);
+  public SimpleNode visit(MODULUS node, SimpleNode data);
   public SimpleNode visit(CONSTRAINTS node, SimpleNode data);
   public SimpleNode visit(STRING node, SimpleNode data);
   public SimpleNode visit(INTEGER node, SimpleNode data);
@@ -34,4 +37,4 @@ public interface ScannerVisitor
   public SimpleNode visit(RANGE node, SimpleNode data);
   public SimpleNode visit(IDEN node, SimpleNode data);
 }
-/* JavaCC - OriginalChecksum=a672ab86f2b4c8f57b2a61168a2023eb (do not edit this line) */
+/* JavaCC - OriginalChecksum=fa73c766325dd0766ba03c25d4656598 (do not edit this line) */

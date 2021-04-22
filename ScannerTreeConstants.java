@@ -22,17 +22,20 @@ public interface ScannerTreeConstants
   public int JJTOR = 18;
   public int JJTAND = 19;
   public int JJTVALEXPR = 20;
-  public int JJTCONSTRAINTS = 21;
-  public int JJTSTRING = 22;
-  public int JJTINTEGER = 23;
-  public int JJTFLOATY = 24;
-  public int JJTANALYZE = 25;
-  public int JJTANLZOPTIONS = 26;
-  public int JJTRULEOPT = 27;
-  public int JJTROWS = 28;
-  public int JJTCOLS = 29;
-  public int JJTRANGE = 30;
-  public int JJTIDEN = 31;
+  public int JJTMINUS = 21;
+  public int JJTDIVIDE = 22;
+  public int JJTMODULUS = 23;
+  public int JJTCONSTRAINTS = 24;
+  public int JJTSTRING = 25;
+  public int JJTINTEGER = 26;
+  public int JJTFLOATY = 27;
+  public int JJTANALYZE = 28;
+  public int JJTANLZOPTIONS = 29;
+  public int JJTRULEOPT = 30;
+  public int JJTROWS = 31;
+  public int JJTCOLS = 32;
+  public int JJTRANGE = 33;
+  public int JJTIDEN = 34;
 
 
   public String[] jjtNodeName = {
@@ -57,6 +60,9 @@ public interface ScannerTreeConstants
     "OR",
     "AND",
     "VALEXPR",
+    "MINUS",
+    "DIVIDE",
+    "MODULUS",
     "CONSTRAINTS",
     "STRING",
     "INTEGER",
@@ -70,4 +76,4 @@ public interface ScannerTreeConstants
     "IDEN",
   };
 }
-/* JavaCC - OriginalChecksum=317acda8d6df782135f4f99b43d29d89 (do not edit this line) */
+/* JavaCC - OriginalChecksum=ba300a904e9ea7ac94a622c9aa9934b7 (do not edit this line) */

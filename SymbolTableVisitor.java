@@ -359,4 +359,22 @@ public class SymbolTableVisitor implements ScannerVisitor {
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    public SimpleNode visit(MINUS node, SimpleNode data) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public SimpleNode visit(DIVIDE node, SimpleNode data) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public SimpleNode visit(MODULUS node, SimpleNode data) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
