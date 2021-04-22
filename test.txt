@@ -4,8 +4,9 @@ IMPORT people.csv IN people BEGIN
 END
 
 MODEL person BEGIN
-    rule4 BEGIN
+    //rule4 BEGIN
         partRule:  age < 3.0 OR age > 2.0 OR age IS DECIMAL
+        partRule3: height > 3 AND height IS INTEGER
         partRule2: age CONTAINS "hej"
     END
     COL rule1: AVG(hoejde) > SUM(hans)   
@@ -13,14 +14,13 @@ MODEL person BEGIN
     COL goodMonth BEGIN 
         option1: COUNT(transaktioner) > 10000 WHERE maned = "februar"
         option2: SUM(transaktioner) > 100000 WHERE maned = "februar"
-    END
+    END//
     rule28: tom IS LETTERS
-    rule29: hoejde > sum - SUM(EMPY) 
+    rule29: hoejde > sum - SUM(EMPY) + 50 
 END
 
 
 ANALYZE people WITH person BEGIN
-    rule4
     rule28
     ROW 1 TO 20
     COL 2 TO 10

@@ -326,8 +326,8 @@ void VALEXPR():
     IDEN()
     (
         t = <IS> CONSTRAINEXPR()
-    |   t = <EQUAL> (STRING() | ARITHMEXPR1())
-    |   t = <COMPARISON> ARITHMEXPR1()
+    |   t = <EQUAL> (STRING() | (TERM() ARITHMEXPR1()))
+    |   t = <COMPARISON> TERM() ARITHMEXPR1()
     |   t = <CONTAINS> STRING()
     ) 
     { jjtThis.value = t.image;}
@@ -343,16 +343,25 @@ void ARITHMEXPR1() #void:
 { Token t; }
 {
     (
-        ARITHMEXPR2() (( t = "+" | t = "-") { jjtThis.value = t.image; } ARITHMEXPR2())*
-    )#ADD(>1)
+        ( t = "+" { jjtThis.value = t.image; } ARITHMEXPR2())#ADD(>1)
+    |   ( t = "-" { jjtThis.value = t.image; } ARITHMEXPR2())#MINUS(>1)
+    )*
+}
+
+void TERM() #void:
+{}
+{
+    OPERANDS() ARITHMEXPR2()
 }
 
 void ARITHMEXPR2() #void:
 { Token t; }
 {
     (
-        OPERANDS()((t = "*" | t = "/" | t = "%") { jjtThis.value = t.image; } OPERANDS())*
-    )#MULT(>1)
+        ( t = "*" { jjtThis.value = t.image; } OPERANDS())#MULT(>1)
+    |   ( t = "/" { jjtThis.value = t.image; } OPERANDS())#DIVIDE(>1)
+    |   ( t = "%" { jjtThis.value = t.image; } OPERANDS())#MODULUS(>1)
+    )*
 }
 
 void CONSTRAINTS():
@@ -367,7 +376,7 @@ void CONSTRAINTS():
 void OPERANDS() #void:
 {}
 {
-    <LPAREN> ARITHMEXPR1() <RPAREN> | (SACD()) | IDEN() | NUM()
+    <LPAREN> TERM() ARITHMEXPR1() <RPAREN> | (SACD()) | IDEN() | NUM()
 }
 
 void STRING():
