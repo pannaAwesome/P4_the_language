@@ -5,7 +5,7 @@ class SimpleNode implements Node {
 
   protected Node parent;
   protected Node[] children;
-  protected int id;
+  public int id;
   protected Object value;
   protected Scanner parser;
   public BaseType type;

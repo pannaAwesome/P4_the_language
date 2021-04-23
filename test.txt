@@ -1,27 +1,9 @@
-IMPORT people.csv IN people BEGIN
-    NOHEADERS
-    ID name
-END
+IMPORT people.csv IN people
 
 MODEL person BEGIN
-    rule4 BEGIN
-        partRule:  age < 3.0 OR age > 2.0 OR age IS DECIMAL
-        partRule2: age CONTAINS "hej"
-    END
-    COL rule1: AVG(hoejde) > SUM(hans)   
-    COL rule2: COUNT(transaktioner) > 180 WHERE maned = "marts"
-    COL goodMonth BEGIN 
-        option1: COUNT(transaktioner) > 10000 WHERE maned = "februar"
-        option2: SUM(transaktioner) > 100000 WHERE maned = "februar"
-    END
-    rule28: tom IS LETTERS
-    rule29: hoejde > sum - SUM(EMPY) 
+    rule27: EMPY IS LETTERS
+    rule: hej < AVG(EMPY)
 END
 
 
-ANALYZE people WITH person BEGIN
-    rule4
-    rule28
-    ROW 1 TO 20
-    COL 2 TO 10
-END
+ANALYZE people WITH person

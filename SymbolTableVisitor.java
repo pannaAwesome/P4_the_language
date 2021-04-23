@@ -5,11 +5,19 @@ import java.util.List;
 public class SymbolTableVisitor implements ScannerVisitor {
 
     public static HashMap<String, STVal> ST = new HashMap<String, STVal>();
-    public static boolean error = false;
+    public static int error = 0;
+
+    public static void printWrongs() {
+        String message = "";
+        message += (error == 1 ? "Found 1 error in code, please fix them!" : "");
+        message += (error > 1 ? "Found " + error + " error in code, please fix them!" : "");
+
+        System.out.println(message);
+    }
 
     private void error(String message) {
         System.err.println(message);
-        error = true;
+        error++;
     }
 
     private void insertNode(String name, BaseType type) {

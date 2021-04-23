@@ -156,24 +156,30 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(ADD node, SimpleNode data) {
-        node.jjtGetChild(0).jjtAccept(this, data);
-
         int numOfChild = node.jjtGetNumChildren();
-        for (int i = 1; i < numOfChild; i++) {
-            print += " " + node.value.toString() + " ";
-            node.jjtGetChild(i).jjtAccept(this, data);
+
+        for (int i = numOfChild; i > 0; i--) {
+            if (i == numOfChild) {
+                node.jjtGetChild(i-1).jjtAccept(this, data);
+            } else {
+                print += " " + node.value.toString() + " ";
+                node.jjtGetChild(i-1).jjtAccept(this, data);
+            }            
         }
         return node;
     }
 
     @Override
     public SimpleNode visit(MULT node, SimpleNode data) {
-        node.jjtGetChild(0).jjtAccept(this, data);
-
         int numOfChild = node.jjtGetNumChildren();
-        for (int i = 1; i < numOfChild; i++) {
-            print += " " + node.value.toString() + " ";
-            node.jjtGetChild(i).jjtAccept(this, data);
+
+        for (int i = numOfChild; i > 0; i--) {
+            if (i == numOfChild) {
+                node.jjtGetChild(i-1).jjtAccept(this, data);
+            } else {
+                print += " " + node.value.toString() + " ";
+                node.jjtGetChild(i-1).jjtAccept(this, data);
+            }            
         }
         return node;
     }
@@ -348,5 +354,4 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
         }
         return node;
     }
-    
 }
