@@ -47,20 +47,23 @@ public class StringType extends BaseType {
 
         if (this.containValue.size() != 0 && t.onlyContains){ // if both are contained values
             if (this.containValue.contains(tContainedVal)){ // and the contained values are the same
+                TypeCheckVisitor.warning++;
                 throw new DuplicationException(id, parentNode, "to contain", tContainedVal);
             } else {
                 this.containValue.add(tContainedVal);
             }
         } else if (this.exactValue.size() != 0 && !t.onlyContains){ // else, if both values are exact
             if (this.exactValue.contains(tExactVal)){ // and they are equal
+                TypeCheckVisitor.warning++;
                 throw new DuplicationException(id, parentNode, "as", tExactVal); // also redunant
             } else {
-                TypeCheckVisitor.error = true;
+                TypeCheckVisitor.error++;
                 throw new ConstraintException(id, printAllValues("exact"), tExactVal, parentNode); // else, you're trying to redeclare the exact value which is constraint error
             }
         } else if (this.containValue.size() != 0 && !t.onlyContains){ // if this has contains values, and the other is an exact
             for (String contained : containValue) {
                 if (tExactVal.contains(contained)) {
+                    TypeCheckVisitor.warning++;
                     throw new RedundantSyntaxException(id, parentNode, contained, tExactVal); // den eksakte værdi er delvist ens med contain værdierne
                 }
             }
@@ -68,10 +71,11 @@ public class StringType extends BaseType {
         } else if (this.exactValue.size() != 0 && t.onlyContains){ // if this has equal values, and the other is an contains
             for (String exact : exactValue) {
                 if (exact.contains(tContainedVal)) {
+                    TypeCheckVisitor.warning++;
                     throw new RedundantSyntaxException(id, parentNode, tContainedVal, exact); // de eksakte værdier er delvist ens med contain værdien
                 }
             }
-            TypeCheckVisitor.error = true;
+            TypeCheckVisitor.error++;
             throw new ConstraintException(id, "as", printAllValues("exact"), "to contain", tContainedVal, parentNode); // de eksakte værdier er ikke delvist ens med contain værdien
         }
 
@@ -88,12 +92,14 @@ public class StringType extends BaseType {
         StringType t = (StringType) type;
         if (this.containValue.size()!=0 && t.onlyContains){ // if both are contains
             if (this.containValue.contains(t.containValue.get(0))){ // and values are the same
+                TypeCheckVisitor.warning++;
                 throw new DuplicationException(id, parentNode, "to contain", t.containValue.get(0)); // redundant
             } else {
                 this.containValue.add(t.containValue.get(0));
             }
         } else if (this.exactValue.size()!=0 && !t.onlyContains){ // if both are exact
             if (this.exactValue.contains(t.exactValue.get(0))) { // if they are the same 
+                TypeCheckVisitor.warning++;
                 throw new DuplicationException(id, parentNode, "as", t.exactValue.get(0)); 
             } else {
                 this.exactValue.add(t.exactValue.get(0));
