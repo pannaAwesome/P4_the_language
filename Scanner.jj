@@ -41,7 +41,7 @@ static Scanner parser = null;
             System.out.println(file.getName());
             try {
                 SimpleNode n = parser.PROG();
-                //n.dump("");
+                n.dump("");
 
                 /*System.out.println("Pretty printing:");
                 PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
@@ -825,8 +825,8 @@ void VALEXPR():
     IDEN()
     (
         t = <IS> CONSTRAINEXPR()
-    |   t = <EQUAL> (STRING() | (TERM() ARITHMEXPR1()))
-    |   t = <COMPARISON> TERM() ARITHMEXPR1()
+    |   t = <EQUAL> (STRING() | ARITHMEXPR1())
+    |   t = <COMPARISON> ARITHMEXPR1()
     |   t = <CONTAINS> STRING()
     )/*@bgen(jjtree)*/
     {
@@ -866,7 +866,8 @@ void CONSTRAINEXPR()      :
 void ARITHMEXPR1()      :
 { Token t; }
 {
-    (/*@bgen(jjtree) #ADD(> 1) */
+    ARITHMEXPR2()
+    (/*@bgen(jjtree) ADD */
         {
           ADD jjtn001 = new ADD(JJTADD);
           boolean jjtc001 = true;
@@ -891,11 +892,11 @@ void ARITHMEXPR1()      :
           throw (Error)jjte001;
         } finally {
           if (jjtc001) {
-            jjtree.closeNodeScope(jjtn001, jjtree.nodeArity() > 1);
+            jjtree.closeNodeScope(jjtn001, true);
           }
         }
-/*@egen*/        
-    |/*@bgen(jjtree) #MINUS(> 1) */
+/*@egen*/    
+    |/*@bgen(jjtree) MINUS */
         {
           MINUS jjtn002 = new MINUS(JJTMINUS);
           boolean jjtc002 = true;
@@ -919,23 +920,17 @@ void ARITHMEXPR1()      :
           throw (Error)jjte002;
         } finally {
           if (jjtc002) {
-            jjtree.closeNodeScope(jjtn002, jjtree.nodeArity() > 1);
+            jjtree.closeNodeScope(jjtn002, true);
           }
         }
-/*@egen*/          
+/*@egen*/      
     )*
-}
-
-void TERM()      :
-{}
-{
-    OPERANDS() ARITHMEXPR2()
 }
 
 void ARITHMEXPR2()      :
 { Token t; }
 {
-    (/*@bgen(jjtree) #MULT(> 1) */
+    OPERANDS() (/*@bgen(jjtree) MULT */
         {
           MULT jjtn001 = new MULT(JJTMULT);
           boolean jjtc001 = true;
@@ -960,11 +955,11 @@ void ARITHMEXPR2()      :
           throw (Error)jjte001;
         } finally {
           if (jjtc001) {
-            jjtree.closeNodeScope(jjtn001, jjtree.nodeArity() > 1);
+            jjtree.closeNodeScope(jjtn001, true);
           }
         }
-/*@egen*/         
-    |/*@bgen(jjtree) #DIVIDE(> 1) */
+/*@egen*/     
+    |/*@bgen(jjtree) DIVIDE */
         {
           DIVIDE jjtn002 = new DIVIDE(JJTDIVIDE);
           boolean jjtc002 = true;
@@ -988,11 +983,11 @@ void ARITHMEXPR2()      :
           throw (Error)jjte002;
         } finally {
           if (jjtc002) {
-            jjtree.closeNodeScope(jjtn002, jjtree.nodeArity() > 1);
+            jjtree.closeNodeScope(jjtn002, true);
           }
         }
-/*@egen*/           
-    |/*@bgen(jjtree) #MODULUS(> 1) */
+/*@egen*/       
+    |/*@bgen(jjtree) MODULUS */
         {
           MODULUS jjtn003 = new MODULUS(JJTMODULUS);
           boolean jjtc003 = true;
@@ -1016,10 +1011,10 @@ void ARITHMEXPR2()      :
           throw (Error)jjte003;
         } finally {
           if (jjtc003) {
-            jjtree.closeNodeScope(jjtn003, jjtree.nodeArity() > 1);
+            jjtree.closeNodeScope(jjtn003, true);
           }
         }
-/*@egen*/            
+/*@egen*/        
     )*
 }
 
@@ -1062,7 +1057,7 @@ void CONSTRAINTS():
 void OPERANDS()      :
 {}
 {
-    <LPAREN> TERM() ARITHMEXPR1() <RPAREN> | (SACD()) | IDEN() | NUM()
+    <LPAREN> ARITHMEXPR1() <RPAREN> | (SACD()) | IDEN() | NUM()
 }
 
 void STRING():
