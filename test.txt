@@ -16,7 +16,7 @@ MODEL person BEGIN
         option2: SUM(transaktioner) > 100000 WHERE maned = "februar"
     END//
     rule28: tom IS LETTERS
-    rule29: hoejde > sum - SUM(EMPY) + 50 
+    rule29: hoejde > sum - SUM(EMPY) + 50
 END
 
 

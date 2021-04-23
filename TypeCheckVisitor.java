@@ -172,7 +172,8 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 }            
             }
         } catch (TipException e) {
-            System.err.println(e.getMessage());            
+            System.err.println(e.getMessage());     
+            e.printStackTrace();       
         }
         
         return data;
@@ -294,6 +295,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         try {
@@ -304,6 +306,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         int numOfChild = node.jjtGetNumChildren();
@@ -333,6 +336,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
         
         return data;
@@ -379,6 +383,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -400,6 +405,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             }
         } catch(Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
     
@@ -423,6 +429,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 

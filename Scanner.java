@@ -28,7 +28,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
             System.out.println(file.getName());
             try {
                 SimpleNode n = parser.PROG();
-                //n.dump("");
+                n.dump("");
 
                 /*System.out.println("Pretty printing:");
                 PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
@@ -1186,7 +1186,6 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
         case INT:
         case FLOAT:
         case ID:
-          TERM();
           ARITHMEXPR1();
           break;
         default:
@@ -1197,7 +1196,6 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
         break;
       case COMPARISON:
         t = jj_consume_token(COMPARISON);
-        TERM();
         ARITHMEXPR1();
         break;
       case CONTAINS:
@@ -1239,6 +1237,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
 
   static final public void ARITHMEXPR1() throws ParseException {
   Token t;
+    ARITHMEXPR2();
     label_26:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -1275,7 +1274,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
           {if (true) throw (Error)jjte001;}
         } finally {
           if (jjtc001) {
-            jjtree.closeNodeScope(jjtn001, jjtree.nodeArity() > 1);
+            jjtree.closeNodeScope(jjtn001, true);
           }
         }
         break;
@@ -1303,7 +1302,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
           {if (true) throw (Error)jjte002;}
         } finally {
           if (jjtc002) {
-            jjtree.closeNodeScope(jjtn002, jjtree.nodeArity() > 1);
+            jjtree.closeNodeScope(jjtn002, true);
           }
         }
         break;
@@ -1315,13 +1314,9 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
     }
   }
 
-  static final public void TERM() throws ParseException {
-    OPERANDS();
-    ARITHMEXPR2();
-  }
-
   static final public void ARITHMEXPR2() throws ParseException {
   Token t;
+    OPERANDS();
     label_27:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -1359,7 +1354,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
           {if (true) throw (Error)jjte001;}
         } finally {
           if (jjtc001) {
-            jjtree.closeNodeScope(jjtn001, jjtree.nodeArity() > 1);
+            jjtree.closeNodeScope(jjtn001, true);
           }
         }
         break;
@@ -1387,7 +1382,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
           {if (true) throw (Error)jjte002;}
         } finally {
           if (jjtc002) {
-            jjtree.closeNodeScope(jjtn002, jjtree.nodeArity() > 1);
+            jjtree.closeNodeScope(jjtn002, true);
           }
         }
         break;
@@ -1415,7 +1410,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
           {if (true) throw (Error)jjte003;}
         } finally {
           if (jjtc003) {
-            jjtree.closeNodeScope(jjtn003, jjtree.nodeArity() > 1);
+            jjtree.closeNodeScope(jjtn003, true);
           }
         }
         break;
@@ -1469,7 +1464,6 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LPAREN:
       jj_consume_token(LPAREN);
-      TERM();
       ARITHMEXPR1();
       jj_consume_token(RPAREN);
       break;
