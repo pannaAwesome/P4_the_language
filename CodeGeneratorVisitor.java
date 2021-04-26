@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class CodeGeneratorVisitor implements ScannerVisitor {
 
@@ -18,48 +19,6 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
     }
 
     @Override
-    public SimpleNode visit(MINUS node, SimpleNode data) {
-        SimpleNode n = node.jjtGetChild(0).jjtAccept(this, null);
-        if (n instanceof IDEN){
-            output += "row[\""+n+"\"]";
-        } 
-        output += " - ";
-        SimpleNode rightChild = node.jjtGetChild(1).jjtAccept(this, null);
-        if (rightChild instanceof IDEN){
-            output += "row[\""+n+"\"]";
-        } 
-        return null;
-    }
-
-    @Override
-    public SimpleNode visit(DIVIDE node, SimpleNode data) {
-        SimpleNode n = node.jjtGetChild(0).jjtAccept(this, null);
-        if (n instanceof IDEN){
-            output += "row[\""+n+"\"]";
-        } 
-        output += " / ";
-        SimpleNode rightChild = node.jjtGetChild(1).jjtAccept(this, null);
-        if (rightChild instanceof IDEN){
-            output += "row[\""+n+"\"]";
-        } 
-        return null;
-    }
-
-    @Override
-    public SimpleNode visit(MODULUS node, SimpleNode data) {
-        SimpleNode n = node.jjtGetChild(0).jjtAccept(this, null);
-        if (n instanceof IDEN){
-            output += "row[\""+n+"\"]";
-        } 
-        output += " % ";
-        SimpleNode rightChild = node.jjtGetChild(1).jjtAccept(this, null);
-        if (rightChild instanceof IDEN){
-            output += "row[\""+n+"\"]";
-        } 
-        return null;
-    }
-
-    @Override
     public SimpleNode visit(SimpleNode node, SimpleNode data) {
         // TODO Auto-generated method stub
         return null;
@@ -74,8 +33,9 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "import numpy as np\n";
         
         output += "ruleNames = []\n";
-        output += "columnList = []\n";
+        output += "resultFromRules = []\n";
         output += "columnRuleNames = []\n";
+        output += "resultFromColumnRules = []\n";
 
         output += "def isfloat(value):\n";
         output += "\ttry:\n";
@@ -101,21 +61,27 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(IMPORT node, SimpleNode data) {
-        String tableName = "df"; /*node.jjtGetChild(0).jjtAccept(this, null).toString("");*/
-        String path = node.jjtGetChild(1).jjtAccept(this, null).toString("");
-        output += "path = \""+path+"\n\"";
+        String path = node.jjtGetChild(0).jjtAccept(this, null).toString("");
+        output += "path = \""+path+"\"\n";
         // Der skal være mulighed for at angive om ens csv fil er komma er semilocolon separeret
         if (node.jjtGetNumChildren()>2){
-            // Sørg for import options
+            node.jjtGetChild(2).jjtAccept(this, null);
         } else {
-            output += tableName+" = pd.read_csv(peoplecsv, dtype=str)\n";
+            output += "df = pd.read_csv(path, dtype=str)\n";
         }
         return null;
     }
 
     @Override
     public SimpleNode visit(IMPOPTIONS node, SimpleNode data) {
-        // TODO Auto-generated method stub
+        for (int i = 0; i < node.jjtGetNumChildren(); i++){
+            SimpleNode n = node.jjtGetChild(i).jjtAccept(this, null);
+            if (n instanceof IDEN || n instanceof INTEGER){ // id parameter 
+                output += "df = pd.read_csv(path, dtype=str)\n";
+                return null;
+            }  
+        }
+        output += "df = pd.read_csv(path, dtype=str)\n";
         return null;
     }
 
@@ -126,7 +92,13 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(NOHEADERS node, SimpleNode data) {
-        // TODO Auto-generated method stub
+        output += "def noHeaders():\n";
+        output += "\tnewHeaders = []\n";
+        output += "\tcolNum = len(df.columns)\n";
+        output += "\tfor i in range(colNum):\n";
+        output += "\t\tnewHeaders.append(f\"column{i+1}\")\n";
+        output += "\tdf.columns = newHeaders\n";
+        output += "noHeaders()\n";
         return null;
     }
 
@@ -155,20 +127,32 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         if (mabyeWhereClause.equals("WHERE")){ // if where clause exists, it has to be run first
             output += "\ttempDf = pd.DataFrame(columns=df.columns)\n";
             output += "\tfor index, row in df.iterrows():\n";
-            output += "\t\tif: ";
+            output += "\t\tif ";
             node.jjtGetChild(lastChild).jjtAccept(this, null);
-            output += "\n";
+            output += ":\n";
             output += "\t\t\ttempDf = tempDf.append(row)\n";
             output += "\trow = tempDf\n";
-        } 
-        output += "\tif ";
-        for (int i = 1; i < node.jjtGetNumChildren()-1; i++){
-            node.jjtGetChild(i).jjtAccept(this, null);
+            output += "\tif ";
+            for (int i = 1; i < node.jjtGetNumChildren()-1; i++){
+                node.jjtGetChild(i).jjtAccept(this, null);
+            }
+        } else {
+            output += "\tif ";
+            for (int i = 1; i < node.jjtGetNumChildren(); i++){
+                node.jjtGetChild(i).jjtAccept(this, null);
+            }
         }
+        output += ":\n";
         output += "\t\treturn ['x', ' ']\n";
         output += "\telse:\n";
         output += "\t\treturn [' ', 'x']\n";
+        output += "columnRuleNames.append("+ruleName+")\n";
+        output += "resultFromColumnRules.append("+ruleName+"())\n";
         output += "\n";
+
+        
+        
+
         return null;
     }
 
@@ -181,19 +165,27 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         if (mabyeWhereClause.equals("WHERE")){ // if where clause exists, it has to be run first
             output += "\ttempDf = pd.DataFrame(columns=df.columns)\n";
             output += "\tfor index, row in df.iterrows():\n";
-            output += "\t\tif: ";
+            output += "\t\tif ";
             node.jjtGetChild(lastChild).jjtAccept(this, null);
-            output += "\n";
+            output += ":\n";
             output += "\t\t\ttempDf = tempDf.append(row)\n";
             output += "\trow = tempDf\n";
-        } 
-        output += "\tif ";
-        for (int i = 1; i < node.jjtGetNumChildren()-1; i++){
-            node.jjtGetChild(i).jjtAccept(this, null);
+            output += "\tif ";
+            for (int i = 1; i < node.jjtGetNumChildren()-1; i++){
+                node.jjtGetChild(i).jjtAccept(this, null);
+            }
+        } else {
+            output += "\tif ";
+            for (int i = 1; i < node.jjtGetNumChildren(); i++){
+                node.jjtGetChild(i).jjtAccept(this, null);
+            }
         }
+        output += ":\n";
         output += "\t\treturn ['x', ' ']\n";
         output += "\telse:\n";
         output += "\t\treturn [' ', 'x']\n";
+        output += "columnRuleNames.append("+ruleName+")\n";
+        output += "columnList.append("+ruleName+"())\n";
         output += "\n";
         return null;
     }
@@ -242,27 +234,21 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         if (expr.equals("IS")){
             processIS(node);
         } else if (expr.equals("=")) {
-            output += node.jjtGetChild(0).jjtAccept(this, null).toString("");
+            node.jjtGetChild(0).jjtAccept(this, null).toString("");
             output += " == ";
-            output += node.jjtGetChild(1).jjtAccept(this, null).toString("");
-        } else if (expr.equals("CONTAINS")){
+            node.jjtGetChild(1).jjtAccept(this, null).toString("");
+        /*} else if (expr.equals("CONTAINS")){
             String str = "\""+node.jjtGetChild(1).jjtAccept(this, null).toString("")+"\"";
             output += str+" in ";
             String colName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
-            output += "("+getType(node)+")row[\""+colName+"\"]";
+            output += "row[\""+colName+"\"]";*/
         } else if (expr.equals("<=") | expr.equals(">=") | expr.equals("<") | expr.equals(">")){
-            String id = node.jjtGetChild(0).jjtAccept(this, null).toString("");
-            output += "row[\""+id+"\"]";
+            node.jjtGetChild(0).jjtAccept(this, null);
             output += node.toString("");
-            SimpleNode rightNode = node.jjtGetChild(1).jjtAccept(this, null);
-            if (rightNode instanceof IDEN) {
-                output += "row[\""+rightNode.toString("")+"\"]";
-            } else {
-                node.jjtGetChild(1).jjtAccept(this, null);
-            }          
+            node.jjtGetChild(1).jjtAccept(this, null);
         } else {
-            String id = node.jjtGetChild(0).jjtAccept(this, null).toString("");
-            output += "row[\""+id+"\"]";
+            node.jjtGetChild(0).jjtAccept(this, null).toString("");
+            output += node.toString("");
             node.jjtGetChild(1).jjtAccept(this, null);
         }
         return null;
@@ -271,28 +257,32 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(WHERE node, SimpleNode data) {
         for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-            node.jjtGetChild(i).jjtAccept(this, data);
+            SimpleNode n = node.jjtGetChild(i).jjtAccept(this, data);
+            if (n instanceof IDEN) {
+
+            }
         }
         return node;
     }
 
     @Override
     public SimpleNode visit(SACD node, SimpleNode data) {
-        SimpleNode childNode = (SimpleNode)node.jjtGetChild(0);
+        IDEN childNode = (IDEN)node.jjtGetChild(0);
         String childType = getType(childNode);
+        String childName = childNode.toString("");
         String val = node.toString("");
         switch (val) {
             case "DISTINCT":
-                output += "len(df["+childNode+"].unique())";
+                output += "len(df["+childName+"].unique())";
                 break;
             case "COUNT":
-                output += "pd.to_numeric(df[\""+childNode+"\"], downcast='"+childType+"').count()";
+                output += "df[\""+childName+"\"].count()";
                 break;
             case "SUM":
-                output += "pd.to_numeric(df[\""+childNode+"\"], downcast='"+childType+"').sum()";
+                output += "pd.to_numeric(df[\""+childName+"\"], downcast='"+childType+"').sum()";
                 break;
             case "AVG":
-                output += "pd.to_numeric(df[\""+childNode+"\"], downcast='"+childType+"').mean()";
+                output += "pd.to_numeric(df[\""+childName+"\"], downcast='"+childType+"').mean()";
                 break;
             default:
                 break;
@@ -341,7 +331,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
         output += "def "+ruleName+"():\n";
         output += "\t"+"result = []\n";
-        output += "\tfor index, row in people.iterrows():\n";
+        output += "\tfor index, row in df.iterrows():\n";
         output += "\t\ttry:\n";
         int lastChild = node.jjtGetNumChildren()-1;
         String mabyeWhereClause = node.jjtGetChild(lastChild).toString();
@@ -381,7 +371,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
         output += "def "+ruleName+"():\n";
         output += "\t"+"result = []\n";
-        output += "\tfor index, row in people.iterrows():\n";
+        output += "\tfor index, row in df.iterrows():\n";
         output += "\t\ttry:\n";
         int lastChild = node.jjtGetNumChildren()-1;
         String mabyeWhereClause = node.jjtGetChild(lastChild).toString();
@@ -406,13 +396,13 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             output += ":\n";
             output += "\t\t\t\tresult.append(\"Right\")\n"; 
             output += "\t\t\telse:\n";
-            output += "\t\t\t\tresult.append(\"Wrong\")"; 
+            output += "\t\t\t\tresult.append(\"Wrong\")\n"; 
         }
         output += "\t\texcept Exception:\n";
         output += "\t\t\tresult.append(\"Wrong\")\n";     
         output += "\treturn pd.Series(result)\n";
         output += "df.append(\""+ruleName+"\")\n";
-        output += "resultFromRules[\""+ruleName+"\"] = "+ruleName+"()";
+        output += "resultFromRules[\""+ruleName+"\"] = "+ruleName+"()\n";
         return null;
     }
 
@@ -460,14 +450,15 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         if (expr.equals("IS")){
             processIS(node);
         } else if (expr.equals("=")) {
-            output += node.jjtGetChild(0).jjtAccept(this, null).toString("");
+            String id = node.jjtGetChild(0).jjtAccept(this, null).toString("");
+            output += "row[\""+id+"\"]";
             output += " == ";
             output += node.jjtGetChild(1).jjtAccept(this, null).toString("");
         } else if (expr.equals("CONTAINS")){
-            String str = node.jjtGetChild(1).jjtAccept(this, null).toString("");
-            output += str+" in ";
+            node.jjtGetChild(1).jjtAccept(this, null).toString("");
+            output += " in ";
             String colName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
-            output += "("+getType(node)+")row[\""+colName+"\"]";
+            output += "row[\""+colName+"\"]";
         } else if (expr.equals("<=") | expr.equals(">=") | expr.equals("<") | expr.equals(">")){
             String id = node.jjtGetChild(0).jjtAccept(this, null).toString("");
             output += "row[\""+id+"\"]";
@@ -475,8 +466,6 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             SimpleNode rightNode = node.jjtGetChild(1).jjtAccept(this, null);
             if (rightNode instanceof IDEN) {
                 output += "row[\""+rightNode.toString("")+"\"]";
-            } else {
-                node.jjtGetChild(1).jjtAccept(this, null);
             }          
         } else {
             String id = node.jjtGetChild(0).jjtAccept(this, null).toString("");
@@ -515,24 +504,27 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(STRING node, SimpleNode data) {
+        output += node.toString("");
         return node;
     }
 
     @Override
     public SimpleNode visit(INTEGER node, SimpleNode data) {
+        output += node.toString("");
         return node;
     }
 
     @Override
     public SimpleNode visit(FLOATY node, SimpleNode data) {
-        return node;
+        output += node.toString("");
+        return null;
     }
 
     @Override
     public SimpleNode visit(ANALYZE node, SimpleNode data) {
 
-        if (node.jjtGetChild(2)!=null) {
-            analyzeWithArguments(node);
+        if (node.jjtGetNumChildren()>2) {
+            node.jjtGetChild(2).jjtAccept(this, null);
             return null;
         }
 
@@ -578,7 +570,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\tmlp.show()\n";
 
         output += "def ANALYZE():\n";
-        output += "\tcolumnTable = pd.DataFrame.from_records(columnList)\n";
+        output += "\tcolumnTable = pd.DataFrame.from_records(resultFromColumnRules)\n";
         output += "\tcols = df[ruleNames].apply(pd.value_counts).fillna(0).transpose()\n";
         output += "\tanalyzeRuleTable = pd.DataFrame(cols[\"Right\"])\n";
         output += "\tanalyzeRuleTable[\"Wrong\"] = cols[\"Wrong\"]\n";
@@ -589,38 +581,68 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         return null;
     }
 
-    private void analyzeWithArguments(ANALYZE node){
-
-    }
-
     @Override
     public SimpleNode visit(ANLZOPTIONS node, SimpleNode data) {
-        // TODO Auto-generated method stub
+        output += "def ANALYZE():\n";
+        output += "\trows = df.drop(labels = ruleNames, axis = 1)\n";
+        
+        for (int i = 0; i < node.jjtGetNumChildren(); i++){
+            node.jjtGetChild(i).jjtAccept(this, null);
+        }
+        
+        output += "\tprint(rows.to_string())\n";
+        output += "ANALYZE()\n";
         return null;
     }
 
     @Override
     public SimpleNode visit(RULEOPT node, SimpleNode data) {
-        // TODO Auto-generated method stub
+        String ruleName = "";
+
+        for (int i = 0; i < node.jjtGetNumChildren(); i++){
+            ruleName = node.jjtGetChild(i).jjtAccept(this, null).toString("");
+            output += "\truleNames.remove(\""+ruleName+"\")\n";
+        }
+
+        output += "\trows = df.loc[df['"+ruleName+"'] == \"Wrong\"]\n";
         return null;
     }
 
     @Override
     public SimpleNode visit(ROWS node, SimpleNode data) {
-        // TODO Auto-generated method stub
+
+        for (int i = 0; i < node.jjtGetNumChildren(); i++){
+            SimpleNode range = node.jjtGetChild(i).jjtAccept(this, null);
+            output += "\trows = rows.loc[";
+            range.jjtGetChild(0).jjtAccept(this, null);
+            output += ":";
+            range.jjtGetChild(1).jjtAccept(this, null);
+            output += "]\n";
+        }
         return null;
     }
 
     @Override
     public SimpleNode visit(COLS node, SimpleNode data) {
-        // TODO Auto-generated method stub
+        SimpleNode mabyeIden = node.jjtGetChild(0).jjtAccept(this, null);
+        if (mabyeIden instanceof IDEN){
+            for (int i = 0; i < node.jjtGetNumChildren(); i++){
+                String id = node.jjtGetChild(i).jjtAccept(this, null).toString("");
+                output += "\trows = rows[\""+id+"\"]\n";
+            }
+        } else { // if range, i replace headers with ints, and index them 
+            output += "\trows.columns = list(range(1, len(rows.columns)+1))\n";
+            for (int i = 0; i < node.jjtGetNumChildren(); i++){
+                String id = node.jjtGetChild(i).jjtAccept(this, null).toString("");
+                output += "\trows = rows["+id+"]\n";
+            }
+        }
         return null;
     }
 
     @Override
     public SimpleNode visit(RANGE node, SimpleNode data) {
-        // TODO Auto-generated method stub
-        return null;
+        return node;
     }
 
     @Override
@@ -628,9 +650,12 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         return node;
     }
 
-    private String getType(SimpleNode n){
-        String t = n.type.toString();
-        if (t.equals("Integer")){
+    private String getType(IDEN n){
+        BaseType t = n.type;
+        if (t == null){
+            return "float";
+        }
+        if (t.toString().equals("Integer")){
             return "int";
         } else {
             return "float";

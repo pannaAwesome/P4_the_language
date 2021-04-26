@@ -48,6 +48,9 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
                     TypeCheckVisitor.printWrongs();
                     if(TypeCheckVisitor.error == 0) {
                         System.out.println("Finished succesfully");
+                        CodeGeneratorVisitor cgv = new CodeGeneratorVisitor();
+                      n.jjtAccept(cgv, null);
+                      cgv.getPyFile();
                     }
                 }
             }catch(Exception e) {
