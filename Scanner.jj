@@ -43,28 +43,25 @@ static Scanner parser = null;
                 SimpleNode n = parser.PROG();
                 n.dump("");
 
-                /*System.out.println("Pretty printing:");
+                System.out.println("Pretty printing:");
                 PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
                 n.jjtAccept(ppv, null);
-                System.out.println(ppv.print);*/
+                System.out.println(ppv.print);
 
                 System.out.println("Filling the symboltable:");
                 SymbolTableVisitor stv = new SymbolTableVisitor();
                 n.jjtAccept(stv, null);
                 System.out.println(SymbolTableVisitor.ST);
-
-                if(!SymbolTableVisitor.error) {
+                SymbolTableVisitor.printWrongs();
+                if(SymbolTableVisitor.error == 0) {
                     System.out.println();
                     System.out.println("Checking types:");
                     TypeCheckVisitor tcv = new TypeCheckVisitor();
                     n.jjtAccept(tcv, null);
-                    if(!TypeCheckVisitor.error) {
+                    TypeCheckVisitor.printWrongs();
+                    if(TypeCheckVisitor.error == 0) {
                         System.out.println("Finished succesfully");
-                    }else {
-                        System.out.println("Found multiple errors in code, please fix them!");
                     }
-                } else {
-                    System.out.println("Found multiple errors in code, please fix them!");
                 }
             }catch(Exception e) {
                 System.out.println(e.getMessage());
@@ -590,73 +587,47 @@ void SACD():
 }
 
 void COLARITHMEXPR()      :
-{ Token t; }
-{/*@bgen(jjtree) #ADD(> 1) */
-    {
-      ADD jjtn001 = new ADD(JJTADD);
-      boolean jjtc001 = true;
-      jjtree.openNodeScope(jjtn001);
-    }
-    try {
-/*@egen*/
+{ Token t; ADD current; }
+{
     (
-        COLARITHMEXPR2() (( t = "+" | t = "-") { jjtn001.value = t.image; } COLARITHMEXPR2())*
-    )/*@bgen(jjtree)*/
-    } catch (Throwable jjte001) {
-      if (jjtc001) {
-        jjtree.clearNodeScope(jjtn001);
-        jjtc001 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte001 instanceof RuntimeException) {
-        throw (RuntimeException)jjte001;
-      }
-      if (jjte001 instanceof ParseException) {
-        throw (ParseException)jjte001;
-      }
-      throw (Error)jjte001;
-    } finally {
-      if (jjtc001) {
-        jjtree.closeNodeScope(jjtn001, jjtree.nodeArity() > 1);
-      }
+    COLARITHMEXPR2()
+    (
+    (   t = "+" COLARITHMEXPR2()
+    |   t = "-" COLARITHMEXPR2()
+    )
+    {
+        SimpleNode first = (SimpleNode) jjtree.popNode();
+        SimpleNode second = (SimpleNode) jjtree.popNode();
+        current = new ADD(first.id);
+        current.value = t.image;
+        current.jjtAddChild(first, 0);
+        current.jjtAddChild(second, 1);
+        jjtree.pushNode(current);
     }
-/*@egen*/        
+    )*
+    )
 }
 
 void COLARITHMEXPR2()      :
-{ Token t; }
-{/*@bgen(jjtree) #MULT(> 1) */
-    {
-      MULT jjtn001 = new MULT(JJTMULT);
-      boolean jjtc001 = true;
-      jjtree.openNodeScope(jjtn001);
-    }
-    try {
-/*@egen*/
+{ Token t; MULT mult; }
+{
+    COLOPERANDS() 
     (
-        COLOPERANDS()((t = "*" | t = "/" | t = "%") { jjtn001.value = t.image; } COLOPERANDS())*
-    )/*@bgen(jjtree)*/
-    } catch (Throwable jjte001) {
-      if (jjtc001) {
-        jjtree.clearNodeScope(jjtn001);
-        jjtc001 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte001 instanceof RuntimeException) {
-        throw (RuntimeException)jjte001;
-      }
-      if (jjte001 instanceof ParseException) {
-        throw (ParseException)jjte001;
-      }
-      throw (Error)jjte001;
-    } finally {
-      if (jjtc001) {
-        jjtree.closeNodeScope(jjtn001, jjtree.nodeArity() > 1);
-      }
-    }
-/*@egen*/         
+        (
+            t = "*" COLOPERANDS()
+        |   t = "/" COLOPERANDS()
+        |   t = "%" COLOPERANDS()
+        )
+        {
+            SimpleNode first = (SimpleNode) jjtree.popNode();
+            SimpleNode second = (SimpleNode) jjtree.popNode();
+            mult = new MULT(first.id);
+            mult.value = t.image;
+            mult.jjtAddChild(first, 0);
+            mult.jjtAddChild(second, 1);
+            jjtree.pushNode(mult);
+        }
+    )*
 }
 
 void COLOPERANDS()      :
@@ -864,157 +835,46 @@ void CONSTRAINEXPR()      :
 }
 
 void ARITHMEXPR1()      :
-{ Token t; }
+{ Token t; ADD current; }
 {
+    (
     ARITHMEXPR2()
-    (/*@bgen(jjtree) ADD */
-        {
-          ADD jjtn001 = new ADD(JJTADD);
-          boolean jjtc001 = true;
-          jjtree.openNodeScope(jjtn001);
-        }
-        try {
-/*@egen*/
-        ( t = "+" { jjtn001.value = t.image; } ARITHMEXPR2())/*@bgen(jjtree)*/
-        } catch (Throwable jjte001) {
-          if (jjtc001) {
-            jjtree.clearNodeScope(jjtn001);
-            jjtc001 = false;
-          } else {
-            jjtree.popNode();
-          }
-          if (jjte001 instanceof RuntimeException) {
-            throw (RuntimeException)jjte001;
-          }
-          if (jjte001 instanceof ParseException) {
-            throw (ParseException)jjte001;
-          }
-          throw (Error)jjte001;
-        } finally {
-          if (jjtc001) {
-            jjtree.closeNodeScope(jjtn001, true);
-          }
-        }
-/*@egen*/    
-    |/*@bgen(jjtree) MINUS */
-        {
-          MINUS jjtn002 = new MINUS(JJTMINUS);
-          boolean jjtc002 = true;
-          jjtree.openNodeScope(jjtn002);
-        }
-        try {
-/*@egen*/   ( t = "-" { jjtn002.value = t.image; } ARITHMEXPR2())/*@bgen(jjtree)*/
-        } catch (Throwable jjte002) {
-          if (jjtc002) {
-            jjtree.clearNodeScope(jjtn002);
-            jjtc002 = false;
-          } else {
-            jjtree.popNode();
-          }
-          if (jjte002 instanceof RuntimeException) {
-            throw (RuntimeException)jjte002;
-          }
-          if (jjte002 instanceof ParseException) {
-            throw (ParseException)jjte002;
-          }
-          throw (Error)jjte002;
-        } finally {
-          if (jjtc002) {
-            jjtree.closeNodeScope(jjtn002, true);
-          }
-        }
-/*@egen*/      
+    (
+    (   t = "+" ARITHMEXPR2()
+    |   t = "-" ARITHMEXPR2()
+    )
+    {
+        SimpleNode first = (SimpleNode) jjtree.popNode();
+        SimpleNode second = (SimpleNode) jjtree.popNode();
+        current = new ADD(first.id);
+        current.value = t.image;
+        current.jjtAddChild(first, 0);
+        current.jjtAddChild(second, 1);
+        jjtree.pushNode(current);
+    }
     )*
+    )
 }
 
 void ARITHMEXPR2()      :
-{ Token t; }
+{ Token t; MULT mult; }
 {
-    OPERANDS() (/*@bgen(jjtree) MULT */
+    OPERANDS() 
+    (
+        (
+            t = "*" OPERANDS()
+        |   t = "/" OPERANDS()
+        |   t = "%" OPERANDS()
+        )
         {
-          MULT jjtn001 = new MULT(JJTMULT);
-          boolean jjtc001 = true;
-          jjtree.openNodeScope(jjtn001);
+            SimpleNode first = (SimpleNode) jjtree.popNode();
+            SimpleNode second = (SimpleNode) jjtree.popNode();
+            mult = new MULT(first.id);
+            mult.value = t.image;
+            mult.jjtAddChild(first, 0);
+            mult.jjtAddChild(second, 1);
+            jjtree.pushNode(mult);
         }
-        try {
-/*@egen*/
-        ( t = "*" { jjtn001.value = t.image; } OPERANDS())/*@bgen(jjtree)*/
-        } catch (Throwable jjte001) {
-          if (jjtc001) {
-            jjtree.clearNodeScope(jjtn001);
-            jjtc001 = false;
-          } else {
-            jjtree.popNode();
-          }
-          if (jjte001 instanceof RuntimeException) {
-            throw (RuntimeException)jjte001;
-          }
-          if (jjte001 instanceof ParseException) {
-            throw (ParseException)jjte001;
-          }
-          throw (Error)jjte001;
-        } finally {
-          if (jjtc001) {
-            jjtree.closeNodeScope(jjtn001, true);
-          }
-        }
-/*@egen*/     
-    |/*@bgen(jjtree) DIVIDE */
-        {
-          DIVIDE jjtn002 = new DIVIDE(JJTDIVIDE);
-          boolean jjtc002 = true;
-          jjtree.openNodeScope(jjtn002);
-        }
-        try {
-/*@egen*/   ( t = "/" { jjtn002.value = t.image; } OPERANDS())/*@bgen(jjtree)*/
-        } catch (Throwable jjte002) {
-          if (jjtc002) {
-            jjtree.clearNodeScope(jjtn002);
-            jjtc002 = false;
-          } else {
-            jjtree.popNode();
-          }
-          if (jjte002 instanceof RuntimeException) {
-            throw (RuntimeException)jjte002;
-          }
-          if (jjte002 instanceof ParseException) {
-            throw (ParseException)jjte002;
-          }
-          throw (Error)jjte002;
-        } finally {
-          if (jjtc002) {
-            jjtree.closeNodeScope(jjtn002, true);
-          }
-        }
-/*@egen*/       
-    |/*@bgen(jjtree) MODULUS */
-        {
-          MODULUS jjtn003 = new MODULUS(JJTMODULUS);
-          boolean jjtc003 = true;
-          jjtree.openNodeScope(jjtn003);
-        }
-        try {
-/*@egen*/   ( t = "%" { jjtn003.value = t.image; } OPERANDS())/*@bgen(jjtree)*/
-        } catch (Throwable jjte003) {
-          if (jjtc003) {
-            jjtree.clearNodeScope(jjtn003);
-            jjtc003 = false;
-          } else {
-            jjtree.popNode();
-          }
-          if (jjte003 instanceof RuntimeException) {
-            throw (RuntimeException)jjte003;
-          }
-          if (jjte003 instanceof ParseException) {
-            throw (ParseException)jjte003;
-          }
-          throw (Error)jjte003;
-        } finally {
-          if (jjtc003) {
-            jjtree.closeNodeScope(jjtn003, true);
-          }
-        }
-/*@egen*/        
     )*
 }
 
@@ -1057,7 +917,7 @@ void CONSTRAINTS():
 void OPERANDS()      :
 {}
 {
-    <LPAREN> ARITHMEXPR1() <RPAREN> | (SACD()) | IDEN() | NUM()
+    <LPAREN> ARITHMEXPR1() <RPAREN> | SACD() | IDEN() | NUM()
 }
 
 void STRING():
@@ -1364,6 +1224,42 @@ void IDEN():
     {
         jjtn000.value = t.image;
     }/*@bgen(jjtree)*/
+    } finally {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+      }
+    }
+/*@egen*/
+}
+
+void MULT():
+{/*@bgen(jjtree) MULT */
+  MULT jjtn000 = new MULT(JJTMULT);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}
+{/*@bgen(jjtree) MULT */
+    try {
+/*@egen*/
+    "*"/*@bgen(jjtree)*/
+    } finally {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+      }
+    }
+/*@egen*/
+}
+
+void ADD():
+{/*@bgen(jjtree) ADD */
+  ADD jjtn000 = new ADD(JJTADD);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+/*@egen*/}
+{/*@bgen(jjtree) ADD */
+    try {
+/*@egen*/
+    "+"/*@bgen(jjtree)*/
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);

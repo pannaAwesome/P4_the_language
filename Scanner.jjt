@@ -39,28 +39,25 @@ static Scanner parser = null;
                 SimpleNode n = parser.PROG();
                 n.dump("");
 
-                /*System.out.println("Pretty printing:");
+                System.out.println("Pretty printing:");
                 PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
                 n.jjtAccept(ppv, null);
-                System.out.println(ppv.print);*/
+                System.out.println(ppv.print);
 
                 System.out.println("Filling the symboltable:");
                 SymbolTableVisitor stv = new SymbolTableVisitor();
                 n.jjtAccept(stv, null);
                 System.out.println(SymbolTableVisitor.ST);
-
-                if(!SymbolTableVisitor.error) {
+                SymbolTableVisitor.printWrongs();
+                if(SymbolTableVisitor.error == 0) {
                     System.out.println();
                     System.out.println("Checking types:");
                     TypeCheckVisitor tcv = new TypeCheckVisitor();
                     n.jjtAccept(tcv, null);
-                    if(!TypeCheckVisitor.error) {
+                    TypeCheckVisitor.printWrongs();
+                    if(TypeCheckVisitor.error == 0) {
                         System.out.println("Finished succesfully");
-                    }else {
-                        System.out.println("Found multiple errors in code, please fix them!");
                     }
-                } else {
-                    System.out.println("Found multiple errors in code, please fix them!");
                 }
             }catch(Exception e) {
                 System.out.println(e.getMessage());
@@ -258,19 +255,47 @@ void SACD():
 }
 
 void COLARITHMEXPR() #void:
-{ Token t; }
+{ Token t; ADD current; }
 {
     (
-        COLARITHMEXPR2() (( t = "+" | t = "-") { jjtThis.value = t.image; } COLARITHMEXPR2())*
-    )#ADD(>1)
+    COLARITHMEXPR2()
+    (
+    (   t = "+" COLARITHMEXPR2()
+    |   t = "-" COLARITHMEXPR2()
+    )
+    {
+        SimpleNode first = (SimpleNode) jjtree.popNode();
+        SimpleNode second = (SimpleNode) jjtree.popNode();
+        current = new ADD(first.id);
+        current.value = t.image;
+        current.jjtAddChild(first, 0);
+        current.jjtAddChild(second, 1);
+        jjtree.pushNode(current);
+    }
+    )*
+    )
 }
 
 void COLARITHMEXPR2() #void:
-{ Token t; }
+{ Token t; MULT mult; }
 {
+    COLOPERANDS() 
     (
-        COLOPERANDS()((t = "*" | t = "/" | t = "%") { jjtThis.value = t.image; } COLOPERANDS())*
-    )#MULT(>1)
+        (
+            t = "*" COLOPERANDS()
+        |   t = "/" COLOPERANDS()
+        |   t = "%" COLOPERANDS()
+        )
+        {
+            SimpleNode first = (SimpleNode) jjtree.popNode();
+            SimpleNode second = (SimpleNode) jjtree.popNode();
+            mult = new MULT(first.id);
+            mult.value = t.image;
+            mult.jjtAddChild(first, 0);
+            mult.jjtAddChild(second, 1);
+            jjtree.pushNode(mult);
+        }
+    )*
 }
 
 void COLOPERANDS() #void:
@@ -340,22 +365,46 @@ void CONSTRAINEXPR() #void:
 }
 
 void ARITHMEXPR1() #void:
-{ Token t; }
+{ Token t; ADD current; }
 {
+    (
     ARITHMEXPR2()
     (
-        ( t = "+" { jjtThis.value = t.image; } ARITHMEXPR2())#ADD
-    |   ( t = "-" { jjtThis.value = t.image; } ARITHMEXPR2())#MINUS
+    (   t = "+" ARITHMEXPR2()
+    |   t = "-" ARITHMEXPR2()
+    )
+    {
+        SimpleNode first = (SimpleNode) jjtree.popNode();
+        SimpleNode second = (SimpleNode) jjtree.popNode();
+        current = new ADD(first.id);
+        current.value = t.image;
+        current.jjtAddChild(first, 0);
+        current.jjtAddChild(second, 1);
+        jjtree.pushNode(current);
+    }
     )*
+    )
 }
 
 void ARITHMEXPR2() #void:
-{ Token t; }
+{ Token t; MULT mult; }
 {
-    OPERANDS() (
-        ( t = "*" { jjtThis.value = t.image; } OPERANDS())#MULT
-    |   ( t = "/" { jjtThis.value = t.image; } OPERANDS())#DIVIDE
-    |   ( t = "%" { jjtThis.value = t.image; } OPERANDS())#MODULUS
+    OPERANDS() 
+    (
+        (
+            t = "*" OPERANDS()
+        |   t = "/" OPERANDS()
+        |   t = "%" OPERANDS()
+        )
+        {
+            SimpleNode first = (SimpleNode) jjtree.popNode();
+            SimpleNode second = (SimpleNode) jjtree.popNode();
+            mult = new MULT(first.id);
+            mult.value = t.image;
+            mult.jjtAddChild(first, 0);
+            mult.jjtAddChild(second, 1);
+            jjtree.pushNode(mult);
+        }
     )*
 }
 
@@ -371,7 +420,7 @@ void CONSTRAINTS():
 void OPERANDS() #void:
 {}
 {
-    <LPAREN> ARITHMEXPR1() <RPAREN> | (SACD()) | IDEN() | NUM()
+    <LPAREN> ARITHMEXPR1() <RPAREN> | SACD() | IDEN() | NUM()
 }
 
 void STRING():
@@ -459,4 +508,16 @@ void IDEN():
     {
         jjtThis.value = t.image;
     }
+}
+
+void MULT():
+{}
+{
+    "*"
+}
+
+void ADD():
+{}
+{
+    "+"
 }
