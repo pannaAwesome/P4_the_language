@@ -1,7 +1,21 @@
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.FileNotFoundException;
 
 public class CodeGeneratorVisitor implements ScannerVisitor {
 
     private String output = "";
+
+    public void getPyFile(){
+        try {
+            PrintWriter out = new PrintWriter("output.py");
+            out.println(output);
+            out.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public SimpleNode visit(MINUS node, SimpleNode data) {
@@ -187,11 +201,17 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(COLOR node, SimpleNode data) {
         output += "(";
-        output += node.jjtGetChild(0).jjtAccept(this, data).toString("");
+        SimpleNode left = node.jjtGetChild(0).jjtAccept(this, data);
+        if (left instanceof IDEN){
+            output += left.toString("");
+        }
         int numOfChild = node.jjtGetNumChildren();
         for (int i = 1; i < numOfChild; i++) {
             output += " or ";
-            output += node.jjtGetChild(i).jjtAccept(this, data).toString("");
+            SimpleNode right = node.jjtGetChild(i).jjtAccept(this, data);
+            if (right instanceof IDEN){
+                output += left.toString("");
+            }
         }
         output += ")";
         return null;
@@ -200,11 +220,17 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(COLAND node, SimpleNode data) {
         output += "(";
-        output += node.jjtGetChild(0).jjtAccept(this, data).toString("");
+        SimpleNode left = node.jjtGetChild(0).jjtAccept(this, data);
+        if (left instanceof IDEN){
+            output += left.toString("");
+        }
         int numOfChild = node.jjtGetNumChildren();
         for (int i = 1; i < numOfChild; i++) {
             output += " and ";
-            output += node.jjtGetChild(i).jjtAccept(this, data).toString("");
+            SimpleNode right = node.jjtGetChild(i).jjtAccept(this, data);
+            if (right instanceof IDEN){
+                output += left.toString("");
+            }
         }
         output += ")";
         return null;
@@ -220,7 +246,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             output += " == ";
             output += node.jjtGetChild(1).jjtAccept(this, null).toString("");
         } else if (expr.equals("CONTAINS")){
-            String str = node.jjtGetChild(1).jjtAccept(this, null).toString("");
+            String str = "\""+node.jjtGetChild(1).jjtAccept(this, null).toString("")+"\"";
             output += str+" in ";
             String colName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
             output += "("+getType(node)+")row[\""+colName+"\"]";
@@ -393,11 +419,17 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(OR node, SimpleNode data) {
         output += "(";
-        output += node.jjtGetChild(0).jjtAccept(this, data).toString("");
+        SimpleNode left = node.jjtGetChild(0).jjtAccept(this, data);
+        if (left instanceof IDEN){
+            output += left.toString("");
+        }
         int numOfChild = node.jjtGetNumChildren();
         for (int i = 1; i < numOfChild; i++) {
             output += " or ";
-            output += node.jjtGetChild(i).jjtAccept(this, data).toString("");
+            SimpleNode right = node.jjtGetChild(i).jjtAccept(this, data);
+            if (right instanceof IDEN){
+                output += left.toString("");
+            }
         }
         output += ")";
         return null;
@@ -406,11 +438,17 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(AND node, SimpleNode data) {
         output += "(";
-        output += node.jjtGetChild(0).jjtAccept(this, data).toString("");
+        SimpleNode left = node.jjtGetChild(0).jjtAccept(this, data);
+        if (left instanceof IDEN){
+            output += left.toString("");
+        }
         int numOfChild = node.jjtGetNumChildren();
         for (int i = 1; i < numOfChild; i++) {
             output += " and ";
-            output += node.jjtGetChild(i).jjtAccept(this, data).toString("");
+            SimpleNode right = node.jjtGetChild(i).jjtAccept(this, data);
+            if (right instanceof IDEN){
+                output += left.toString("");
+            }
         }
         output += ")";
         return null;
