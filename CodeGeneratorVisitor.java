@@ -30,26 +30,26 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "import pandas as pd\n";
         output += "import matplotlib.pyplot as mlp\n";
         output += "import matplotlib.ticker as mlt\n";
-        output += "import numpy as np\n";
+        output += "import numpy as np\n\n";
         
         output += "ruleNames = []\n";
         output += "resultFromRules = []\n";
         output += "columnRuleNames = []\n";
-        output += "resultFromColumnRules = []\n";
+        output += "resultFromColumnRules = []\n\n";
 
         output += "def isfloat(value):\n";
         output += "\ttry:\n";
         output += "\t\tfloat(value)\n";
         output += "\t\treturn True\n";
         output += "\texcept Exception:\n";   
-        output += "\t\treturn False\n";  
+        output += "\t\treturn False\n\n";  
 
         output += "def isint(value):\n";
         output += "\ttry:\n";
         output += "\t\tint(value)\n";
         output += "\t\treturn True\n";
         output += "\texcept Exception:\n";   
-        output += "\t\treturn False\n";
+        output += "\t\treturn False\n\n";
 
 
         for(int i = 0; i < node.jjtGetNumChildren(); i++){
@@ -74,6 +74,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(IMPOPTIONS node, SimpleNode data) {
+        output += "df = pd.read_csv(path, dtype=str)\n";
         for (int i = 0; i < node.jjtGetNumChildren(); i++){
             SimpleNode n = node.jjtGetChild(i).jjtAccept(this, null);
             if (n instanceof IDEN || n instanceof INTEGER){ // id parameter 
@@ -81,7 +82,6 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
                 return null;
             }  
         }
-        output += "df = pd.read_csv(path, dtype=str)\n";
         return null;
     }
 
@@ -98,7 +98,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\tfor i in range(colNum):\n";
         output += "\t\tnewHeaders.append(f\"column{i+1}\")\n";
         output += "\tdf.columns = newHeaders\n";
-        output += "noHeaders()\n";
+        output += "noHeaders()\n\n";
         return null;
     }
 
@@ -131,7 +131,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             node.jjtGetChild(lastChild).jjtAccept(this, null);
             output += ":\n";
             output += "\t\t\ttempDf = tempDf.append(row)\n";
-            output += "\trow = tempDf\n";
+            //output += "\trow = tempDf\n";
             output += "\tif ";
             for (int i = 1; i < node.jjtGetNumChildren()-1; i++){
                 node.jjtGetChild(i).jjtAccept(this, null);
@@ -149,8 +149,6 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "columnRuleNames.append("+ruleName+")\n";
         output += "resultFromColumnRules.append("+ruleName+"())\n";
         output += "\n";
-
-        
         
 
         return null;
@@ -169,7 +167,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             node.jjtGetChild(lastChild).jjtAccept(this, null);
             output += ":\n";
             output += "\t\t\ttempDf = tempDf.append(row)\n";
-            output += "\trow = tempDf\n";
+            //output += "\trow = tempDf\n";
             output += "\tif ";
             for (int i = 1; i < node.jjtGetNumChildren()-1; i++){
                 node.jjtGetChild(i).jjtAccept(this, null);
@@ -363,6 +361,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\treturn pd.Series(result)\n";
         output += "df.append(\""+ruleName+"\")\n";
         output += "resultFromRules[\""+ruleName+"\"] = "+ruleName+"()\n";
+        output += "\n";
         return null;
     }
 
@@ -403,6 +402,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\treturn pd.Series(result)\n";
         output += "df.append(\""+ruleName+"\")\n";
         output += "resultFromRules[\""+ruleName+"\"] = "+ruleName+"()\n";
+        output += "\n";
         return null;
     }
 
@@ -528,7 +528,8 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             return null;
         }
 
-        output += "def pretty_print(analyzeRuleTable, overviewAxis, normalAxis, columnAxis, columnTable):\n";
+        output += "def pretty_print(analyzeRuleTable, columnTable):\n";
+        output += "\tfig, (overviewAxis, normalAxis, columnAxis) = mlp.subplots(3, 1)\n";
         output += "\tcolors_list = ['#5cb85c', '#d9534f']\n";
         output += "\toverviewPlot = (analyzeRuleTable.div(analyzeRuleTable.sum(1), axis=0)).plot(\n";
         output += "\tkind='barh', \n";
@@ -545,7 +546,10 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\toverviewAxis.xaxis.set_major_formatter(mlt.PercentFormatter(1))\n";
         output += "\toverviewAxis.legend(['Passed', 'Failed'], loc=[1, 0.5])\n";
 
-        output += "\tcolumn_labels = ['No. of passed rows', 'No. of failed rows']\n";
+        output += "\tanalyzeRuleTable[\"Total\"] = analyzeRuleTable[\"Right\"] + analyzeRuleTable[\"Wrong\"] \n";
+        output += "\tanalyzeRuleTable[\"%\"] = round((analyzeRuleTable[\"Right\"] / analyzeRuleTable[\"Total\"]) * 100, 2)\n";
+
+        output += "\tcolumn_labels = ['No. of passed rows', 'No. of failed rows', 'no. of total rows', '% of passed rows']\n";
         output += "\tnormalAxis.axis('off')\n";
         output += "\tnormalAxis.table(\n";
         output += "\t\tcellText=analyzeRuleTable.values, \n";
@@ -574,8 +578,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\tcols = df[ruleNames].apply(pd.value_counts).fillna(0).transpose()\n";
         output += "\tanalyzeRuleTable = pd.DataFrame(cols[\"Right\"])\n";
         output += "\tanalyzeRuleTable[\"Wrong\"] = cols[\"Wrong\"]\n";
-        output += "\tfig, (overviewAxis, normalAxis, columnAxis) = mlp.subplots(3, 1)\n";
-        output += "\tpretty_print(analyzeRuleTable, overviewAxis, normalAxis, columnAxis, columnTable)\n";
+        output += "\tpretty_print(analyzeRuleTable, columnTable)\n";
 
         output += "ANALYZE()";
         return null;
