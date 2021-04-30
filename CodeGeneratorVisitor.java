@@ -350,12 +350,12 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             output += "\t\t\tfor func in _"+ruleName+":\n";
             output += "\t\t\t\ttempRes = tempRes or func(row)\n";
             output += "\t\t\tif tempRes:\n";
-            output += "\t\t\t\tresult.append(\"Right\")\n";
+            output += "\t\t\t\tresult.append(\"True\")\n";
             output += "\t\t\telse:\n";
-            output += "\t\t\t\tresult.append(\"Wrong\")\n";
+            output += "\t\t\t\tresult.append(\"False\")\n";
             output += "\t\t\ttempRes = False\n";
             output += "\t\texcept Exception:\n";
-            output += "\t\t\tresult.append(\"Wrong\")\n";
+            output += "\t\t\tresult.append(\"False\")\n";
             output += "\treturn pd.Series(result)\n";
             output += "ruleNames.append(\""+ruleName+"\")\n";
             output += "df[\""+ruleName+"\"] = "+ruleName+"()\n\n";
@@ -373,11 +373,11 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             node.jjtGetChild(i).jjtAccept(this, null);
         }        
         output += ":\n";
-        output += "\t\t\t\tresult.append(\"Right\")\n"; 
+        output += "\t\t\t\tresult.append(\"True\")\n"; 
         output += "\t\t\telse:\n";
-        output += "\t\t\t\tresult.append(\"Wrong\")\n"; 
+        output += "\t\t\t\tresult.append(\"False\")\n"; 
         output += "\t\texcept Exception:\n";
-        output += "\t\t\tresult.append(\"Wrong\")\n";     
+        output += "\t\t\tresult.append(\"False\")\n";     
         output += "\treturn pd.Series(result)\n";
         output += "ruleNames.append(\""+ruleName+"\")\n";
         output += "df[\""+ruleName+"\"] = "+ruleName+"()\n";
@@ -563,8 +563,8 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\toverviewAxis.xaxis.set_major_formatter(mlt.PercentFormatter(1))\n";
         output += "\toverviewAxis.legend(['Passed', 'Failed'], loc=[1, 0.5])\n\n";
 
-        output += "\tanalyzeRuleTable[\"Total\"] = analyzeRuleTable[\"Right\"] + analyzeRuleTable[\"Wrong\"] \n";
-        output += "\tanalyzeRuleTable[\"%\"] = round((analyzeRuleTable[\"Right\"] / analyzeRuleTable[\"Total\"]) * 100, 2)\n\n";
+        output += "\tanalyzeRuleTable[\"Total\"] = analyzeRuleTable[\"True\"] + analyzeRuleTable[\"False\"] \n";
+        output += "\tanalyzeRuleTable[\"%\"] = round((analyzeRuleTable[\"True\"] / analyzeRuleTable[\"Total\"]) * 100, 2)\n\n";
 
         output += "\tcolumn_labels = ['No. of passed rows', 'No. of failed rows', 'no. of total rows', '% of passed rows']\n";
         output += "\tnormalAxis.axis('off')\n";
@@ -598,20 +598,20 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\ttotalFailure = 0\n";
         output += "\tfor row in df.iterrows():\n";
         output += "\t\tfor rule in ruleNames:\n";
-        output += "\t\t\tif (\"Wrong\" in row[1][rule]):\n";
+        output += "\t\t\tif (row[1][rule] == False):\n";
         output += "\t\t\t\ttotalFailure += 1\n";
         output += "\t\t\t\tbreak\n";
 
         output += "\ttotalRows = len(df.index)\n";
         output += "\ttotalFailure = round((totalFailure / totalRows) * 100, 2)\n";
-        output += "\toverrall = pd.DataFrame([[totalFailure, 100-totalFailure]], columns=[\"Wrong\", \"Right\"]).rename(index={0: \"Overrall correctness\"})\n";
+        output += "\toverrall = pd.DataFrame([[totalFailure, 100-totalFailure]], columns=[\"False\", \"True\"]).rename(index={0: \"Overrall correctness\"})\n";
 
         
         output += "\tcols = df[ruleNames].apply(pd.value_counts).fillna(0).transpose()\n";
         output += "\tcols = cols.append(overrall)\n";
         output += "\truleNames.append(\"Overral correctness\")\n";
-        output += "\tanalyzeRuleTable = pd.DataFrame(cols[\"Right\"])\n";
-        output += "\tanalyzeRuleTable[\"Wrong\"] = cols[\"Wrong\"]\n";
+        output += "\tanalyzeRuleTable = pd.DataFrame(cols[\"True\"])\n";
+        output += "\tanalyzeRuleTable[\"False\"] = cols[\"False\"]\n";
         output += "\tpretty_print(analyzeRuleTable, columnTable)\n";
 
         output += "ANALYZE()";
@@ -641,7 +641,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             output += "\truleNames.remove(\""+ruleName+"\")\n";
         }
 
-        output += "\trows = df.loc[df['"+ruleName+"'] == \"Wrong\"]\n";
+        output += "\trows = df.loc[df['"+ruleName+"'] == \"False\"]\n";
         return null;
     }
 
