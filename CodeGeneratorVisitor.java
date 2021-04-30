@@ -598,7 +598,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\ttotalFailure = 0\n";
         output += "\tfor row in df.iterrows():\n";
         output += "\t\tfor rule in ruleNames:\n";
-        output += "\t\t\tif (row[1][rule] == False):\n";
+        output += "\t\t\tif (row[1][rule] == \"False\"):\n";
         output += "\t\t\t\ttotalFailure += 1\n";
         output += "\t\t\t\tbreak\n";
 
