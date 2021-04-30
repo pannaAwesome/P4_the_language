@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Scanner",
+            "request": "launch",
+            "mainClass": "Scanner",
+            "projectName": "P4_the_language_d9e5e70e"
+        },
+        {
+            "type": "java",
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}"

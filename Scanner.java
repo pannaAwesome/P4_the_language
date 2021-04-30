@@ -48,6 +48,9 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
                     TypeCheckVisitor.printWrongs();
                     if(TypeCheckVisitor.error == 0) {
                         System.out.println("Finished succesfully");
+                        CodeGeneratorVisitor cgv = new CodeGeneratorVisitor();
+                        n.jjtAccept(cgv, null);
+                        cgv.getPyFile();
                     }
                 }
             }catch(Exception e) {
@@ -1514,31 +1517,39 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
       RULEOPT();
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case ROW:
-        ROWOPT();
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case COL:
-          COLOPT();
-          break;
-        default:
-          jj_la1[58] = jj_gen;
-          ;
-        }
-        break;
       case COL:
-        COLOPT();
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case ROW:
           ROWOPT();
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case COL:
+            COLOPT();
+            break;
+          default:
+            jj_la1[58] = jj_gen;
+            ;
+          }
+          break;
+        case COL:
+          COLOPT();
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case ROW:
+            ROWOPT();
+            break;
+          default:
+            jj_la1[59] = jj_gen;
+            ;
+          }
           break;
         default:
-          jj_la1[59] = jj_gen;
-          ;
+          jj_la1[60] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
         }
         break;
       default:
-        jj_la1[60] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
+        jj_la1[61] = jj_gen;
+        ;
       }
     } catch (Throwable jjte000) {
       if (jjtc000) {
@@ -1574,7 +1585,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
           ;
           break;
         default:
-          jj_la1[61] = jj_gen;
+          jj_la1[62] = jj_gen;
           break label_30;
         }
         IDEN();
@@ -1586,7 +1597,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
             ;
             break;
           default:
-            jj_la1[62] = jj_gen;
+            jj_la1[63] = jj_gen;
             break label_31;
           }
         }
@@ -1622,7 +1633,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
         ;
         break;
       default:
-        jj_la1[63] = jj_gen;
+        jj_la1[64] = jj_gen;
         break label_32;
       }
     }
@@ -1638,7 +1649,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
         ;
         break;
       default:
-        jj_la1[64] = jj_gen;
+        jj_la1[65] = jj_gen;
         break label_33;
       }
     }
@@ -1659,7 +1670,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
           ;
           break;
         default:
-          jj_la1[65] = jj_gen;
+          jj_la1[66] = jj_gen;
           break label_34;
         }
         jj_consume_token(COMMA);
@@ -1703,7 +1714,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
             ;
             break;
           default:
-            jj_la1[66] = jj_gen;
+            jj_la1[67] = jj_gen;
             break label_35;
           }
           jj_consume_token(COMMA);
@@ -1719,7 +1730,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
             ;
             break;
           default:
-            jj_la1[67] = jj_gen;
+            jj_la1[68] = jj_gen;
             break label_36;
           }
           jj_consume_token(COMMA);
@@ -1727,7 +1738,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
         }
         break;
       default:
-        jj_la1[68] = jj_gen;
+        jj_la1[69] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -1766,7 +1777,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
         INTEGER();
         break;
       default:
-        jj_la1[69] = jj_gen;
+        jj_la1[70] = jj_gen;
         ;
       }
     } catch (Throwable jjte001) {
@@ -1845,7 +1856,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[70];
+  static final private int[] jj_la1 = new int[71];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -1853,10 +1864,10 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x50,0x8000,0x0,0x8000,0x8000,0x0,0x8000,0x1000,0x0,0x8000,0x8000,0x800,0x1800,0x8000,0x400,0x400,0x8000,0x4000,0x8000,0x8000,0x0,0x8000,0x40000,0x4000,0x8000,0x100000,0x200000,0x87800000,0x30000,0x7800000,0x0,0x0,0x0,0x0,0x87800000,0x8000,0x8000,0x0,0x8000,0x40000,0x8000,0x100000,0x200000,0x80000000,0x87800000,0x200b0000,0x0,0x0,0x0,0x0,0x18400000,0x87800000,0x0,0x8000,0x8001,0x81,0x8000,0x0,0x400,0x200,0x600,0x0,0x8000,0x8000,0x8000,0x40000000,0x40000000,0x40000000,0x0,0x2000,};
+      jj_la1_0 = new int[] {0x50,0x8000,0x0,0x8000,0x8000,0x0,0x8000,0x1000,0x0,0x8000,0x8000,0x800,0x1800,0x8000,0x400,0x400,0x8000,0x4000,0x8000,0x8000,0x0,0x8000,0x40000,0x4000,0x8000,0x100000,0x200000,0x87800000,0x30000,0x7800000,0x0,0x0,0x0,0x0,0x87800000,0x8000,0x8000,0x0,0x8000,0x40000,0x8000,0x100000,0x200000,0x80000000,0x87800000,0x200b0000,0x0,0x0,0x0,0x0,0x18400000,0x87800000,0x0,0x8000,0x8001,0x81,0x8000,0x0,0x400,0x200,0x600,0x600,0x0,0x8000,0x8000,0x8000,0x40000000,0x40000000,0x40000000,0x0,0x2000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x2,0x0,0x0,0x88,0x0,0x0,0x88,0x0,0x0,0x0,0x0,0x0,0x80,0x80,0x0,0x0,0x0,0x0,0x80,0x0,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1800,0x1800,0xe000,0xe000,0x18,0x0,0x0,0x80,0x0,0x2,0x0,0x0,0x0,0x80,0xb8,0x0,0x1800,0x1800,0xe000,0xe000,0x0,0x98,0x18,0x0,0x0,0x0,0x0,0x2,0x0,0x0,0x0,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x88,0x0,};
+      jj_la1_1 = new int[] {0x0,0x0,0x2,0x0,0x0,0x88,0x0,0x0,0x88,0x0,0x0,0x0,0x0,0x0,0x80,0x80,0x0,0x0,0x0,0x0,0x80,0x0,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1800,0x1800,0xe000,0xe000,0x18,0x0,0x0,0x80,0x0,0x2,0x0,0x0,0x0,0x80,0xb8,0x0,0x1800,0x1800,0xe000,0xe000,0x0,0x98,0x18,0x0,0x0,0x0,0x0,0x2,0x0,0x0,0x0,0x0,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x88,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -1877,7 +1888,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 70; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 71; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1892,7 +1903,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 70; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 71; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -1909,7 +1920,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 70; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 71; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1920,7 +1931,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 70; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 71; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -1936,7 +1947,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 70; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 71; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1946,7 +1957,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 70; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 71; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -2002,7 +2013,7 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 70; i++) {
+    for (int i = 0; i < 71; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
