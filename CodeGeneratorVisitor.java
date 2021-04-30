@@ -587,7 +587,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\t\t#bbox=[0, 0, 1, 0.65],\n";
         output += "\t\tloc='center'\n";
         output += "\t)\n";
-        output += "\tcolPlot.set_fontsize(15)\n\n";
+        output += "\tcolPlot.set_fontsize(12)\n\n";
 
         output += "\tmlp.tight_layout()\n";
         output += "\tmlp.show()\n\n";
@@ -597,8 +597,10 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
         output += "\ttotalFailure = 0\n";
         output += "\tfor row in df.iterrows():\n";
-        output += "\t\tif (\"Wrong\" in row[1].to_string()):\n";
-        output += "\t\t\ttotalFailure += 1\n";
+        output += "\t\tfor rule in ruleNames:\n";
+        output += "\t\t\tif (\"Wrong\" in row[1][rule]):\n";
+        output += "\t\t\t\ttotalFailure += 1\n";
+        output += "\t\t\t\tbreak\n";
 
         output += "\ttotalRows = len(df.index)\n";
         output += "\ttotalFailure = round((totalFailure / totalRows) * 100, 2)\n";
