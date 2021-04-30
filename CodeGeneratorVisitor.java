@@ -13,14 +13,12 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             out.println(output);
             out.close();
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
     @Override
     public SimpleNode visit(SimpleNode node, SimpleNode data) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -157,7 +155,6 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             node.jjtGetChild(lastChild).jjtAccept(this, null);
             output += ":\n";
             output += "\t\t\ttempDf = tempDf.append(row)\n";
-            //output += "\trow = tempDf\n";
             output += "\tif ";
             for (int i = 1; i < node.jjtGetNumChildren()-1; i++){
                 node.jjtGetChild(i).jjtAccept(this, null);
@@ -183,7 +180,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(COLPARTRULE node, SimpleNode data) {
         String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
-        output += "def "+ruleName+"(row):\n";
+        output += "def "+ruleName+"Where(row):\n";
         int lastChild = node.jjtGetNumChildren()-1;
         SimpleNode whereClause = (SimpleNode)node.jjtGetChild(lastChild);
 
@@ -193,15 +190,15 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
                 whereClause.jjtGetChild(i).jjtAccept(this, null);
             } 
             output += "\n";
-            output += "_"+getParentRuleFromPartRule(node)+"Where.append("+ruleName+")\n\n";
+            output += "_"+getParentRuleFromPartRule(node)+"Where.append("+ruleName+"Where)\n\n";
 
-            output += "def "+ruleName+"Where(row):\n";
+            output += "def "+ruleName+"(row):\n";
             output += "\treturn ";
             for (int i = 0; i < node.jjtGetNumChildren()-1; i++){
                 node.jjtGetChild(i).jjtAccept(this, null);
             }
             output += "\n";
-            output += "_"+getParentRuleFromPartRule(node)+".append("+ruleName+"Where)\n";
+            output += "_"+getParentRuleFromPartRule(node)+".append("+ruleName+")\n";
             output += "\n";
         } else {
             for (int i = 1; i < node.jjtGetNumChildren(); i++){
@@ -260,11 +257,6 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             node.jjtGetChild(0).jjtAccept(this, null);
             output += " == ";
             node.jjtGetChild(1).jjtAccept(this, null);
-        /*} else if (expr.equals("CONTAINS")){
-            String str = "\""+node.jjtGetChild(1).jjtAccept(this, null).toString("")+"\"";
-            output += str+" in ";
-            String colName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
-            output += "row[\""+colName+"\"]";*/
         } else if (expr.equals("<=") | expr.equals(">=") | expr.equals("<") | expr.equals(">")){
             node.jjtGetChild(0).jjtAccept(this, null);
             output += node.toString("");
@@ -376,31 +368,14 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\t"+"result = []\n";
         output += "\tfor index, row in df.iterrows():\n";
         output += "\t\ttry:\n";
-        /*int lastChild = node.jjtGetNumChildren()-1;
-        String mabyeWhereClause = node.jjtGetChild(lastChild).toString();
-        if (mabyeWhereClause.equals("WHERE")){ // if where clause exists, it has to be run first
-            output += "\t\t\tif ";
-            node.jjtGetChild(lastChild).jjtAccept(this, null);
-            output += "\t\t\t\tif ";
-            for (int i = 1; i < node.jjtGetNumChildren()-1; i++){
-                node.jjtGetChild(i).jjtAccept(this, null);
-            }
-            output += ":\n";
-            output += "\t\t\t\t\tresult.append(\"Right\")\n"; 
-            output += "\t\t\t\telse:\n";
-            output += "\t\t\t\t\tresult.append(\"Wrong\")\n"; 
-            output += "\t\t\telse:\n";
-            output += "result.append(\"\")\n";
-        } else {*/
-            output += "\t\t\tif ";
-            for (int i = 1; i < node.jjtGetNumChildren(); i++){
-                node.jjtGetChild(i).jjtAccept(this, null);
-            }        
-            output += ":\n";
-            output += "\t\t\t\tresult.append(\"Right\")\n"; 
-            output += "\t\t\telse:\n";
-            output += "\t\t\t\tresult.append(\"Wrong\")\n"; 
-        //}
+        output += "\t\t\tif ";
+        for (int i = 1; i < node.jjtGetNumChildren(); i++){
+            node.jjtGetChild(i).jjtAccept(this, null);
+        }        
+        output += ":\n";
+        output += "\t\t\t\tresult.append(\"Right\")\n"; 
+        output += "\t\t\telse:\n";
+        output += "\t\t\t\tresult.append(\"Wrong\")\n"; 
         output += "\t\texcept Exception:\n";
         output += "\t\t\tresult.append(\"Wrong\")\n";     
         output += "\treturn pd.Series(result)\n";
