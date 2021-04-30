@@ -192,7 +192,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             output += "\n";
             output += "_"+getParentRuleFromPartRule(node)+"Where.append("+ruleName+"Where)\n\n";
 
-            output += "def "+ruleName+"(row):\n";
+            output += "def "+ruleName+"():\n";
             output += "\treturn ";
             for (int i = 0; i < node.jjtGetNumChildren()-1; i++){
                 node.jjtGetChild(i).jjtAccept(this, null);

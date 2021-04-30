@@ -344,7 +344,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 SimpleNode idNode = node.jjtGetChild(i).jjtAccept(this, data);
                 String idName = idNode.value.toString();
                 STVal types = SymbolTableVisitor.ST.get(idName);
-                if (!types.type.contains(new RuleType()) && !types.type.contains(new PartRuleType())) {
+                if (!types.type.contains(new RuleType()) /*&& !types.type.contains(new PartRuleType())*/) {
                     TypeCheckVisitor.error++;
                     throw new TypeException(idName, types, new RuleType(), data);
                 }

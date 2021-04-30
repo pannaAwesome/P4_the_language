@@ -57,6 +57,9 @@ static Scanner parser = null;
                     TypeCheckVisitor.printWrongs();
                     if(TypeCheckVisitor.error == 0) {
                         System.out.println("Finished succesfully");
+                        CodeGeneratorVisitor cgv = new CodeGeneratorVisitor();
+                        n.jjtAccept(cgv, null);
+                        cgv.getPyFile();
                     }
                 }
             }catch(Exception e) {
@@ -136,7 +139,7 @@ TOKEN: /* Literals */
 
 TOKEN: /* Identifiers */
 {
-    <FILENAME:      (["A"-"Z","a"-"z","0"-"9","-","_"])+".csv">
+    <FILENAME:      (["A"-"Z","a"-"z","0"-"9","-","_", "/", ".", ":"])+".csv">
 |   <ID:            (["A"-"Z","a"-"z"](["A"-"Z","a"-"z","0"-"9","_"])*)|("_"(["A"-"Z","a"-"z","0"-"9"])(["A"-"Z","a"-"z","0"-"9","_"])*)>
 }
 
@@ -462,7 +465,7 @@ void ANLZ() #ANALYZE:
 void ANOPTIONS() #ANLZOPTIONS:
 {}
 {
-    RULEOPT() (ROWOPT() (COLOPT())? | COLOPT() (ROWOPT())?)
+    (RULEOPT()) (ROWOPT() (COLOPT())? | COLOPT() (ROWOPT())?)?
 }
 
 void RULEOPT():
