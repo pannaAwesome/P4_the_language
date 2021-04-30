@@ -1,4 +1,4 @@
-IMPORT C:/Users/ax111/Downloads/users.csv IN users BEGIN
+IMPORT ./CsvFiler/users.csv IN users BEGIN
     ID id
 END
 
