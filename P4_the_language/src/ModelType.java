@@ -1,3 +1,4 @@
+package src;
 public class ModelType extends BaseType {
     public ModelType() {
         super(7);

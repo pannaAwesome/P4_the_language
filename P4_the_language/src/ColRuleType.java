@@ -1,3 +1,4 @@
+package src;
 public class ColRuleType extends BaseType{
     public ColRuleType() {
         super(9);

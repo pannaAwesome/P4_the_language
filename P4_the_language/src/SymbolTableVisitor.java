@@ -1,3 +1,4 @@
+package src;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -183,7 +184,7 @@ public class SymbolTableVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(COLVALEXPR node, SimpleNode data) {
-        return node;
+        return data;
     }
     
     @Override

@@ -1,3 +1,4 @@
+package src;
 public class TipException extends Exception {
 
     private static final long serialVersionUID = 1L;

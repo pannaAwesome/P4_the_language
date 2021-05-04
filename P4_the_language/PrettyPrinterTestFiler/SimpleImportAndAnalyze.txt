@@ -4,4 +4,4 @@ MODEL user BEGIN
 
 END
 
-ANALYZE users WITH user 
+ANALYZE users WITH user

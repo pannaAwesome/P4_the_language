@@ -1,3 +1,4 @@
+package src;
 public class RedundantSyntaxException extends Exception {
 
     private static final long serialVersionUID = 1L;

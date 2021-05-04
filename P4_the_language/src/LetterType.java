@@ -1,3 +1,4 @@
+package src;
 public class LetterType extends BaseType {
     public LetterType() {
         super(4);

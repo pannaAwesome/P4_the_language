@@ -1,3 +1,4 @@
+package src;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,8 +61,6 @@ public class TypeCheckVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(MODEL node, SimpleNode data) {
-        node.jjtGetChild(0).jjtAccept(this, data);
-
         for (int i = 1; i < node.jjtGetNumChildren(); i++){
             node.jjtGetChild(i).jjtAccept(this, data);
         }
@@ -75,7 +74,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             node.jjtGetChild(i).jjtAccept(this, node);
         }
         
-        return node;
+        return data;
     }
 
     @Override
@@ -84,7 +83,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
         for (int i = 1; i < numOfChild; i++) {
             node.jjtGetChild(i).jjtAccept(this, node);
         }
-        return node;
+        return data;
     }
 
     @Override
@@ -93,7 +92,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
         for (int i = 0; i < numOfChild; i++) {
             node.jjtGetChild(i).jjtAccept(this, node);
         }
-        return node;
+        return data;
     }
     
     @Override
@@ -102,7 +101,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
         for (int i = 0; i < numOfChild; i++) {
             node.jjtGetChild(i).jjtAccept(this, node);
         }
-        return null;
+        return data;
     }
 
     @Override
@@ -111,7 +110,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
         for (int i = 0; i < numOfChild; i++) {
             node.jjtGetChild(i).jjtAccept(this, node);
         }
-        return null;
+        return data;
     }
 
     @Override
@@ -142,7 +141,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             }
         }
         
-        return node;
+        return data;
     }
 
     @Override
@@ -153,7 +152,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
             SimpleNode idNode = node.jjtGetChild(1).jjtAccept(this, data);
             checkOrColNode(idNode);
         }
-        return node;
+        return data;
     }
 
     @Override
@@ -344,7 +343,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 SimpleNode idNode = node.jjtGetChild(i).jjtAccept(this, data);
                 String idName = idNode.value.toString();
                 STVal types = SymbolTableVisitor.ST.get(idName);
-                if (!types.type.contains(new RuleType()) /*&& !types.type.contains(new PartRuleType())*/) {
+                if (!types.type.contains(new RuleType())) {
                     TypeCheckVisitor.error++;
                     throw new TypeException(idName, types, new RuleType(), data);
                 }

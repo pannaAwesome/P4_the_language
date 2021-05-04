@@ -1,3 +1,4 @@
+package src;
 public class TableType extends BaseType{
     public TableType() {
         super(6);

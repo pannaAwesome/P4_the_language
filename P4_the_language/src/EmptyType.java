@@ -1,3 +1,4 @@
+package src;
 public class EmptyType extends BaseType {
     public boolean notFlag;
 
