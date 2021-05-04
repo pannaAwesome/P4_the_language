@@ -6,12 +6,17 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
   protected static JJTScannerState jjtree = new JJTScannerState();static Scanner parser = null;
     public static void main(String[] args) throws ParseException, FileNotFoundException {
         String[] files = {
-            //"./TekstTestFiler/StringRegelTest.txt",
-            //"./TekstTestFiler/DecimalRegelTest.txt",
-            //"./TekstTestFiler/IntegerRegelTest.txt",
-            //"./TekstTestFiler/TypeRegelTest.txt",
-            //"./TekstTestFiler/TipRegelTest.txt",
-            "test.txt"
+            /*"./ExceptionsTestFiler/StringRegelTest.txt",
+            "./ExceptionsTestFiler/DecimalRegelTest.txt",
+            "./ExceptionsTestFiler/IntegerRegelTest.txt",
+            "./ExceptionsTestFiler/TypeRegelTest.txt",
+            "./ExceptionsTestFiler/TipRegelTest.txt",*/
+            "./PrettyPrinterTestFiler/SimpleImportAndAnalyze.txt",
+            "./PrettyPrinterTestFiler/AdvancedImportAndAnalyze.txt",
+            "./PrettyPrinterTestFiler/Rules.txt",
+            "./PrettyPrinterTestFiler/PartRules.txt",
+            "./PrettyPrinterTestFiler/ColumnRules.txt",
+            "./PrettyPrinterTestFiler/ColumnPartRules.txt"
         };
 
         for (String fileName : files) {
@@ -23,12 +28,15 @@ public class Scanner/*@bgen(jjtree)*/implements ScannerTreeConstants, ScannerCon
             } else {
               parser.ReInit(stream);
               SymbolTableVisitor.ST =  new HashMap<String, STVal>();
+              TypeCheckVisitor.error = 0;
+              TypeCheckVisitor.warning = 0;
+              TypeCheckVisitor.tip = 0;
             }
 
             System.out.println(file.getName());
             try {
                 SimpleNode n = parser.PROG();
-                n.dump("");
+                //n.dump("");
 
                 System.out.println("Pretty printing:");
                 PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();

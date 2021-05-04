@@ -1,0 +1,12 @@
+IMPORT ../CsvFiler/users.csv IN users
+
+MODEL user BEGIN
+    COL nameRule BEGIN
+        nameISFilled: COUNT(name) = 100
+        heightISExpectedAverage: AVG(height) > 169 WHERE country = "Danmark"
+        lastNameISFilled: COUNT(name) = 100
+        ageISExpectedSum: SUM(age) > 30 WHERE height > 160
+    END
+END
+
+ANALYZE users WITH user

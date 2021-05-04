@@ -21,58 +21,28 @@ def isint(value):
 	except Exception:
 		return False
 
-path = "C:/Users/ax111/Downloads/users.csv"
+path = "../CsvFiler/users.csv"
 df = pd.read_csv(path, dtype=str)
-idColSet = "id"
-
-_exactNameRule = []
-def isNancy(row):
-	 return row["firstname"] == "Nancy"
-_exactNameRule.append(isNancy)
-
-def isRobert(row):
-	 return row["firstname"] == "robert"
-_exactNameRule.append(isRobert)
-
-def isSteven(row):
-	 return row["firstname"] == "Steven"
-_exactNameRule.append(isSteven)
-
-def exactNameRule():
-	result = []
-	tempRes = False
-	for index, row in df.iterrows():
-		try:
-			for func in _exactNameRule:
-				tempRes = tempRes or func(row)
-			if tempRes:
-				result.append("True")
-			else:
-				result.append("False")
-			tempRes = False
-		except Exception:
-			result.append("False")
-	return pd.Series(result)
-ruleNames.append("exactNameRule")
-df["exactNameRule"] = exactNameRule()
-
+idColSet = False
 _nameRuleWhere = []
 _nameRule = []
-def nameRule3Where(row):
-	return float(row["balance"])>-5000.0
-_nameRuleWhere.append(nameRule3Where)
+def nameISFilledWhere(row):
+	return df["name"].count() == 100def heightISExpectedAverageWhere(row):
+	return row["country"] == "Danmark"
+_nameRuleWhere.append(heightISExpectedAverageWhere)
 
-def nameRule3():
-	return df["firstname"].count() == 9
-_nameRule.append(nameRule3)
+def heightISExpectedAverage():
+	return pd.to_numeric(df["height"], downcast='float').mean()>169
+_nameRule.append(heightISExpectedAverage)
 
-def nameRule4Where(row):
-	return float(row["balance"])>-5000.0
-_nameRuleWhere.append(nameRule4Where)
+def lastNameISFilledWhere(row):
+	return df["name"].count() == 100def ageISExpectedSumWhere(row):
+	return int(row["height"])>160
+_nameRuleWhere.append(ageISExpectedSumWhere)
 
-def nameRule4():
-	return len(df["firstname"].unique()) == 9
-_nameRule.append(nameRule4)
+def ageISExpectedSum():
+	return pd.to_numeric(df["age"], downcast='float').sum()>30
+_nameRule.append(ageISExpectedSum)
 
 def nameRule():
 	try:
@@ -95,64 +65,6 @@ def nameRule():
 		return [' ', 'x']
 columnRuleNames.append("nameRule")
 resultFromColumnRules.append(nameRule())
-
-def balanceRule2():
-	result = []
-	for index, row in df.iterrows():
-		try:
-			if (float(row["balance"])>0.0 and float(row["balance"])<100000.0):
-				result.append("True")
-			else:
-				result.append("False")
-		except Exception:
-			result.append("False")
-	return pd.Series(result)
-ruleNames.append("balanceRule2")
-df["balanceRule2"] = balanceRule2()
-
-def heigtRule1():
-	result = []
-	for index, row in df.iterrows():
-		try:
-			if isfloat(row["height"]):
-				result.append("True")
-			else:
-				result.append("False")
-		except Exception:
-			result.append("False")
-	return pd.Series(result)
-ruleNames.append("heigtRule1")
-df["heigtRule1"] = heigtRule1()
-
-def avgHeightRule():
-	if pd.to_numeric(df["height"], downcast='float').mean()>120:
-		return ['x', ' ']
-	else:
-		return [' ', 'x']
-columnRuleNames.append("avgHeightRule")
-resultFromColumnRules.append(avgHeightRule())
-
-def sumHeightRule():
-	if pd.to_numeric(df["height"], downcast='float').sum() == 1583:
-		return ['x', ' ']
-	else:
-		return [' ', 'x']
-columnRuleNames.append("sumHeightRule")
-resultFromColumnRules.append(sumHeightRule())
-
-def ageRule1():
-	result = []
-	for index, row in df.iterrows():
-		try:
-			if (isint(row["age"]) and int(row["age"])>0 and int(row["age"])<100):
-				result.append("True")
-			else:
-				result.append("False")
-		except Exception:
-			result.append("False")
-	return pd.Series(result)
-ruleNames.append("ageRule1")
-df["ageRule1"] = ageRule1()
 
 def pretty_print(analyzeRuleTable, columnTable):
 	fig, (overviewAxis, normalAxis, columnAxis) = mlp.subplots(3, 1)
@@ -206,7 +118,7 @@ def ANALYZE():
 	totalFailure = 0
 	for row in df.iterrows():
 		for rule in ruleNames:
-			if (row[1][rule] == False):
+			if (row[1][rule] == "False"):
 				totalFailure += 1
 				break
 	totalRows = len(df.index)
