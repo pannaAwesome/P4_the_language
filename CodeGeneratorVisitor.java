@@ -355,33 +355,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(RULE node, SimpleNode data) {
-        String mabyePartRule = node.jjtGetChild(1).toString();
-        if (mabyePartRule.equals("PARTRULE")){
-            String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString(""); 
-            output += "_"+ruleName+" = []\n";
-            for (int i = 0; i < node.jjtGetNumChildren(); i++){
-                node.jjtGetChild(i).jjtAccept(this, null);
-            }  
-            output += "def "+ruleName+"():\n";
-            output += "\tresult = []\n";
-            output += "\ttempRes = False\n";
-            output += "\tfor index, row in df.iterrows():\n";
-            output += "\t\ttry:\n";
-            output += "\t\t\tfor func in _"+ruleName+":\n";
-            output += "\t\t\t\ttempRes = tempRes or func(row)\n";
-            output += "\t\t\tif tempRes:\n";
-            output += "\t\t\t\tresult.append(\"True\")\n";
-            output += "\t\t\telse:\n";
-            output += "\t\t\t\tresult.append(\"False\")\n";
-            output += "\t\t\ttempRes = False\n";
-            output += "\t\texcept Exception:\n";
-            output += "\t\t\tresult.append(\"False\")\n";
-            output += "\treturn pd.Series(result)\n";
-            output += "ruleNames.append(\""+ruleName+"\")\n";
-            output += "df[\""+ruleName+"\"] = "+ruleName+"()\n\n";
-
-            return null;
-        }
+        
 
         String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
         output += "def "+ruleName+"():\n";
@@ -389,9 +363,22 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\tfor index, row in df.iterrows():\n";
         output += "\t\ttry:\n";
         output += "\t\t\tif ";
-        for (int i = 1; i < node.jjtGetNumChildren(); i++){
-            node.jjtGetChild(i).jjtAccept(this, null);
-        }        
+
+        String mabyePartRule = node.jjtGetChild(1).toString();
+        if (mabyePartRule.equals("PARTRULE")){
+            int childNum = node.jjtGetNumChildren();
+            for (int i = 1; i < childNum; i++){
+                node.jjtGetChild(i).jjtAccept(this, null);
+                if (i != childNum-1){
+                    output += " or ";
+                }
+            } 
+        } else {
+            for (int i = 1; i < node.jjtGetNumChildren(); i++){
+                node.jjtGetChild(i).jjtAccept(this, null);
+            }
+        }
+
         output += ":\n";
         output += "\t\t\t\tresult.append(\"True\")\n"; 
         output += "\t\t\telse:\n";
@@ -407,28 +394,9 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(PARTRULE node, SimpleNode data) {
-        String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
-        output += "def "+ruleName+"(row):\n";
-        /*int lastChild = node.jjtGetNumChildren()-1;
-        String mabyeWhereClause = node.jjtGetChild(lastChild).toString();
-        if (mabyeWhereClause.equals("WHERE")){ // if where clause exists, it has to be run first
-            output += "\tif ";
-            node.jjtGetChild(lastChild).jjtAccept(this, null);
-            output += "\t\treturn ";
-            for (int i = 1; i < node.jjtGetNumChildren()-1; i++){
-                node.jjtGetChild(i).jjtAccept(this, null);
-            }
-            output += "\telse:";
-            output += "return \"\"";
-        } else {*/
-            output += "\t return ";
-            for (int i = 1; i < node.jjtGetNumChildren(); i++){
-                node.jjtGetChild(i).jjtAccept(this, null);
-            }        
-            output += "\n";
-        //}
-        output += "_"+getParentRuleFromPartRule(node)+".append("+ruleName+")\n";
-        output += "\n";
+        for (int i = 1; i < node.jjtGetNumChildren(); i++){
+            node.jjtGetChild(i).jjtAccept(this, null);
+        }        
         return null;
     }
 
