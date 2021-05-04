@@ -130,12 +130,12 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             output += "\t\t\tif tempBool:\n";
             output += "\t\t\t\ttempDf = tempDf.append(row)\n\n";
 		
-            output += "\t\t\tfor func in _"+ruleName+":\n";
-            output += "\t\t\t\ttempRes = tempRes or func(row)\n";
-            output += "\t\t\tif tempRes:\n";
-            output += "\t\t\t\treturn ['x', ' ']\n";
-            output += "\t\t\telse:\n";
-            output += "\t\t\t\treturn [' ', 'x']\n";
+            output += "\t\tfor func in _"+ruleName+":\n";
+            output += "\t\t\ttempRes = tempRes or func(_df)\n";
+            output += "\t\tif tempRes:\n";
+            output += "\t\t\treturn ['x', ' ']\n";
+            output += "\t\telse:\n";
+            output += "\t\t\treturn [' ', 'x']\n";
             output += "\texcept Exception:\n";
             output += "\t\treturn [' ', 'x']\n";
             output += "columnRuleNames.append(\""+ruleName+"\")\n";
@@ -156,12 +156,12 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             output += ":\n";
             output += "\t\t\ttempDf = tempDf.append(row)\n";
             output += "\tif ";
-            for (int i = 1; i < node.jjtGetNumChildren()-1; i++){
+            for (int i = 0; i < node.jjtGetNumChildren()-1; i++){
                 node.jjtGetChild(i).jjtAccept(this, null);
             }
         } else {
             output += "\tif ";
-            for (int i = 1; i < node.jjtGetNumChildren(); i++){
+            for (int i = 0; i < node.jjtGetNumChildren(); i++){
                 node.jjtGetChild(i).jjtAccept(this, null);
             }
         }
@@ -180,19 +180,20 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(COLPARTRULE node, SimpleNode data) {
         String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
-        output += "def "+ruleName+"Where(row):\n";
+        
         int lastChild = node.jjtGetNumChildren()-1;
         SimpleNode whereClause = (SimpleNode)node.jjtGetChild(lastChild);
-
-        output += "\treturn ";
+ 
         if (whereClause instanceof WHERE){
+            output += "def "+ruleName+"Where(row):\n";
+            output += "\treturn ";
             for (int i = 0; i < whereClause.jjtGetNumChildren(); i++){
                 whereClause.jjtGetChild(i).jjtAccept(this, null);
             } 
             output += "\n";
             output += "_"+getParentRuleFromPartRule(node)+"Where.append("+ruleName+"Where)\n\n";
 
-            output += "def "+ruleName+"():\n";
+            output += "def "+ruleName+"(df):\n";
             output += "\treturn ";
             for (int i = 0; i < node.jjtGetNumChildren()-1; i++){
                 node.jjtGetChild(i).jjtAccept(this, null);
@@ -201,11 +202,15 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             output += "_"+getParentRuleFromPartRule(node)+".append("+ruleName+")\n";
             output += "\n";
         } else {
+            output += "def "+ruleName+"(df):\n";
+            output += "\treturn ";
             for (int i = 1; i < node.jjtGetNumChildren(); i++){
                 node.jjtGetChild(i).jjtAccept(this, null);
             }
+            output += "\n";
+            output += "_"+getParentRuleFromPartRule(node)+".append("+ruleName+")\n";
+            output += "\n";
         }
-
 
         return null;
     }
@@ -274,7 +279,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         for (int i = 0; i < node.jjtGetNumChildren(); i++) {
             SimpleNode n = node.jjtGetChild(i).jjtAccept(this, data);
             if (n instanceof IDEN) {
-
+                
             }
         }
         return node;
@@ -506,10 +511,10 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
                 output += "isint("+id+")";
                 break;
             case "EMPTY":
-                output += "pd.isna(row[\""+id+"\"])";
+                output += "pd.isna("+id+")";
                 break;
-            case "NOT":
-                output += "not pd.isna(row[\""+id+"\"])";
+            case "NOTEMPTY":
+                output += "not pd.isna("+id+")";
                 break;
         }
     }
