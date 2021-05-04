@@ -1,0 +1,7 @@
+IMPORT ../CsvFiler/users.csv IN users
+
+MODEL user BEGIN
+
+END
+
+ANALYZE users WITH user 

@@ -1,0 +1,11 @@
+IMPORT ../CsvFiler/users.csv IN users
+
+MODEL user BEGIN
+    nameRule BEGIN
+        nameISLETTERS: name IS LETTERS
+        lastNameISLETTERS: lastname IS LETTERS
+        nameContainsHans: name CONTAINS "hans"
+    END
+END
+
+ANALYZE users WITH user

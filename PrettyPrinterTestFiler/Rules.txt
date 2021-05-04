@@ -1,0 +1,11 @@
+IMPORT ../CsvFiler/users.csv IN users
+
+MODEL user BEGIN
+    nameRule: name IS LETTERS
+    lastNameRule: lastName = "hej" OR lastName CONTAINS "goddag"
+    heightRule: height < 200 AND height > 0
+    balanceRule: balance = formerBalance + currentBalance - 5
+    ageRule: age < AVG(age) OR age > AVG(age)
+END
+
+ANALYZE users WITH user

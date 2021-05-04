@@ -1,0 +1,14 @@
+IMPORT ../CsvFiler/users.csv IN user BEGIN
+    ID id
+    NOHEADERS
+END
+
+MODEL user BEGIN
+    
+END
+
+ANALYZE users WITH user BEGIN
+    nameRule
+    COL 1, name
+    ROW 1, 20 TO 30
+END
