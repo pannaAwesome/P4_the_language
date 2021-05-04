@@ -111,43 +111,11 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(COLRULE node, SimpleNode data) {
-        // String mabyePartRule = node.jjtGetChild(1).toString();
-        // if (mabyePartRule.equals("COLPARTRULE")){
-        //     String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
-        //     output += "_"+ruleName+"Where = []\n"; 
-        //     output += "_"+ruleName+" = []\n";
-        //     for (int i = 0; i < node.jjtGetNumChildren(); i++){
-        //         node.jjtGetChild(i).jjtAccept(this, null);
-        //     }  
-        //     output += "def "+ruleName+"():\n";
-        //     output += "\ttry:\n";
-        //     output += "\t\ttempDf = pd.DataFrame(columns=df.columns)\n";
-        //     output += "\t\ttempBool = False\n";
-        //     output += "\t\ttempRes = False\n";
-        //     output += "\t\tfor index, row in df.iterrows():\n";
-        //     output += "\t\t\tfor func in _nameRuleWhere:\n";
-        //     output += "\t\t\t\ttempBool = tempBool or func(row)\n";
-        //     output += "\t\t\tif tempBool:\n";
-        //     output += "\t\t\t\ttempDf = tempDf.append(row)\n\n";
-		
-        //     output += "\t\tfor func in _"+ruleName+":\n";
-        //     output += "\t\t\ttempRes = tempRes or func(_df)\n";
-        //     output += "\t\tif tempRes:\n";
-        //     output += "\t\t\treturn ['x', ' ']\n";
-        //     output += "\t\telse:\n";
-        //     output += "\t\t\treturn [' ', 'x']\n";
-        //     output += "\texcept Exception:\n";
-        //     output += "\t\treturn [' ', 'x']\n";
-        //     output += "columnRuleNames.append(\""+ruleName+"\")\n";
-        //     output += "resultFromColumnRules.append("+ruleName+"())\n\n";
-
-        //     return null;
-        // }
-
         String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
         output += "def "+ruleName+"(df):\n";
         output += "\ttempRes = False\n";
         output += "\ttry:\n";
+        output += "\t\tdfCopy = df\n";
         int lastChild = node.jjtGetNumChildren()-1;
         SimpleNode mabyeWhereClause = (SimpleNode)node.jjtGetChild(lastChild);
         if (mabyeWhereClause instanceof WHERE){ // if where clause exists, it has to be run first
@@ -202,7 +170,6 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
  
         if (whereClause instanceof WHERE){
             output += "\t\ttempDf = pd.DataFrame(columns=df.columns)\n";
-            output += "\t\tdfCopy = df\n";
             output += "\t\tfor index, row in df.iterrows():\n";
             output += "\t\t\tif ";
             for (int i = 0; i < whereClause.jjtGetNumChildren(); i++){
