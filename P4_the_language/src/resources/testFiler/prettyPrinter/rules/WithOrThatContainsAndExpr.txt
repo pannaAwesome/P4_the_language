@@ -1,0 +1,5 @@
+IMPORT users.csv IN users
+
+MODEL user BEGIN
+    rule: (height IS INTEGER AND height > 10) OR (height IS DECIMAL AND height > 10.0)
+END

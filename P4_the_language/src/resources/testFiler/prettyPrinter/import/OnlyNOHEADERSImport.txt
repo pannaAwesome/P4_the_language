@@ -1,0 +1,7 @@
+IMPORT users.csv IN users BEGIN
+    NOHEADERS
+END
+
+MODEL user BEGIN
+
+END

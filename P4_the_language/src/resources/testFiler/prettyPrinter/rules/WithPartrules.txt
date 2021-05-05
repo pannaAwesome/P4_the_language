@@ -1,0 +1,8 @@
+IMPORT users.csv IN users
+
+MODEL user BEGIN
+    rule BEGIN
+        part1: height IS INTEGER
+        part2: height IS DECIMAL
+    END
+END

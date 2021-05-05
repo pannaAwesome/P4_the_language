@@ -1,0 +1,11 @@
+IMPORT users.csv IN users
+
+MODEL user BEGIN
+
+END
+
+ANALYZE users WITH user BEGIN
+    rule1
+    COL firstname
+    ROW 1
+END

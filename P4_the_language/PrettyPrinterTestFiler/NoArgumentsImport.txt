@@ -1,5 +1,0 @@
-IMPORT users.csv IN users
-
-MODEL user BEGIN
-
-END

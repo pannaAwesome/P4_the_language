@@ -1,0 +1,5 @@
+IMPORT users.csv IN users
+
+MODEL user BEGIN
+    COL rule: SUM(height) > 10 AND COUNT(height) = 100
+END

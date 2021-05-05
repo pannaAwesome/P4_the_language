@@ -1,0 +1,8 @@
+IMPORT users.csv IN users BEGIN
+    ID hejsa
+    NOHEADERS
+END
+
+MODEL user BEGIN
+
+END

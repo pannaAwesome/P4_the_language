@@ -3,5 +3,16 @@
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
         "lib/junit-platform-console-standalone-1.6.0.jar"
+    ],
+    "java.test.config": [
+        {
+            "name": "Java Test Runner",
+            "workingDirectory": "${workspaceFolder}",
+            "sourcePaths": [
+                "${workspaceFolder}/src/resources/testFiler/prettyPrinter",
+                "${workspaceFolder}/src/resources/testFiler/typeExceptions",
+                "${workspaceFolder}/src/resources/CsvFiler"
+            ]
+        }
     ]
 }
