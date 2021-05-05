@@ -521,7 +521,9 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
         output += "\ttotalRows = len(df.index)\n";
         output += "\tanalyzeRuleTable[\"%passed\"] = round((analyzeRuleTable[\"True\"] / totalRows) * 100, 2)\n";
-        output += "\tanalyzeRuleTable[\"%failed\"] = round(100 - analyzeRuleTable[\"%passed\"], 2)\n\n";
+        output += "\tanalyzeRuleTable[\"%failed\"] = round(100 - analyzeRuleTable[\"%passed\"], 2)\n";
+        output += "\tanalyzeRuleTable[\"True\"] = analyzeRuleTable[\"True\"].astype(str)\n";
+        output += "\tanalyzeRuleTable[\"False\"] = analyzeRuleTable[\"False\"].astype(str)\n\n";
 
         output += "\tcolumn_labels = ['No. of passed rows', 'No. of failed rows', '% of passed rows', '% of failed rows']\n";
         output += "\tnormalAxis.axis('off')\n";
@@ -565,7 +567,11 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\tcols = cols.append(overrall)\n";
         output += "\truleNames.append(\"Overral correctness\")\n";
         output += "\tanalyzeRuleTable = pd.DataFrame(cols[\"True\"])\n";
+        output += "\tanalyzeRuleTable[\"True\"] = pd.to_numeric(analyzeRuleTable[\"True\"], downcast='integer')\n";
+
         output += "\tanalyzeRuleTable[\"False\"] = cols[\"False\"]\n";
+        output += "\tanalyzeRuleTable[\"False\"] = pd.to_numeric(analyzeRuleTable[\"False\"], downcast='integer')\n";
+
         output += "\tpretty_print(analyzeRuleTable, columnTable)\n";
 
         output += "ANALYZE()";
