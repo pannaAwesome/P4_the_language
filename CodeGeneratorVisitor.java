@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CodeGeneratorVisitor implements ScannerVisitor {
 
@@ -581,8 +582,10 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         for (int i = 0; i < node.jjtGetNumChildren(); i++){
             node.jjtGetChild(i).jjtAccept(this, null);
         }
-        
-        output += "\tprint(rows.to_string())\n";
+        output += "\tif (len(rows)==0):\n";
+		output += "\t\tprint(\"No failed rows with the given arguments\")\n"; 
+	    output += "\telse:\n";
+		output += "\t\tprint(rows.to_string())\n";
         output += "ANALYZE()\n";
         return null;
     }
@@ -590,13 +593,21 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(RULEOPT node, SimpleNode data) {
         String ruleName = "";
+        List<String> list = new ArrayList<String>();
 
         for (int i = 0; i < node.jjtGetNumChildren(); i++){
             ruleName = node.jjtGetChild(i).jjtAccept(this, null).toString("");
             output += "\truleNames.remove(\""+ruleName+"\")\n";
+            list.add(ruleName);
         }
-
-        output += "\trows = df.loc[df['"+ruleName+"'] == \"False\"]\n";
+        output += "\trows = df.loc[";
+        for (int i = 0; i < list.size(); i++){
+            output += "(df['"+list.get(i)+"'] == \"False\")";
+            if (i != list.size()-1){
+                output += " | ";
+            }
+        }
+        output += "]\n";
         return null;
     }
 
