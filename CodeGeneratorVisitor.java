@@ -519,10 +519,13 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\toverviewAxis.xaxis.set_major_formatter(mlt.PercentFormatter(1))\n";
         output += "\toverviewAxis.legend(['Passed', 'Failed'], loc=[1, 0.5])\n\n";
 
-        output += "\tanalyzeRuleTable[\"Total\"] = analyzeRuleTable[\"True\"] + analyzeRuleTable[\"False\"] \n";
-        output += "\tanalyzeRuleTable[\"%\"] = round((analyzeRuleTable[\"True\"] / analyzeRuleTable[\"Total\"]) * 100, 2)\n\n";
+        output += "\ttotalRows = len(df.index)\n";
+        output += "\tanalyzeRuleTable[\"%passed\"] = round((analyzeRuleTable[\"True\"] / totalRows) * 100, 2)\n";
+        output += "\tanalyzeRuleTable[\"%failed\"] = round(100 - analyzeRuleTable[\"%passed\"], 2)\n";
+        output += "\tanalyzeRuleTable[\"True\"] = analyzeRuleTable[\"True\"].astype(str)\n";
+        output += "\tanalyzeRuleTable[\"False\"] = analyzeRuleTable[\"False\"].astype(str)\n\n";
 
-        output += "\tcolumn_labels = ['No. of passed rows', 'No. of failed rows', 'no. of total rows', '% of passed rows']\n";
+        output += "\tcolumn_labels = ['No. of passed rows', 'No. of failed rows', '% of passed rows', '% of failed rows']\n";
         output += "\tnormalAxis.axis('off')\n";
         output += "\tnorPlot = normalAxis.table(\n";
         output += "\t\tcellText=analyzeRuleTable.values, \n";
@@ -550,7 +553,6 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
         output += "def ANALYZE():\n";
         output += "\tcolumnTable = pd.DataFrame.from_records(resultFromColumnRules)\n";
-
         output += "\ttotalFailure = 0\n";
         output += "\tfor row in df.iterrows():\n";
         output += "\t\tfor rule in ruleNames:\n";
@@ -559,15 +561,17 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\t\t\t\tbreak\n";
 
         output += "\ttotalRows = len(df.index)\n";
-        output += "\ttotalFailure = round((totalFailure / totalRows) * 100, 2)\n";
-        output += "\toverrall = pd.DataFrame([[totalFailure, 100-totalFailure]], columns=[\"False\", \"True\"]).rename(index={0: \"Overrall correctness\"})\n";
+        output += "\toverrall = pd.DataFrame([[totalFailure, totalRows-totalFailure]], columns=[\"False\", \"True\"]).rename(index={0: \"Overrall correctness\"})\n";
 
-        
         output += "\tcols = df[ruleNames].apply(pd.value_counts).fillna(0).transpose()\n";
         output += "\tcols = cols.append(overrall)\n";
         output += "\truleNames.append(\"Overral correctness\")\n";
         output += "\tanalyzeRuleTable = pd.DataFrame(cols[\"True\"])\n";
+        output += "\tanalyzeRuleTable[\"True\"] = pd.to_numeric(analyzeRuleTable[\"True\"], downcast='integer')\n";
+
         output += "\tanalyzeRuleTable[\"False\"] = cols[\"False\"]\n";
+        output += "\tanalyzeRuleTable[\"False\"] = pd.to_numeric(analyzeRuleTable[\"False\"], downcast='integer')\n";
+
         output += "\tpretty_print(analyzeRuleTable, columnTable)\n";
 
         output += "ANALYZE()";
