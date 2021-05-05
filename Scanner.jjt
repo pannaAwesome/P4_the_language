@@ -468,10 +468,10 @@ void ANOPTIONS() #ANLZOPTIONS:
     (RULEOPT()) (ROWOPT() (COLOPT())? | COLOPT() (ROWOPT())?)?
 }
 
-void RULEOPT():
+void RULEOPT() #void: 
 {}
 {
-    (IDEN() (<EOL>)+)*
+    ((IDEN() (<EOL>)+)*)#RULEOPT (> 0)
 }
 
 void ROWOPT() #void:
