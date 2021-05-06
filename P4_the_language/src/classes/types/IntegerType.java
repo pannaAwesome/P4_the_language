@@ -7,11 +7,11 @@ import src.classes.exceptions.*;
 import src.classes.visitors.*;
 
 public class IntegerType extends BaseType {
-    private Integer minValue = null;
-    private boolean withGivenMinValue = false;
-    private Integer maxValue = null;
-    private boolean withGivenMaxValue = false;
-    private List<Integer> equalValue = new ArrayList<Integer>();
+    public Integer minValue = null;
+    public boolean withGivenMinValue = false;
+    public Integer maxValue = null;
+    public boolean withGivenMaxValue = false;
+    public List<Integer> equalValue = new ArrayList<Integer>();
 
     public IntegerType() {
         super(3);

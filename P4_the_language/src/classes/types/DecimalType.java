@@ -7,11 +7,11 @@ import src.classes.exceptions.*;
 import src.classes.visitors.*;
 
 public class DecimalType extends BaseType {
-    private Double minValue = null;
-    private boolean withGivenMinValue = false;
-    private Double maxValue = null;
-    private boolean withGivenMaxValue = false;
-    private List<Double> equalValue = new ArrayList<Double>();
+    public Double minValue = null;
+    public boolean withGivenMinValue = false;
+    public Double maxValue = null;
+    public boolean withGivenMaxValue = false;
+    public List<Double> equalValue = new ArrayList<Double>();
 
     public DecimalType() {
         super(2);
