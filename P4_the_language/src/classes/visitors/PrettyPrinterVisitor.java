@@ -126,12 +126,18 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(AND node, SimpleNode data) {
-        node.jjtGetChild(0).jjtAccept(this, data);
-
         int numOfChild = node.jjtGetNumChildren();
-        for (int i = 1; i < numOfChild; i++) {
-            print += " AND ";
-            node.jjtGetChild(i).jjtAccept(this, data);
+        for (int i = 0; i < numOfChild; i++) {
+            if (i != 0) {
+                print += " AND ";
+            }
+            if (node.jjtGetChild(i).toString().equals("OR")) {
+                print += "(";
+                node.jjtGetChild(i).jjtAccept(this, data);
+                print += ")";
+            } else {
+                node.jjtGetChild(i).jjtAccept(this, data);
+            }
         }
         return node;
     }

@@ -167,7 +167,7 @@ public class RulesTest {
         String fileName = "WithAndExpr.txt";
         String[] args = {pathName + fileName};
         String expected = importPrint + "MODEL user BEGIN\n";
-        expected += "rule: height IS INTEGER AND height < 10\n";
+        expected += "rule: height IS INTEGER AND height = \"hejsa\" AND height = 10 AND height < 10 AND height <= 10 AND height > 10 AND height >= 10\n";
         expected += "END\n";
 
         Scanner.main(args);
@@ -197,7 +197,7 @@ public class RulesTest {
         String fileName = "WithOrExpr.txt";
         String[] args = {pathName + fileName};
         String expected = importPrint + "MODEL user BEGIN\n";
-        expected += "rule: height IS INTEGER OR height IS DECIMAL\n";
+        expected += "rule: height IS INTEGER OR height = \"hejsa\" OR height = 10 OR height < 10 OR height <= 10 OR height > 10 OR height >= 10\n";
         expected += "END\n";
 
         Scanner.main(args);
