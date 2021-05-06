@@ -123,6 +123,7 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
         }
         return node;
     }
+          
 
     @Override
     public SimpleNode visit(AND node, SimpleNode data) {
@@ -136,7 +137,6 @@ public class PrettyPrinterVisitor implements ScannerVisitor {
                 node.jjtGetChild(i).jjtAccept(this, data);
                 print += ")";
             } else {
-                
                 node.jjtGetChild(i).jjtAccept(this, data);
             }
         }

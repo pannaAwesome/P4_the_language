@@ -1,5 +1,5 @@
 IMPORT users.csv IN users
 
 MODEL user BEGIN
-    rule: height IS INTEGER OR height IS DECIMAL
+    rule: height IS INTEGER OR height = "hejsa" OR height = 10 OR height < 10 OR height <= 10 OR height > 10 OR height >= 10
 END
