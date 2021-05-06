@@ -667,11 +667,10 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
     }
 
     private String getType(IDEN n){
-        BaseType t = n.type;
-        if (t == null){
-            return "float";
-        }
-        if (t.toString().equals("Integer")){
+        STVal idTypes = SymbolTableVisitor.ST.get(n.toString(""));
+        if (idTypes.type.size() == 0) return "float";
+        
+        if (idTypes.type.contains(new IntegerType()) && !idTypes.type.contains(new DecimalType())){ 
             return "int";
         } else {
             return "float";
