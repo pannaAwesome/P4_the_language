@@ -70,7 +70,7 @@ public class ImportStatementTest {
     @Test
     @DisplayName("Import statement where the only parameter is NOHEADERS")
     public void OnlyNOHEADERSImport() {
-        String fileName = "NoArgumentsImport.txt";
+        String fileName = "OnlyNOHEADERSImport.txt";
         String[] args = {pathName + fileName};
         String expected = "IMPORT users.csv IN users BEGIN\nNOHEADERS\nEND\n" + modelPrint;
 

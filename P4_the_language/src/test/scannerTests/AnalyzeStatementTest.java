@@ -80,7 +80,7 @@ public class AnalyzeStatementTest {
         assertEquals(expected, actual);   
     }
 
-    @Disabled
+    
     @Test
     @DisplayName("Analyze statement where only columns are given as column names and numbers")
     public void OnlyColumnsWithNameAndNumbersAnalyze(){

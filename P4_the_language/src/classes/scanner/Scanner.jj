@@ -8,7 +8,13 @@
 }
 
 PARSER_BEGIN(Scanner)
-package src;
+package src.classes.scanner;
+
+import src.classes.exceptions.*;
+import src.classes.types.*;
+import src.classes.visitors.*;
+
+
 import java.io.*;
 import java.util.HashMap;
 
@@ -346,7 +352,7 @@ void MDL()       :
 /*@egen*/}  
 {/*@bgen(jjtree) MODEL */
   try {
-/*@egen*/ <MODEL> IDEN() <ARGSSTART> (<EOL>)+ (RLE() | COLRLE())* <ARGSSTOP> (<EOL>)+/*@bgen(jjtree)*/
+/*@egen*/ <MODEL> IDEN() <ARGSSTART> (<EOL>)+ (RLE() | COLRLE())* <ARGSSTOP> (<EOF> | (<EOL>)+)/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -1182,7 +1188,7 @@ void COLS():
 {/*@bgen(jjtree) COLS */
     try {
 /*@egen*/
-    <COL> ( IDEN()(<COMMA> IDEN())* | (INDEX()(<COMMA> INDEX())*))/*@bgen(jjtree)*/
+    <COL> ( IDEN()(<COMMA> IDEN())* | (INDEX()(<COMMA> (INDEX()| IDEN())*)) )/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);

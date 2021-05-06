@@ -7,7 +7,7 @@ options {
 }
 
 PARSER_BEGIN(Scanner)
-package src.Classes.Scanner;
+package src.classes.scanner;
 
 import src.classes.exceptions.*;
 import src.classes.types.*;
@@ -230,7 +230,7 @@ void NOHEADERS() #NOHEADERS:
 
 void MDL() #MODEL:     
 {}  
-{ <MODEL> IDEN() <ARGSSTART> (<EOL>)+ (RLE() | COLRLE())* <ARGSSTOP> (<EOL>)+}
+{ <MODEL> IDEN() <ARGSSTART> (<EOL>)+ (RLE() | COLRLE())* <ARGSSTOP> (<EOF> | (<EOL>)+)}
 
 void COLRLE() #void:
 {}
@@ -530,7 +530,7 @@ void ROWS():
 void COLS():
 {}
 {
-    <COL> ( IDEN()(<COMMA> IDEN())* | (INDEX()(<COMMA> INDEX())*))
+    <COL> ( IDEN()(<COMMA> IDEN())* | (INDEX()(<COMMA> (INDEX()| IDEN())*)) )
 }
 
 void INDEX() #void:
