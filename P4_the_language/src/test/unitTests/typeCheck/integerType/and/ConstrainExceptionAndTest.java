@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.jupiter.api.*;
 
 import src.classes.exceptions.ConstraintException;
-import src.classes.exceptions.DuplicationException;
 import src.classes.scanner.*;
 import src.classes.types.*;
 
@@ -271,7 +270,157 @@ public class ConstrainExceptionAndTest {
         assertEquals(expected, thrown.getMessage());
     }
 
-    
+    @Test
+    @DisplayName("Test < 10 AND Test = 10")
+    public void smallerThanAndEqual() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue("=", 10);
+        CreateAndExpression("<", 10, "=", 10);
+        
+        String expected = "ERROR:\n";
+        expected += "CONSTRAINT ERROR: Cannot redefine \"test\" to be  10 because it is already defined as less than 10\n";
+        expected += "At line: rule1: test < 10 AND test = 10\n\n";
+        
+        Throwable thrown = assertThrows(ConstraintException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test < 10 AND Test <= 10")
+    public void smallerThanAndSmallerThanOrEqual() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue("<=", 10);
+        CreateAndExpression("<", 10, "<=", 10);
+        
+        String expected = "ERROR:\n";
+        expected += "CONSTRAINT ERROR: Cannot redefine \"test\" to be less than or equal to 10 because it is already defined as less than 10\n";
+        expected += "At line: rule1: test < 10 AND test <= 10\n\n";
+        
+        Throwable thrown = assertThrows(ConstraintException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test < 10 AND Test > 10")
+    public void smallerThanAndBiggerThan() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue(">", 10);
+        CreateAndExpression("<", 10, ">", 10);
+        
+        String expected = "ERROR:\n";
+        expected += "CONSTRAINT ERROR: \"test\" cannot have a max value of 10, which is smaller than the min value of 10\n";
+        expected += "At line: rule1: test < 10 AND test > 10\n\n";
+        
+        Throwable thrown = assertThrows(ConstraintException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test < 10 AND Test >= 10")
+    public void smallerThanAndBiggerThanOrEqual() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue(">=", 10);
+        CreateAndExpression("<", 10, ">=", 10);
+        
+        String expected = "ERROR:\n";
+        expected += "CONSTRAINT ERROR: \"test\" cannot have a max value of 10, which is smaller than the min value of 10\n";
+        expected += "At line: rule1: test < 10 AND test >= 10\n\n";
+        
+        Throwable thrown = assertThrows(ConstraintException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test <= 10 AND Test = 11")
+    public void smallerThanOrEqualAndEqual() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<=", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue("=", 11);
+        CreateAndExpression("<=", 10, "=", 11);
+        
+        String expected = "ERROR:\n";
+        expected += "CONSTRAINT ERROR: Cannot redefine \"test\" to be  11 because it is already defined as less than or equal to 10\n";
+        expected += "At line: rule1: test <= 10 AND test = 11\n\n";
+        
+        Throwable thrown = assertThrows(ConstraintException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test <= 10 AND Test < 10")
+    public void smallerThanOrEqualAndSmallerThan() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<=", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue("<", 10);
+        CreateAndExpression("<=", 10, "<", 10);
+        
+        String expected = "ERROR:\n";
+        expected += "CONSTRAINT ERROR: Cannot redefine \"test\" to be less than 10 because it is already defined as less than or equal to 10\n";
+        expected += "At line: rule1: test <= 10 AND test < 10\n\n";
+        
+        Throwable thrown = assertThrows(ConstraintException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test <= 10 AND Test > 11")
+    public void smalletThanOrEqualAndBiggerThan() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<=", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue(">", 11);
+        CreateAndExpression("<=", 10, ">", 11);
+        
+        String expected = "ERROR:\n";
+        expected += "CONSTRAINT ERROR: \"test\" cannot have a max value of 10, which is smaller than the min value of 11\n";
+        expected += "At line: rule1: test >= 10 AND test < 10\n\n";
+        
+        Throwable thrown = assertThrows(ConstraintException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test <= 10 AND Test >= 11")
+    public void smallerThanOrEqualAndBiggerThanOrEqual() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<=", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue(">=", 11);
+        CreateAndExpression("<=", 10, ">=", 11);
+        
+        String expected = "ERROR:\n";
+        expected += "CONSTRAINT ERROR: \"test\" cannot have a max value of 10, which is smaller than the min value of 11\n";
+        expected += "At line: rule1: test <= 10 AND test >= 11\n\n";
+        
+        Throwable thrown = assertThrows(ConstraintException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
 
 
     //#region Exceptions in and expressions
