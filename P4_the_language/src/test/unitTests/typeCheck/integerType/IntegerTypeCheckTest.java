@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.*;
 
-import src.classes.exceptions.*;
 import src.classes.scanner.*;
 import src.classes.types.*;
 

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.*;
 import src.classes.scanner.*;
 import src.classes.types.*;
 
-public class NoErrorsOrIntType {
+public class NoErrorsOrBeforeValueCheckTest {
     private RULE parentNode;
 
     @BeforeEach
@@ -23,26 +23,6 @@ public class NoErrorsOrIntType {
     }
 
     @Test
-    @DisplayName("Test = 10 OR Test = 11")
-    public void equalsOrEquals() throws Exception {
-        IntegerType firstInt = new IntegerType();
-        firstInt.SetValue("=", 10);
-
-        String id = "test";
-        IntegerType secondInt = new IntegerType();
-        secondInt.SetValue("=", 11);
-        
-        List<Integer> expected = new ArrayList<Integer>();
-        expected.add(10);
-        expected.add(11);
-        
-        firstInt.compareTypesOr( id, secondInt, parentNode);
-        List<Integer> actual = firstInt.equalValue;
-
-        assertIterableEquals(expected, actual);
-    }
-
-    @Test
     @DisplayName("Test = 10 OR Test > 11")
     public void equalsOrBiggerThan() throws Exception {
         IntegerType firstInt = new IntegerType();
@@ -52,15 +32,13 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue(">", 11);
 
-        int expected = 11;
-        boolean expectedWith = false;
+        List<Integer> expected = new ArrayList<Integer>();
+        expected.add(10);
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        int actual = firstInt.minValue;
-        boolean actualWith = firstInt.withGivenMinValue;
+        List<Integer> actual = firstInt.equalValue;
 
-        assertEquals(expected, actual);
-        assertEquals(expectedWith, actualWith);
+        assertIterableEquals(expected, actual);
     }
 
     @Test
@@ -73,15 +51,13 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue(">=", 12);
 
-        int expected = 12;
-        boolean expectedWith = true;
+        List<Integer> expected = new ArrayList<Integer>();
+        expected.add(10);
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        int actual = firstInt.minValue;
-        boolean actualWith = firstInt.withGivenMinValue;
+        List<Integer> actual = firstInt.equalValue;
 
-        assertEquals(expected, actual);
-        assertEquals(expectedWith, actualWith);
+        assertIterableEquals(expected, actual);
     }
 
     @Test
@@ -94,15 +70,13 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue("<", 9);
 
-        int expected = 9;
-        boolean expectedWith = false;
+        List<Integer> expected = new ArrayList<Integer>();
+        expected.add(10);
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        int actual = firstInt.maxValue;
-        boolean actualWith = firstInt.withGivenMaxValue;
+        List<Integer> actual = firstInt.equalValue;
 
-        assertEquals(expected, actual);
-        assertEquals(expectedWith, actualWith);
+        assertIterableEquals(expected, actual);
     }
 
     @Test
@@ -115,15 +89,13 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue("<=", 8);
 
-        int expected = 8;
-        boolean expectedWith = true;
+        List<Integer> expected = new ArrayList<Integer>();
+        expected.add(10);
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        int actual = firstInt.maxValue;
-        boolean actualWith = firstInt.withGivenMaxValue;
+        List<Integer> actual = firstInt.equalValue;
 
-        assertEquals(expected, actual);
-        assertEquals(expectedWith, actualWith);
+        assertIterableEquals(expected, actual);
     }
 
     @Test
@@ -136,13 +108,15 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue("=", 9);
         
-        List<Integer> expected = new ArrayList<Integer>();
-        expected.add(9);
+        Integer expected = 10;
+        boolean expectedWith = false;
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        List<Integer> actual = firstInt.equalValue;
+        Integer actual = firstInt.minValue;
+        boolean actualWith = firstInt.withGivenMinValue;
 
-        assertIterableEquals(expected, actual);
+        assertEquals(expected, actual);
+        assertEquals(expectedWith, actualWith);
     }
 
     @Test
@@ -155,11 +129,11 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue("<", 9);
 
-        int expected = 9;
+        Integer expected = 10;
         boolean expectedWith = false;
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        int actual = firstInt.minValue;
+        Integer actual = firstInt.minValue;
         boolean actualWith = firstInt.withGivenMinValue;
 
         assertEquals(expected, actual);
@@ -176,11 +150,11 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue("<=", 9);
 
-        int expected = 9;
-        boolean expectedWith = true;
+        Integer expected = 10;
+        boolean expectedWith = false;
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        int actual = firstInt.minValue;
+        Integer actual = firstInt.minValue;
         boolean actualWith = firstInt.withGivenMinValue;
 
         assertEquals(expected, actual);
@@ -197,13 +171,15 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue("=", 8);
         
-        List<Integer> expected = new ArrayList<Integer>();
-        expected.add(8);
+        Integer expected = 10;
+        boolean expectedWith = true;
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        List<Integer> actual = firstInt.equalValue;
+        Integer actual = firstInt.minValue;
+        boolean actualWith = firstInt.withGivenMinValue;
 
-        assertIterableEquals(expected, actual);
+        assertEquals(expected, actual);
+        assertEquals(expectedWith, actualWith);
     }
 
     @Test
@@ -216,11 +192,11 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue("<", 9);
 
-        int expected = 9;
-        boolean expectedWith = false;
+        Integer expected = 10;
+        boolean expectedWith = true;
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        int actual = firstInt.minValue;
+        Integer actual = firstInt.minValue;
         boolean actualWith = firstInt.withGivenMinValue;
 
         assertEquals(expected, actual);
@@ -237,11 +213,11 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue("<=", 8);
 
-        int expected = 8;
+        Integer expected = 10;
         boolean expectedWith = true;
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        int actual = firstInt.minValue;
+        Integer actual = firstInt.minValue;
         boolean actualWith = firstInt.withGivenMinValue;
 
         assertEquals(expected, actual);
@@ -258,13 +234,15 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue("=", 11);
         
-        List<Integer> expected = new ArrayList<Integer>();
-        expected.add(11);
+        Integer expected = 10;
+        boolean expectedWith = false;
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        List<Integer> actual = firstInt.equalValue;
+        Integer actual = firstInt.maxValue;
+        boolean actualWith = firstInt.withGivenMaxValue;
 
-        assertIterableEquals(expected, actual);
+        assertEquals(expected, actual);
+        assertEquals(expectedWith, actualWith);
     }
 
     @Test
@@ -277,12 +255,12 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue(">", 11);
 
-        int expected = 11;
+        Integer expected = 10;
         boolean expectedWith = false;
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        int actual = firstInt.minValue;
-        boolean actualWith = firstInt.withGivenMinValue;
+        Integer actual = firstInt.maxValue;
+        boolean actualWith = firstInt.withGivenMaxValue;
 
         assertEquals(expected, actual);
         assertEquals(expectedWith, actualWith);
@@ -298,12 +276,12 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue(">=", 11);
 
-        int expected = 11;
+        Integer expected = 10;
         boolean expectedWith = true;
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        int actual = firstInt.minValue;
-        boolean actualWith = firstInt.withGivenMinValue;
+        Integer actual = firstInt.maxValue;
+        boolean actualWith = firstInt.withGivenMaxValue;
 
         assertEquals(expected, actual);
         assertEquals(expectedWith, actualWith);
@@ -319,13 +297,15 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue("=", 12);
         
-        List<Integer> expected = new ArrayList<Integer>();
-        expected.add(12);
+        Integer expected = 10;
+        boolean expectedWith = true;
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        List<Integer> actual = firstInt.equalValue;
+        Integer actual = firstInt.maxValue;
+        boolean actualWith = firstInt.withGivenMaxValue;
 
-        assertIterableEquals(expected, actual);
+        assertEquals(expected, actual);
+        assertEquals(expectedWith, actualWith);
     }
 
     @Test
@@ -338,12 +318,12 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue(">", 11);
 
-        int expected = 11;
-        boolean expectedWith = false;
+        Integer expected = 10;
+        boolean expectedWith = true;
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        int actual = firstInt.minValue;
-        boolean actualWith = firstInt.withGivenMinValue;
+        Integer actual = firstInt.maxValue;
+        boolean actualWith = firstInt.withGivenMaxValue;
 
         assertEquals(expected, actual);
         assertEquals(expectedWith, actualWith);
@@ -359,19 +339,19 @@ public class NoErrorsOrIntType {
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue(">=", 12);
 
-        int expected = 12;
+        Integer expected = 10;
         boolean expectedWith = true;
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
-        int actual = firstInt.minValue;
-        boolean actualWith = firstInt.withGivenMinValue;
+        Integer actual = firstInt.maxValue;
+        boolean actualWith = firstInt.withGivenMaxValue;
 
         assertEquals(expected, actual);
         assertEquals(expectedWith, actualWith);
     }
 
     //#region Exceptions in or expressions
-    private void CreateOrExpression(String firstOperator, int firstValue, String secondOperator, int secondValue) {
+    private void CreateOrExpression(String firstOperator, Integer firstValue, String secondOperator, Integer secondValue) {
         AND andNode = new AND(1);
         VALEXPR firstExpr = new VALEXPR(2);
         firstExpr.value = firstOperator;
