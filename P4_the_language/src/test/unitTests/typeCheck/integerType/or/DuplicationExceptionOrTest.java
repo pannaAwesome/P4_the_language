@@ -36,7 +36,7 @@ public class DuplicationExceptionOrTest {
         expected += "DUPLICATE WARNING: \"test\" has already been defined as Integer\n";
         expected += "At line: rule1: test IS INTEGER OR test IS INTEGER\n\n";
         
-        Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());
     }
 
@@ -55,7 +55,7 @@ public class DuplicationExceptionOrTest {
         expected += "DUPLICATE WARNING: \"test\" has already been defined as 10\n";
         expected += "At line: rule1: test = 10 OR test = 10\n\n";
         
-        Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());
     }
 
@@ -74,7 +74,7 @@ public class DuplicationExceptionOrTest {
         expected += "DUPLICATE WARNING: \"test\" has already been defined to be bigger than 10\n";
         expected += "At line: rule1: test > 10 OR test > 10\n\n";
         
-        Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());
     }
 
@@ -93,7 +93,7 @@ public class DuplicationExceptionOrTest {
         expected += "DUPLICATE WARNING: \"test\" has already been defined to be bigger than or equal to 10\n";
         expected += "At line: rule1: test >= 10 OR test >= 10\n\n";
         
-        Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());
     }
 
@@ -112,7 +112,7 @@ public class DuplicationExceptionOrTest {
         expected += "DUPLICATE WARNING: \"test\" has already been defined to be less than 10\n";
         expected += "At line: rule1: test < 10 OR test < 10\n\n";
         
-        Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());
     }
 
@@ -131,7 +131,7 @@ public class DuplicationExceptionOrTest {
         expected += "DUPLICATE WARNING: \"test\" has already been defined to be less than or equal to 10\n";
         expected += "At line: rule1: test <= 10 OR test <= 10\n\n";
         
-        Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());
     }
 
