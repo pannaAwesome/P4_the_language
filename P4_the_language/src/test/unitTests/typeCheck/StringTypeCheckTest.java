@@ -397,7 +397,7 @@ public class StringTypeCheckTest {
     }
 
     @Test
-    @DisplayName("Having one equal value that is contained in contain value in and expression")
+    @DisplayName("Having one equal value that is contained in contain value in or expression")
     public void containedEqualAndContainValuesOr() {
         StringType firstString = new StringType();
         firstString.setStringValues("=", "hejsa");
@@ -409,7 +409,7 @@ public class StringTypeCheckTest {
 
         String expectedMessage = "WARNING:\n";
         expectedMessage += "REDUNDANT SYNTAX WARNING: \"test\" has been given the exact value \"hejsa\" and it should contain the value \"hej\", this is redundant. Therefore one of the operations can be omitted.\n";
-        expectedMessage += "At line: rule1: test = \"hejsa\" AND test CONTAINS \"hej\"\n\n";
+        expectedMessage += "At line: rule1: test = \"hejsa\" OR test CONTAINS \"hej\"\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstString.compareTypesOr( id, secondString, parentNode));
         assertEquals(expectedMessage, thrown.getMessage());
