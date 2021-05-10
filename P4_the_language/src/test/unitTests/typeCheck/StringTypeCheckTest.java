@@ -397,7 +397,7 @@ public class StringTypeCheckTest {
     }
 
     @Test
-    @DisplayName("Having one equal value that is contained in contain value in and expression")
+    @DisplayName("Having one equal value that is contained in contain value in or expression")
     public void containedEqualAndContainValuesOr() {
         StringType firstString = new StringType();
         firstString.setStringValues("=", "hejsa");
