@@ -79,7 +79,6 @@ public class NoErrorsOrIntTypeTest {
         firstInt.compareTypesOr( id, secondInt, parentNode);
         int actual = firstInt.minValue;
         boolean actualWith = firstInt.withGivenMinValue;
-
         assertEquals(expected, actual);
         assertEquals(expectedWith, actualWith);
     }
