@@ -1,4 +1,4 @@
-package src.test.unitTests.typeCheck.integerType.and;
+package src.test.unitTests.typeCheck.integerType.or;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +11,7 @@ import src.classes.exceptions.DuplicationException;
 import src.classes.scanner.*;
 import src.classes.types.*;
 
-public class DuplicationExceptionAndTest {
+public class DuplicationExceptionOrTest {
     private RULE parentNode;
 
     @BeforeEach
@@ -24,126 +24,126 @@ public class DuplicationExceptionAndTest {
     }
 
     @Test
-    @DisplayName("Test IS INTEGER AND Test IS INTEGER")
-    public void isAndIs() throws Exception {
+    @DisplayName("Test IS INTEGER OR Test IS INTEGER")
+    public void isOrIs() throws Exception {
         IntegerType firstInt = new IntegerType();
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
-        CreateAndExpression("IS", null, "IS", null);
+        CreateOrExpression("IS", null, "IS", null);
         
         String expected = "WARNING:\n";
         expected += "DUPLICATE WARNING: \"test\" has already been defined as Integer\n";
-        expected += "At line: rule1: test IS INTEGER AND test IS INTEGER\n\n";
+        expected += "At line: rule1: test IS INTEGER OR test IS INTEGER\n\n";
         
         Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());
     }
 
     @Test
-    @DisplayName("Test = 10 AND Test = 10")
-    public void equalAndEqual() throws Exception {
+    @DisplayName("Test = 10 OR Test = 10")
+    public void equalsOrEquals() throws Exception {
         IntegerType firstInt = new IntegerType();
         firstInt.SetValue("=", 10);
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue("=", 10);
-        CreateAndExpression("=", 10, "=", 10);
+        CreateOrExpression("=", 10, "=", 10);
         
         String expected = "WARNING:\n";
         expected += "DUPLICATE WARNING: \"test\" has already been defined as 10\n";
-        expected += "At line: rule1: test = 10 AND test = 10\n\n";
+        expected += "At line: rule1: test = 10 OR test = 10\n\n";
         
         Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());
     }
 
     @Test
-    @DisplayName("Test > 10 AND Test > 10")
-    public void biggerThanAndBiggerThan() throws Exception {
+    @DisplayName("Test > 10 OR Test > 10")
+    public void biggerThanOrBiggerThan() throws Exception {
         IntegerType firstInt = new IntegerType();
         firstInt.SetValue(">", 10);
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue(">", 10);
-        CreateAndExpression(">", 10, ">", 10);
+        CreateOrExpression(">", 10, ">", 10);
         
         String expected = "WARNING:\n";
-        expected += "DUPLICATE WARNING: \"Test\" has already been defined to be bigger than 10\n";
-        expected += "At line: rule1: test > 10 AND test > 10\n\n";
+        expected += "DUPLICATE WARNING: \"test\" has already been defined to be bigger than 10\n";
+        expected += "At line: rule1: test > 10 OR test > 10\n\n";
         
         Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());
     }
 
     @Test
-    @DisplayName("Test >= 10 AND Test >= 10")
-    public void biggerThanOrEqualAndBiggerThanOrEqual() throws Exception {
+    @DisplayName("Test >= 10 OR Test >= 10")
+    public void biggerThanOrEqualOrBiggerThanOrEqual() throws Exception {
         IntegerType firstInt = new IntegerType();
         firstInt.SetValue(">=", 10);
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue(">=", 10);
-        CreateAndExpression(">=", 10, ">=", 10);
+        CreateOrExpression(">=", 10, ">=", 10);
         
         String expected = "WARNING:\n";
-        expected += "DUPLICATE WARNING: \"Test\" has already been defined to be bigger than or equal to 10\n";
-        expected += "At line: rule1: test >= 10 AND test >= 10\n\n";
+        expected += "DUPLICATE WARNING: \"test\" has already been defined to be bigger than or equal to 10\n";
+        expected += "At line: rule1: test >= 10 OR test >= 10\n\n";
         
         Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());
     }
 
     @Test
-    @DisplayName("Test < 10 AND Test < 10")
+    @DisplayName("Test < 10 OR Test < 10")
     public void smallerThanOrSmallerThan() throws Exception {
         IntegerType firstInt = new IntegerType();
-        firstInt.SetValue("<", 10);
+        firstInt.SetValue(">", 10);
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue("<", 10);
-        CreateAndExpression("<", 10, "<", 10);
+        CreateOrExpression("<", 10, "<", 10);
         
         String expected = "WARNING:\n";
-        expected += "DUPLICATE WARNING: \"Test\" has already been defined to be less than 10\n";
-        expected += "At line: rule1: test < 10 AND test < 10\n\n";
+        expected += "DUPLICATE WARNING: \"test\" has already been defined to be less than 10\n";
+        expected += "At line: rule1: test < 10 OR test < 10\n\n";
         
         Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());
     }
 
     @Test
-    @DisplayName("Test <= 10 AND Test <= 10")
-    public void smallerThanOrEqualAndSmallerThanOrEqual() throws Exception {
+    @DisplayName("Test <= 10 OR Test <= 10")
+    public void smalleThanOrEqualOrSmallerThanOrEqual() throws Exception {
         IntegerType firstInt = new IntegerType();
         firstInt.SetValue("<=", 10);
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue("<=", 10);
-        CreateAndExpression("<=", 10, "<=", 10);
+        CreateOrExpression("<=", 10, "<=", 10);
         
         String expected = "WARNING:\n";
-        expected += "DUPLICATE WARNING: \"Test\" has already been defined to be less than or equal to 10\n";
-        expected += "At line: rule1: test <= 10 AND test <= 10\n\n";
+        expected += "DUPLICATE WARNING: \"test\" has already been defined to be less than or equal to 10\n";
+        expected += "At line: rule1: test <= 10 OR test <= 10\n\n";
         
         Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());
     }
 
-    //#region Exceptions in and expressions
-    private void CreateAndExpression(String firstOperator, Integer firstValue, String secondOperator, Integer secondValue) {
-        AND andNode = new AND(1);
+    //#region Exceptions in or expressions
+    private void CreateOrExpression(String firstOperator, Integer firstValue, String secondOperator, Integer secondValue) {
+        OR andNode = new OR(1);
         VALEXPR firstExpr = new VALEXPR(2);
         firstExpr.value = firstOperator;
         IDEN firstId = new IDEN(3);
         firstId.value = "test";
         firstExpr.jjtAddChild(firstId, 0);
-        INTEGER firstInt = new INTEGER(4);
+        STRING firstInt = new STRING(4);
         firstInt.value = firstValue;
         firstExpr.jjtAddChild(firstInt, 1);
         andNode.jjtAddChild(firstExpr, 0);
@@ -153,7 +153,7 @@ public class DuplicationExceptionAndTest {
         IDEN secondId = new IDEN(3);
         secondId.value = "test";
         secondExpr.jjtAddChild(secondId, 0);
-        INTEGER secondInt = new INTEGER(4);
+        STRING secondInt = new STRING(4);
         secondInt.value = secondValue;
         secondExpr.jjtAddChild(secondInt, 1);
         andNode.jjtAddChild(secondExpr, 1);
