@@ -412,19 +412,245 @@ public class RedundantSyntaxExceptionOrTest {
     }
 
     @Test
-    @DisplayName("Test >= 10 OR Test <= 11")
+    @DisplayName("Test >= 10 OR Test <= 10")
     public void biggerThanOrEqualOrSmallerThanOrEqual() throws Exception {
         IntegerType firstInt = new IntegerType();
         firstInt.SetValue(">=", 10);
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
-        secondInt.SetValue("<=", 11);
-        CreateOrExpression(">=", 10, "<=", 11);
+        secondInt.SetValue("<=", 10);
+        CreateOrExpression(">=", 10, "<=", 10);
         
         String expected = "WARNING:\n";
-        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as bigger than or equal to 10 or less than or equal to 11. This can be simplified\n";
-        expected += "At line: rule1: test >= 10 OR test <= 11\n\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as bigger than or equal to 10 or less than or equal to 10. This can be simplified\n";
+        expected += "At line: rule1: test >= 10 OR test <= 10\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test < 10 OR Test IS INTEGER")
+    public void smallerThanOrIs() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        CreateOrExpression("<", 10, "IS", null);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than 10 or Integer. This can be simplified\n";
+        expected += "At line: rule1: test < 10 OR test IS INTEGER\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+    
+    @Test
+    @DisplayName("Test < 10 OR Test = 9")
+    public void smallerThanOrEquals() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue("=", 9);
+        CreateOrExpression("<", 10, "=", 9);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than 10 or equal to 9. This can be simplified\n";
+        expected += "At line: rule1: test < 10 OR test = 9\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test < 10 OR Test > 9")
+    public void smallerThanOrBiggerThan() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue(">", 9);
+        CreateOrExpression("<", 10, ">", 9);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than 10 or bigger than 9. This can be simplified\n";
+        expected += "At line: rule1: test < 10 OR test > 9\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+    
+    @Test
+    @DisplayName("Test < 10 OR Test >= 9")
+    public void smallerThanOrBiggerThanOrEqual() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue(">=", 9);
+        CreateOrExpression("<", 10, ">=", 9);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than 10 or bigger than or equal to 9. This can be simplified\n";
+        expected += "At line: rule1: test < 10 OR test >= 9\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test < 10 OR Test < 11")
+    public void smallerThanOrSmallerThan() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue("<", 11);
+        CreateOrExpression("<", 10, "<", 11);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than 10 or less than 11. This can be simplified\n";
+        expected += "At line: rule1: test < 10 OR test < 11\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test < 10 OR Test <= 10")
+    public void smallerThanOrSmallerThanOrEqual() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue("<=", 10);
+        CreateOrExpression("<", 10, "<=", 10);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than 10 or less than or equal to 10. This can be simplified\n";
+        expected += "At line: rule1: test < 10 OR test <= 10\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test <= 10 OR Test IS INTEGER")
+    public void smallerThanOrEqualOrIs() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<=", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        CreateOrExpression("<=", 10, "IS", null);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than or equal to 10 or Integer. This can be simplified\n";
+        expected += "At line: rule1: test <= 10 OR test IS INTEGER\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test <= 10 OR Test = 10")
+    public void smallerThanOrEqualOrEqual() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<=", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue("=", 10);
+        CreateOrExpression("<=", 10, "=", 10);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than or equal to 10 or equal to 10. This can be simplified\n";
+        expected += "At line: rule1: test <= 10 OR test = 10\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test <= 10 OR Test > 9")
+    public void smallerThanOrEqualOrBiggerThan() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<=", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue(">", 9);
+        CreateOrExpression("<=", 10, ">", 9);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than or equal to 10 or bigger than 9. This can be simplified\n";
+        expected += "At line: rule1: test <= 10 OR test > 9\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test <= 10 OR Test >= 10")
+    public void smallerThanOrEqualOrBiggerThanOrEqual() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<=", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue(">=", 10);
+        CreateOrExpression("<=", 10, ">=", 10);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than or equal to 10 or bigger than or equal to 10. This can be simplified\n";
+        expected += "At line: rule1: test <= 10 OR test >= 10\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test <= 10 OR Test < 10")
+    public void smallerThanOrEqualOrSmallerThan() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<=", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue("<", 10);
+        CreateOrExpression("<=", 10, "<", 10);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than or equal to 10 or less than 10. This can be simplified\n";
+        expected += "At line: rule1: test <= 10 OR test < 10\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test <= 10 OR Test <= 11")
+    public void smallerThanOrEqualOrSmallerThanOrEqual() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<=", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue("<=", 11);
+        CreateOrExpression("<=", 10, "<=", 11);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than or equal to 10 or less than or equal to 11. This can be simplified\n";
+        expected += "At line: rule1: test <= 10 OR test <= 11\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());
