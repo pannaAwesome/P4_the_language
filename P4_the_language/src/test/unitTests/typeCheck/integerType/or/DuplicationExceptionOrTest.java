@@ -30,7 +30,7 @@ public class DuplicationExceptionOrTest {
         CreateOrExpression("IS", null, "IS", null);
         
         String expected = "WARNING:\n";
-        expected += "DUPLICATE WARNING: \"test\" has already been defined as Integer\n";
+        expected += "DUPLICATE WARNING: \"test\" has already been defined as Integer.\n";
         expected += "At line: rule1: test IS INTEGER OR test IS INTEGER\n\n";
         
         Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
@@ -49,7 +49,7 @@ public class DuplicationExceptionOrTest {
         CreateOrExpression("=", 10, "=", 10);
         
         String expected = "WARNING:\n";
-        expected += "DUPLICATE WARNING: \"test\" has already been defined as 10\n";
+        expected += "DUPLICATE WARNING: \"test\" has already been defined as 10.\n";
         expected += "At line: rule1: test = 10 OR test = 10\n\n";
         
         Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesOr( id, secondInt, parentNode));
@@ -140,9 +140,16 @@ public class DuplicationExceptionOrTest {
         IDEN firstId = new IDEN(3);
         firstId.value = "test";
         firstExpr.jjtAddChild(firstId, 0);
-        INTEGER firstInt = new INTEGER(4);
-        firstInt.value = firstValue;
-        firstExpr.jjtAddChild(firstInt, 1);
+        if (firstOperator.equals("IS")) {
+            CONSTRAINTS firstInt = new CONSTRAINTS(4);
+            firstInt.value = "INTEGER";
+            firstExpr.jjtAddChild(firstInt, 1);
+        } else {
+            INTEGER firstInt = new INTEGER(4);
+            firstInt.value = firstValue;
+            firstExpr.jjtAddChild(firstInt, 1);
+        }
+        
         andNode.jjtAddChild(firstExpr, 0);
 
         VALEXPR secondExpr = new VALEXPR(4);
@@ -150,9 +157,15 @@ public class DuplicationExceptionOrTest {
         IDEN secondId = new IDEN(3);
         secondId.value = "test";
         secondExpr.jjtAddChild(secondId, 0);
-        INTEGER secondInt = new INTEGER(4);
-        secondInt.value = secondValue;
-        secondExpr.jjtAddChild(secondInt, 1);
+        if (secondOperator.equals("IS")) {
+            CONSTRAINTS secondInt = new CONSTRAINTS(4);
+            secondInt.value = "INTEGER";
+            secondExpr.jjtAddChild(secondInt, 1);
+        } else {
+            INTEGER secondInt = new INTEGER(4);
+            secondInt.value = secondValue;
+            secondExpr.jjtAddChild(secondInt, 1);
+        }
         andNode.jjtAddChild(secondExpr, 1);
 
         parentNode.jjtAddChild(andNode, 1);
