@@ -2,9 +2,6 @@ package src.test.unitTests.typeCheck.integerType.or;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.*;
 
 import src.classes.exceptions.DuplicationException;
