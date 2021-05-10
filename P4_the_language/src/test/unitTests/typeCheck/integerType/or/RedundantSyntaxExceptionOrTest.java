@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.*;
 
 import src.classes.exceptions.DuplicationException;
+import src.classes.exceptions.RedundantSyntaxException;
 import src.classes.scanner.*;
 import src.classes.types.*;
 
@@ -24,21 +25,96 @@ public class RedundantSyntaxExceptionOrTest {
     }
 
     @Test
-    @DisplayName("Test IS INTEGER OR Test IS INTEGER")
-    public void isOrIs() throws Exception {
+    @DisplayName("Test IS INTEGER OR Test = 10")
+    public void isOrEquals() throws Exception {
         IntegerType firstInt = new IntegerType();
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
-        CreateOrExpression("IS", null, "IS", null);
+        secondInt.SetValue("=", 10);
+        CreateOrExpression("IS", null, "=", 10);
         
         String expected = "WARNING:\n";
-        expected += "DUPLICATE WARNING: \"test\" has already been defined as Integer\n";
-        expected += "At line: rule1: test IS INTEGER OR test IS INTEGER\n\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has already been defined as Integer and equal to 10. This can be simplified\n";
+        expected += "At line: rule1: test IS INTEGER OR test = 10\n\n";
         
-        Throwable thrown = assertThrows(DuplicationException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());
     }
+
+    @Test
+    @DisplayName("Test IS INTEGER OR Test > 10")
+    public void isOrBiggerThan() throws Exception {
+        IntegerType firstInt = new IntegerType();
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue(">", 10);
+        CreateOrExpression("IS", null, ">", 10);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has already been defined as Integer and bigger than 10. This can be simplified\n";
+        expected += "At line: rule1: test IS INTEGER OR test > 10\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test IS INTEGER OR Test >= 10")
+    public void isOrBiggerThanOrEqual() throws Exception {
+        IntegerType firstInt = new IntegerType();
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue(">=", 10);
+        CreateOrExpression("IS", null, ">=", 10);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has already been defined as Integer and bigger than or equal to 10. This can be simplified\n";
+        expected += "At line: rule1: test IS INTEGER OR test >= 10\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test IS INTEGER OR Test < 10")
+    public void isOrSmallerThan() throws Exception {
+        IntegerType firstInt = new IntegerType();
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue("<", 10);
+        CreateOrExpression("IS", null, "<", 10);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has already been defined as Integer and less than 10. This can be simplified\n";
+        expected += "At line: rule1: test IS INTEGER OR test < 10\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test IS INTEGER OR Test <= 10")
+    public void isOrSmallerThanOrEqual() throws Exception {
+        IntegerType firstInt = new IntegerType();
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue("<=", 10);
+        CreateOrExpression("IS", null, "<=", 10);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has already been defined as Integer and less than or equal to 10. This can be simplified\n";
+        expected += "At line: rule1: test IS INTEGER OR test <= 10\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    
 
     //#region Exceptions in or expressions
     private void CreateOrExpression(String firstOperator, Integer firstValue, String secondOperator, Integer secondValue) {
