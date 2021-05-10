@@ -74,6 +74,13 @@ public class IntegerType extends BaseType {
         if (this.minValue != null && t.maxValue != null && this.minValue > t.maxValue) {
             TypeCheckVisitor.error++;
             throw new ConstraintException(id, this.minValue, t.maxValue);
+        } else if (t.minValue == null && 
+            t.withGivenMinValue == false &&
+            t.maxValue == null &&
+            t.withGivenMaxValue == false &&
+            t.equalValue.size() == 0){ // id IS INTEGER AND id IS INTEGER
+            TypeCheckVisitor.warning++;
+            throw new DuplicationException(id, parentNode);
         } else {
             compareMinValue(id, t, parentNode);
             compareMaxValue(id, t, parentNode);
@@ -93,7 +100,7 @@ public class IntegerType extends BaseType {
             }else if (t.minValue != null) { // den nye indeholder en minimumsværdi
                 if (this.minValue.equals(t.minValue) && t.withGivenMinValue) { // minimum værdierne er helt ens
                     TypeCheckVisitor.warning++;
-                    throw new DuplicationException(id, parentNode, "bigger than", this.minValue);
+                    throw new DuplicationException(id, parentNode, "bigger than or equal to ", this.minValue);
                 } else if (t.withGivenMinValue) { // minimum værdierne er ikke helt ens
                     TypeCheckVisitor.error++;
                     throw new ConstraintException(id, parentNode, "bigger than or equal to", t.minValue, "bigger than or equal to", minValue);
@@ -109,7 +116,7 @@ public class IntegerType extends BaseType {
             }else if (t.minValue != null) { // den nye indeholder en minimumværdi
                 if (this.minValue.equals(t.minValue) && !t.withGivenMinValue) { // minimumværdierne er helt ens
                     TypeCheckVisitor.warning++;
-                    throw new DuplicationException(id, parentNode, "bigger than", this.minValue);
+                    throw new DuplicationException(id, parentNode, "bigger than ", this.minValue);
                 } else if (t.withGivenMinValue) { // minimum værdierne er ikke helt ens
                     TypeCheckVisitor.error++;
                     throw new ConstraintException(id, parentNode, "bigger than or equal to", t.minValue, "bigger than", minValue);
@@ -134,7 +141,7 @@ public class IntegerType extends BaseType {
             }else if (t.maxValue != null) { // den nye indeholder en maksimumsværdi
                 if (this.maxValue.equals(t.maxValue) && t.withGivenMaxValue) { // maksimumsværdierne er helt ens
                     TypeCheckVisitor.warning++;
-                    throw new DuplicationException(id, parentNode, "less than or equal to", this.maxValue);
+                    throw new DuplicationException(id, parentNode, "less than or equal to ", this.maxValue);
                 } else if (t.withGivenMaxValue) { // makismum værdierne er ikke helt ens
                     TypeCheckVisitor.error++;
                     throw new ConstraintException(id, parentNode, "less than or equal to", t.maxValue, "less than or equal to", maxValue);
@@ -150,7 +157,7 @@ public class IntegerType extends BaseType {
             }else if (t.maxValue != null) { // den nye indeholder en maksimumværdi
                 if (this.maxValue.equals(t.maxValue) && !t.withGivenMaxValue) { // maksimumværdierne er helt ens
                     TypeCheckVisitor.warning++;
-                    throw new DuplicationException(id, parentNode, "less than", this.maxValue);
+                    throw new DuplicationException(id, parentNode, "less than ", this.maxValue);
                 } else if (t.withGivenMaxValue) { // maksimumværdierne er ikke helt ens
                     TypeCheckVisitor.error++;
                     throw new ConstraintException(id, parentNode, "less than or equal to", t.maxValue, "less than or equal to", maxValue);
