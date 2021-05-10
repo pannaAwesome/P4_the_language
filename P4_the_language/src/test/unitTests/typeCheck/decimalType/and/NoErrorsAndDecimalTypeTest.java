@@ -153,16 +153,16 @@ public class NoErrorsAndDecimalTypeTest {
     }
 
     @Test
-    @DisplayName("Test > 10.0 AND Test < 15.0")
+    @DisplayName("Test > 10.0 AND Test < 11.0")
     public void biggerThanAndSmallerThan() throws Exception {
         DecimalType firstDoub = new DecimalType();
         firstDoub.SetValue(">", 10.0);
 
         String id = "test";
         DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue("<", 15.0);
+        secondDoub.SetValue("<", 11.0);
         
-        Double expected = 15.0;
+        Double expected = 11.0;
         boolean expectedWith = false;
         
         firstDoub.compareTypesAnd( id, secondDoub, parentNode);
@@ -174,16 +174,16 @@ public class NoErrorsAndDecimalTypeTest {
     }
 
     @Test
-    @DisplayName("Test > 10.0 AND Test <= 15.0")
+    @DisplayName("Test > 10.0 AND Test <= 11.0")
     public void biggerThanAndSmallerThanOrEqual() throws Exception {
         DecimalType firstDoub = new DecimalType();
         firstDoub.SetValue(">", 10.0);
 
         String id = "test";
         DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue("<=", 15.0);
+        secondDoub.SetValue("<=", 11.0);
         
-        Double expected = 15.0;
+        Double expected = 11.0;
         boolean expectedWith = true;
         
         firstDoub.compareTypesAnd( id, secondDoub, parentNode);
@@ -211,16 +211,16 @@ public class NoErrorsAndDecimalTypeTest {
     }
 
     @Test
-    @DisplayName("Test >= 10.0 AND Test < 15.0")
+    @DisplayName("Test >= 10.0 AND Test < 11.0")
     public void biggerThanOrEqualAndSmallerThan() throws Exception {
         DecimalType firstDoub = new DecimalType();
         firstDoub.SetValue(">=", 10.0);
 
         String id = "test";
         DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue("<", 15.0);
+        secondDoub.SetValue("<", 11.0);
         
-        Double expected = 15.0;
+        Double expected = 11.0;
         boolean expectedWith = false;
         
         firstDoub.compareTypesAnd( id, secondDoub, parentNode);
@@ -232,16 +232,16 @@ public class NoErrorsAndDecimalTypeTest {
     }
 
     @Test
-    @DisplayName("Test >= 10.0 AND Test <= 15.0")
+    @DisplayName("Test >= 10.0 AND Test <= 11.0")
     public void biggerThanOrEqualAndSmallerThanOrEqual() throws Exception {
         DecimalType firstDoub = new DecimalType();
         firstDoub.SetValue(">=", 10.0);
 
         String id = "test";
         DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue("<=", 15.0);
+        secondDoub.SetValue("<=", 11.0);
         
-        Double expected = 15.0;
+        Double expected = 11.0;
         boolean expectedWith = true;
         
         firstDoub.compareTypesAnd( id, secondDoub, parentNode);
@@ -269,16 +269,16 @@ public class NoErrorsAndDecimalTypeTest {
     }
 
     @Test
-    @DisplayName("Test < 10.0 AND Test > 15.0")
+    @DisplayName("Test < 10.0 AND Test > 9.0")
     public void smallerThanAndBiggerThan() throws Exception {
         DecimalType firstDoub = new DecimalType();
         firstDoub.SetValue("<", 10.0);
 
         String id = "test";
         DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue(">", 15.0);
+        secondDoub.SetValue(">", 9.0);
         
-        Double expected = 15.0;
+        Double expected = 9.0;
         boolean expectedWith = false;
         
         firstDoub.compareTypesAnd( id, secondDoub, parentNode);
@@ -290,16 +290,16 @@ public class NoErrorsAndDecimalTypeTest {
     }
 
     @Test
-    @DisplayName("Test < 10.0 AND Test >= 15.0")
+    @DisplayName("Test < 10.0 AND Test >= 9.0")
     public void  smallerThanAndBiggerThanOrEqual() throws Exception {
         DecimalType firstDoub = new DecimalType();
         firstDoub.SetValue("<", 10.0);
 
         String id = "test";
         DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue(">=", 15.0);
+        secondDoub.SetValue(">=", 9.0);
         
-        Double expected = 15.0;
+        Double expected = 9.0;
         boolean expectedWith = true;
         
         firstDoub.compareTypesAnd( id, secondDoub, parentNode);
@@ -327,16 +327,16 @@ public class NoErrorsAndDecimalTypeTest {
     }
 
     @Test
-    @DisplayName("Test <= 10.0 AND Test > 15.0")
+    @DisplayName("Test <= 10.0 AND Test > 9.0")
     public void smallerThanOrEqualAndBiggerThan() throws Exception {
         DecimalType firstDoub = new DecimalType();
         firstDoub.SetValue("<=", 10.0);
 
         String id = "test";
         DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue(">", 15.0);
+        secondDoub.SetValue(">", 9.0);
         
-        Double expected = 15.0;
+        Double expected = 9.0;
         boolean expectedWith = false;
         
         firstDoub.compareTypesAnd( id, secondDoub, parentNode);
@@ -348,16 +348,16 @@ public class NoErrorsAndDecimalTypeTest {
     }
 
     @Test
-    @DisplayName("Test <= 10.0 AND Test >= 15.0")
+    @DisplayName("Test <= 10.0 AND Test >= 9.0")
     public void  smallerThanOrEqualAndBiggerThanOrEqual() throws Exception {
         DecimalType firstDoub = new DecimalType();
         firstDoub.SetValue("<=", 10.0);
 
         String id = "test";
         DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue(">=", 15.0);
+        secondDoub.SetValue(">=", 9.0);
         
-        Double expected = 15.0;
+        Double expected = 9.0;
         boolean expectedWith = true;
         
         firstDoub.compareTypesAnd( id, secondDoub, parentNode);

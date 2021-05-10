@@ -89,7 +89,7 @@ public class ConstraintException extends Exception {
     private static String equalOtherConstrainDecimal(String id, SimpleNode node, String wrongConstrain, double wrongValue, String value) {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "ERROR:\n";
-        newMessage += "CONSTRAINT ERROR: Cannot redefine \"" + id + "\" to be " + wrongConstrain + wrongValue + " because it is already defined as " + value + "\n";
+        newMessage += "CONSTRAINT ERROR: Cannot redefine \"" + id + "\" to be " + wrongConstrain + " " + wrongValue + " because it is already defined as " + value + "\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;
