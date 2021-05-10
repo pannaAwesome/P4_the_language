@@ -409,7 +409,7 @@ public class StringTypeCheckTest {
 
         String expectedMessage = "WARNING:\n";
         expectedMessage += "REDUNDANT SYNTAX WARNING: \"test\" has been given the exact value \"hejsa\" and it should contain the value \"hej\", this is redundant. Therefore one of the operations can be omitted.\n";
-        expectedMessage += "At line: rule1: test = \"hejsa\" AND test CONTAINS \"hej\"\n\n";
+        expectedMessage += "At line: rule1: test = \"hejsa\" OR test CONTAINS \"hej\"\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstString.compareTypesOr( id, secondString, parentNode));
         assertEquals(expectedMessage, thrown.getMessage());
@@ -447,7 +447,7 @@ public class StringTypeCheckTest {
 
         String expectedMessage = "WARNING:\n";
         expectedMessage += "REDUNDANT SYNTAX WARNING: \"test\" should contain both \"hejsa\" and \"hej\", this is redundant. Therefore one of the operations can be omitted.\n";
-        expectedMessage += "At line: rule1: test CONTAINS \"hejsa\" AND test CONTAINS \"hej\"\n\n";
+        expectedMessage += "At line: rule1: test CONTAINS \"hejsa\" OR test CONTAINS \"hej\"\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstString.compareTypesOr( id, secondString, parentNode));
         assertEquals(expectedMessage, thrown.getMessage());
@@ -466,7 +466,7 @@ public class StringTypeCheckTest {
 
         String expectedMessage = "WARNING:\n";
         expectedMessage += "REDUNDANT SYNTAX WARNING: \"test\" should contain both \"hej\" and \"hejsa\", this is redundant. Therefore one of the operations can be omitted.\n";
-        expectedMessage += "At line: rule1: test CONTAINS \"hej\" AND test CONTAINS \"hejsa\"\n\n";
+        expectedMessage += "At line: rule1: test CONTAINS \"hej\" OR test CONTAINS \"hejsa\"\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstString.compareTypesOr( id, secondString, parentNode));
         assertEquals(expectedMessage, thrown.getMessage());
