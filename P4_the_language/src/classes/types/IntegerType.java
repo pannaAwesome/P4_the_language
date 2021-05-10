@@ -213,6 +213,7 @@ public class IntegerType extends BaseType {
         return true;
     }
     private void compareValues(String id, IntegerType t, SimpleNode parentNode) throws DuplicationException, RedundantSyntaxException {
+        
         if (this.minValue != null && t.minValue != null) { // begge har en minimum værdi
             String firstConstrain = this.withGivenMinValue ? "bigger than or equal" : "bigger than";
             String secondConstrain = t.withGivenMinValue ? "bigger than or equal" : "bigger than";
@@ -237,9 +238,14 @@ public class IntegerType extends BaseType {
         if (t.equalValue.size() != 0) {
             this.equalValue.add(t.equalValue.get(0));
         }
-        this.minValue = t.minValue;
-        this.withGivenMinValue = t.withGivenMinValue;
-        this.maxValue = t.maxValue;
-        this.withGivenMaxValue = t.withGivenMaxValue;
+        if (t.minValue != null){
+            
+            this.minValue = t.minValue;
+            this.withGivenMinValue = t.withGivenMinValue;
+        }
+        if (t.maxValue != null){
+            this.maxValue = t.maxValue;
+            this.withGivenMaxValue = t.withGivenMaxValue;
+        }
     }
 }

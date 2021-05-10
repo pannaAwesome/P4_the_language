@@ -144,7 +144,7 @@ public class NoErrorsOrBeforeValueCheckTest {
     @DisplayName("Test > 10 OR Test <= 9")
     public void biggerThanOrSmallerThanOrEqual() throws Exception {
         IntegerType firstInt = new IntegerType();
-        firstInt.SetValue("=", 10);
+        firstInt.SetValue(">", 10);
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
@@ -275,14 +275,13 @@ public class NoErrorsOrBeforeValueCheckTest {
         String id = "test";
         IntegerType secondInt = new IntegerType();
         secondInt.SetValue(">=", 11);
-
         Integer expected = 10;
-        boolean expectedWith = true;
+        boolean expectedWith = false;
         
         firstInt.compareTypesOr( id, secondInt, parentNode);
         Integer actual = firstInt.maxValue;
         boolean actualWith = firstInt.withGivenMaxValue;
-
+        
         assertEquals(expected, actual);
         assertEquals(expectedWith, actualWith);
     }
