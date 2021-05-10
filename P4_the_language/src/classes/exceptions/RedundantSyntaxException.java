@@ -19,6 +19,10 @@ public class RedundantSyntaxException extends Exception {
         super(ContainsIsContainedInContainsString(id, node, containValue, exactValue, containsContains));
     }
 
+    public RedundantSyntaxException(String id, SimpleNode node, String containValue, String exactValue, int notUsed) {
+        super(exactIsContainedInContains(id, node, containValue, exactValue, notUsed));
+    }
+
     private static String ContainsSameAsEqualString(String id, SimpleNode node, String containValue, String exactValue) {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "WARNING:\n";
@@ -34,6 +38,17 @@ public class RedundantSyntaxException extends Exception {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "WARNING:\n";
         newMessage += "REDUNDANT SYNTAX WARNING: \""+id+"\" should contain both \""+firstContain+"\" and \""+secondConstrain+"\", this is redundant. Therefore one of the operations can be omitted.\n";
+        newMessage += "At line: "; // ikke sikker på om det bliver contains linjen som bliver udskrevet 
+        node.jjtAccept(ppv, null);
+        newMessage += ppv.print;
+        newMessage += "\n";
+        return newMessage;
+    }
+
+    private static String exactIsContainedInContains(String id, SimpleNode node, String exactVal, String containsVal, int notUsed) {
+        PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
+        String newMessage = "WARNING:\n";
+        newMessage += "REDUNDANT SYNTAX WARNING: \""+id+"\" has been given the exact value \""+exactVal+"\" and it should contain the value \""+containsVal+"\", this is redundant. Therefore one of the operations can be omitted.\n";
         newMessage += "At line: "; // ikke sikker på om det bliver contains linjen som bliver udskrevet 
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;
