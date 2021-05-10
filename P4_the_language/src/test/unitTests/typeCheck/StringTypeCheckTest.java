@@ -492,7 +492,7 @@ public class StringTypeCheckTest {
     }
 
     private void CreateOrExpression(String firstOperator, String firstValue, String secondOperator, String secondValue) {
-        AND andNode = new AND(1);
+        OR andNode = new OR(1);
         VALEXPR firstExpr = new VALEXPR(2);
         firstExpr.value = firstOperator;
         IDEN firstId = new IDEN(3);
