@@ -485,7 +485,7 @@ public class StringTypeCheckTest {
 
         String expectedMessage = "WARNING:\n";
         expectedMessage += "REDUNDANT SYNTAX WARNING: \"test\" has been given the exact value \"hejsa\" and it should contain the value \"hej\", this is redundant. Therefore one of the operations can be omitted.\n";
-        expectedMessage += "At line: rule1: test CONTAINS \"hej\" AND test = \"hejsa\"\n\n";
+        expectedMessage += "At line: rule1: test CONTAINS \"hej\" OR test = \"hejsa\"\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstString.compareTypesOr( id, secondString, parentNode));
         assertEquals(expectedMessage, thrown.getMessage());

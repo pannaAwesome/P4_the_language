@@ -126,8 +126,20 @@ public class StringType extends BaseType {
                 this.exactValue.add(t.exactValue.get(0));
             }
         } else if (this.containValue.size()!=0 && !t.onlyContains){ // if this contains, and other exact
+            String tExactVal = t.exactValue.get(0);
+            for (String string : this.containValue) {
+                if (tExactVal.contains(string)){
+                    throw new RedundantSyntaxException(id, parentNode, tExactVal, string, 1);
+                }
+            } 
             this.exactValue.add(t.exactValue.get(0));
         } else if (this.exactValue.size()!=0 && t.onlyContains){ // if this has exact, and other contains
+            String tContainVal = t.containValue.get(0);
+            for (String string : this.exactValue) {
+                if (string.contains(tContainVal)){
+                    throw new RedundantSyntaxException(id, parentNode, string, tContainVal, 1);
+                }
+            }
             this.containValue.add(t.containValue.get(0));
         }
         return true;
