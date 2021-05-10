@@ -159,7 +159,7 @@ public class IntegerType extends BaseType {
                     throw new ConstraintException(id, parentNode, "less than", t.maxValue, "less than or equal to", maxValue);
                 }
             }
-        } else if (t.maxValue != null)  { // alt er okay og derfor kan maksimumværdien sættes
+        } else if (t.maxValue != null) { // alt er okay og derfor kan maksimumværdien sættes
             this.SetMaxValue(t.maxValue, t.withGivenMaxValue);
         }
     }
@@ -213,21 +213,27 @@ public class IntegerType extends BaseType {
         return true;
     }
     private void compareValues(String id, IntegerType t, SimpleNode parentNode) throws DuplicationException, RedundantSyntaxException {
-        System.out.println(this.minValue);
-        System.out.println(this.withGivenMinValue);
-        System.out.println(this.maxValue);
-        System.out.println(this.withGivenMaxValue);
-        System.out.println(t.minValue);
-        System.out.println(t.withGivenMinValue);
-        System.out.println(t.maxValue);
-        System.out.println(t.withGivenMaxValue);
         if (t.minValue == null && 
             t.withGivenMinValue == false &&
             t.maxValue == null &&
-            t.withGivenMaxValue == false){ // id IS INTEGER OR id IS INTEGER
+            t.withGivenMaxValue == false &&
+            t.equalValue.size() == 0){ // id IS INTEGER OR id IS INTEGER
+            TypeCheckVisitor.warning++;
             throw new DuplicationException(id, parentNode);
         }
-        
+        if (t.equalValue.size()!=0){
+            Integer tEqual = t.equalValue.get(0);
+            if (this.equalValue.size()!=0){
+                for (Integer i : this.equalValue) {
+                    if (i == tEqual){
+                        TypeCheckVisitor.warning++;
+                        throw new DuplicationException(id, parentNode, tEqual);
+                    }
+                }
+            } else {
+                this.equalValue.add(t.equalValue.get(0));
+            }
+        }
         if (this.minValue != null && t.minValue != null) { // begge har en minimum værdi
             String firstConstrain = this.withGivenMinValue ? "bigger than or equal to " : "bigger than ";
             String secondConstrain = t.withGivenMinValue ? "bigger than or equal to " : "bigger than ";
@@ -253,7 +259,6 @@ public class IntegerType extends BaseType {
             this.equalValue.add(t.equalValue.get(0));
         }
         if (t.minValue != null){
-            
             this.minValue = t.minValue;
             this.withGivenMinValue = t.withGivenMinValue;
         }

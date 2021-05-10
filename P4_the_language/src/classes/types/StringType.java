@@ -57,8 +57,10 @@ public class StringType extends BaseType {
             } 
             for (String string : this.containValue) {
                 if (string.contains(tContainedVal)){
+                    TypeCheckVisitor.warning++;
                     throw new RedundantSyntaxException(id, parentNode, string, tContainedVal, "ContainsContained");
                 } else if (tContainedVal.contains(string)){
+                    TypeCheckVisitor.warning++;
                     throw new RedundantSyntaxException(id, parentNode, string, tContainedVal, "ContainsContained");
                 }
             }   
@@ -111,8 +113,10 @@ public class StringType extends BaseType {
             String tContainedVal = t.containValue.get(0);
             for (String string : this.containValue) {
                 if (string.contains(tContainedVal)){
+                    TypeCheckVisitor.warning++;
                     throw new RedundantSyntaxException(id, parentNode, string, tContainedVal, "ContainsContained");
                 } else if (tContainedVal.contains(string)){
+                    TypeCheckVisitor.warning++;
                     throw new RedundantSyntaxException(id, parentNode, string, tContainedVal, "ContainsContained");
                 }
             } 
@@ -129,6 +133,7 @@ public class StringType extends BaseType {
             String tExactVal = t.exactValue.get(0);
             for (String string : this.containValue) {
                 if (tExactVal.contains(string)){
+                    TypeCheckVisitor.warning++;
                     throw new RedundantSyntaxException(id, parentNode, tExactVal, string, 1);
                 }
             } 
@@ -137,6 +142,7 @@ public class StringType extends BaseType {
             String tContainVal = t.containValue.get(0);
             for (String string : this.exactValue) {
                 if (string.contains(tContainVal)){
+                    TypeCheckVisitor.warning++;
                     throw new RedundantSyntaxException(id, parentNode, string, tContainVal, 1);
                 }
             }

@@ -98,7 +98,7 @@ public class DuplicationExceptionOrTest {
     @DisplayName("Test < 10 OR Test < 10")
     public void smallerThanOrSmallerThan() throws Exception {
         IntegerType firstInt = new IntegerType();
-        firstInt.SetValue(">", 10);
+        firstInt.SetValue("<", 10);
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
