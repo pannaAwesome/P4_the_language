@@ -238,6 +238,8 @@ public class IntegerType extends BaseType {
             this.equalValue.add(t.equalValue.get(0));
         }
         this.minValue = t.minValue;
+        this.withGivenMinValue = t.withGivenMinValue;
         this.maxValue = t.maxValue;
+        this.withGivenMaxValue = t.withGivenMaxValue;
     }
 }
