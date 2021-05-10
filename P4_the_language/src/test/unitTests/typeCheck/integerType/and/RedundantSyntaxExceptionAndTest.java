@@ -131,7 +131,7 @@ public class RedundantSyntaxExceptionAndTest {
         CreateAndExpression(">", 10, ">", 11);
         
         String expected = "WARNING:\n";
-        expected += "REDUNDANT SYNTAX WARNING: \"test\" has already been defined as bigger than 10 and bigger than 11. This can be simplified\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as bigger than 10 and bigger than 11. This can be simplified\n";
         expected += "At line: rule1: test > 10 AND test > 11\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
@@ -150,7 +150,7 @@ public class RedundantSyntaxExceptionAndTest {
         CreateAndExpression(">", 10, ">=", 11);
         
         String expected = "WARNING:\n";
-        expected += "REDUNDANT SYNTAX WARNING: \"test\" has already been defined as bigger than 10 and bigger than or equal to 11. This can be simplified\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as bigger than 10 and bigger than or equal to 11. This can be simplified\n";
         expected += "At line: rule1: test > 10 AND test >= 11\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
@@ -188,7 +188,7 @@ public class RedundantSyntaxExceptionAndTest {
         CreateAndExpression(">=", 10, ">", 9);
         
         String expected = "WARNING:\n";
-        expected += "REDUNDANT SYNTAX WARNING: \"test\" has already been defined as bigger than or equal to 10 and bigger than 9. This can be simplified\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as bigger than or equal to 10 and bigger than 9. This can be simplified\n";
         expected += "At line: rule1: test >= 10 AND test > 9\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
@@ -226,7 +226,7 @@ public class RedundantSyntaxExceptionAndTest {
         CreateAndExpression("<", 10, "<", 11);
         
         String expected = "WARNING:\n";
-        expected += "REDUNDANT SYNTAX WARNING: \"test\" has already been defined as less than 10 and less than 11. This can be simplified\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than 10 and less than 11. This can be simplified\n";
         expected += "At line: rule1: test < 10 AND test < 11\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
@@ -245,7 +245,7 @@ public class RedundantSyntaxExceptionAndTest {
         CreateAndExpression("<", 10, "<=", 9);
         
         String expected = "WARNING:\n";
-        expected += "REDUNDANT SYNTAX WARNING: \"test\" has already been defined as less than 10 and less than or equal to 9. This can be simplified\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than 10 and less than or equal to 9. This can be simplified\n";
         expected += "At line: rule1: test < 10 AND test <= 9\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
@@ -283,7 +283,7 @@ public class RedundantSyntaxExceptionAndTest {
         CreateAndExpression("<=", 10, "<", 9);
         
         String expected = "WARNING:\n";
-        expected += "REDUNDANT SYNTAX WARNING: \"test\" has already been defined as less than or equal to 10 and less than 9. This can be simplified\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than or equal to 10 and less than 9. This can be simplified\n";
         expected += "At line: rule1: test <= 10 AND test < 9\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
@@ -302,7 +302,7 @@ public class RedundantSyntaxExceptionAndTest {
         CreateAndExpression("<=", 10, "<=", 11);
         
         String expected = "WARNING:\n";
-        expected += "REDUNDANT SYNTAX WARNING: \"test\" has already been defined as less than or equal to 10 and less than or equal to 11 This can be simplified\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than or equal to 10 and less than or equal to 11 This can be simplified\n";
         expected += "At line: rule1: test <= 10 AND test <= 11\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
