@@ -72,6 +72,10 @@ public class DuplicationException extends Exception{
     public DuplicationException(String id, SimpleNode node, int value){
         super(equalDuplicationInteger(id, node, value));
     }
+
+    public DuplicationException(String id, SimpleNode node){
+        super(IsDuplicationInteger(id, node));
+    }
     
     private static String constrainDuplicationInteger(String id, SimpleNode node, String constrain, int value){
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
@@ -88,6 +92,17 @@ public class DuplicationException extends Exception{
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "WARNING:\n";
         newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined as " + value + "\n";
+        newMessage += "At line: ";
+        node.jjtAccept(ppv, null);
+        newMessage += ppv.print;
+        newMessage += "\n";
+        return newMessage;
+    }
+
+    private static String IsDuplicationInteger(String id, SimpleNode node){
+        PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
+        String newMessage = "WARNING:\n";
+        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined as Integer.\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;
