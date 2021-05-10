@@ -372,7 +372,7 @@ public class NoErrorsOrIntTypeTest {
 
     //#region Exceptions in or expressions
     private void CreateOrExpression(String firstOperator, int firstValue, String secondOperator, int secondValue) {
-        AND andNode = new AND(1);
+        OR andNode = new OR(1);
         VALEXPR firstExpr = new VALEXPR(2);
         firstExpr.value = firstOperator;
         IDEN firstId = new IDEN(3);

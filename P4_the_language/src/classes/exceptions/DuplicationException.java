@@ -76,7 +76,7 @@ public class DuplicationException extends Exception{
     private static String constrainDuplicationInteger(String id, SimpleNode node, String constrain, int value){
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "WARNING:\n";
-        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined to " + constrain + " " + value + "\n";
+        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined to be " + constrain + " " + value + "\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;
