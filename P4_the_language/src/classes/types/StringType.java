@@ -54,9 +54,17 @@ public class StringType extends BaseType {
             if (this.containValue.contains(tContainedVal)){ // and the contained values are the same
                 TypeCheckVisitor.warning++;
                 throw new DuplicationException(id, parentNode, "to contain", tContainedVal);
-            } else {
-                this.containValue.add(tContainedVal);
-            }
+            } 
+            for (String string : this.containValue) {
+                if (string.contains(tContainedVal)){
+                    throw new RedundantSyntaxException(id, parentNode, string, tContainedVal, "ContainsContained");
+                } else if (tContainedVal.contains(string)){
+                    throw new RedundantSyntaxException(id, parentNode, string, tContainedVal, "ContainsContained");
+                }
+            }   
+            this.containValue.add(tContainedVal);
+            return true;
+            
         } else if (this.exactValue.size() != 0 && !t.onlyContains){ // else, if both values are exact
             if (this.exactValue.contains(tExactVal)){ // and they are equal
                 TypeCheckVisitor.warning++;
@@ -93,15 +101,23 @@ public class StringType extends BaseType {
         return true; 
     }
 
-    public boolean compareTypesOr(String id, BaseType type, SimpleNode parentNode) throws DuplicationException{
+    public boolean compareTypesOr(String id, BaseType type, SimpleNode parentNode) throws DuplicationException, RedundantSyntaxException{
         StringType t = (StringType) type;
         if (this.containValue.size()!=0 && t.onlyContains){ // if both are contains
             if (this.containValue.contains(t.containValue.get(0))){ // and values are the same
                 TypeCheckVisitor.warning++;
                 throw new DuplicationException(id, parentNode, "to contain", t.containValue.get(0)); // redundant
-            } else {
-                this.containValue.add(t.containValue.get(0));
-            }
+            } 
+            String tContainedVal = t.containValue.get(0);
+            for (String string : this.containValue) {
+                if (string.contains(tContainedVal)){
+                    throw new RedundantSyntaxException(id, parentNode, string, tContainedVal, "ContainsContained");
+                } else if (tContainedVal.contains(string)){
+                    throw new RedundantSyntaxException(id, parentNode, string, tContainedVal, "ContainsContained");
+                }
+            } 
+            this.containValue.add(t.containValue.get(0));
+            
         } else if (this.exactValue.size()!=0 && !t.onlyContains){ // if both are exact
             if (this.exactValue.contains(t.exactValue.get(0))) { // if they are the same 
                 TypeCheckVisitor.warning++;
@@ -109,6 +125,10 @@ public class StringType extends BaseType {
             } else {
                 this.exactValue.add(t.exactValue.get(0));
             }
+        } else if (this.containValue.size()!=0 && !t.onlyContains){ // if this contains, and other exact
+            this.exactValue.add(t.exactValue.get(0));
+        } else if (this.exactValue.size()!=0 && t.onlyContains){ // if this has exact, and other contains
+            this.containValue.add(t.containValue.get(0));
         }
         return true;
     }
