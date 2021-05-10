@@ -140,7 +140,7 @@ public class DuplicationExceptionOrTest {
         IDEN firstId = new IDEN(3);
         firstId.value = "test";
         firstExpr.jjtAddChild(firstId, 0);
-        STRING firstInt = new STRING(4);
+        INTEGER firstInt = new INTEGER(4);
         firstInt.value = firstValue;
         firstExpr.jjtAddChild(firstInt, 1);
         andNode.jjtAddChild(firstExpr, 0);
@@ -150,7 +150,7 @@ public class DuplicationExceptionOrTest {
         IDEN secondId = new IDEN(3);
         secondId.value = "test";
         secondExpr.jjtAddChild(secondId, 0);
-        STRING secondInt = new STRING(4);
+        INTEGER secondInt = new INTEGER(4);
         secondInt.value = secondValue;
         secondExpr.jjtAddChild(secondInt, 1);
         andNode.jjtAddChild(secondExpr, 1);
