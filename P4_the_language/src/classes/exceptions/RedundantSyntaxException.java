@@ -82,7 +82,7 @@ public class RedundantSyntaxException extends Exception {
     private static String multipleValuesDefinedDecimal(String id, SimpleNode node, double firstValue, String firstConstrain, double secondValue, String secondConstrain) {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "WARNING:\n";
-        newMessage += "REDUNDANT SYNTAX WARNING: \"" + id + "\" has already been defined as " + firstConstrain + firstValue + " and " + secondConstrain + secondValue + ". This can be simplified\n";
+        newMessage += "REDUNDANT SYNTAX WARNING: \"" + id + "\" has been defined as " + firstConstrain + firstValue + " and " + secondConstrain + secondValue + ". This can be simplified\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;

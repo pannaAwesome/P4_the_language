@@ -359,7 +359,7 @@ public class ConstrainExceptionAndTest {
         
         String expected = "ERROR:\n";
         expected += "CONSTRAINT ERROR: There are no integer values that are less than 10 and bigger than 9 for \"test\"\n";
-        expected += "At line: rule1: test < 10 AND test > 10\n\n";
+        expected += "At line: rule1: test < 10 AND test > 9\n\n";
         
         Throwable thrown = assertThrows(ConstraintException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
         assertEquals(expected, thrown.getMessage());

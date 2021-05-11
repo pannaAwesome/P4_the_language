@@ -198,8 +198,8 @@ public class DecimalType extends BaseType {
 
     private void compareValues(String id, DecimalType t, SimpleNode parentNode) throws DuplicationException, RedundantSyntaxException {
         if (this.minValue != null && t.minValue != null) { // begge har en minimum værdi
-            String firstConstrain = this.withGivenMinValue ? "bigger than or equal to" : "bigger than";
-            String secondConstrain = t.withGivenMinValue ? "bigger than or equal to" : "bigger than";
+            String firstConstrain = this.withGivenMinValue ? "bigger than or equal to " : "bigger than ";
+            String secondConstrain = t.withGivenMinValue ? "bigger than or equal to " : "bigger than ";
             if (this.withGivenMinValue == t.withGivenMinValue && this.minValue.equals(t.minValue)){ // minimumværdierne er helt ens
                 TypeCheckVisitor.warning++;
                 throw new DuplicationException(id, parentNode, firstConstrain, this.minValue);
@@ -208,8 +208,8 @@ public class DecimalType extends BaseType {
                 throw new RedundantSyntaxException(id, parentNode, this.minValue, firstConstrain, t.minValue, secondConstrain);
             }
         } else if (this.maxValue != null && t.maxValue != null){ // begge har en maksimum værdi
-            String firstConstrain = this.withGivenMaxValue ? "less than or equal to" : "less than";
-            String secondConstrain = t.withGivenMaxValue ? "less than or equal to" : "less than";
+            String firstConstrain = this.withGivenMaxValue ? "less than or equal to " : "less than ";
+            String secondConstrain = t.withGivenMaxValue ? "less than or equal to " : "less than ";
             if (this.withGivenMaxValue == t.withGivenMaxValue && this.maxValue.equals(t.maxValue)){ // maksimumværdierne er helt ens
                 TypeCheckVisitor.warning++;
                 throw new DuplicationException(id, parentNode, firstConstrain, this.maxValue);

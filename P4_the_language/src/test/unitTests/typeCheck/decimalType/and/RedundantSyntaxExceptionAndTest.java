@@ -190,6 +190,25 @@ public class RedundantSyntaxExceptionAndTest {
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));
         assertEquals(expected, thrown.getMessage());
     }
+    
+    @Test
+    @DisplayName("Test >= 10.0 AND Test >= 9.0")
+    public void biggerThanOrEqualAndBiggerThanOorEqual() throws Exception {
+        DecimalType firstDoub = new DecimalType();
+        firstDoub.SetValue(">=", 10.0);
+
+        String id = "test";
+        DecimalType secondDoub = new DecimalType();
+        secondDoub.SetValue(">=", 9.0);
+        CreateAndExpression(">=", 10.0, ">=", 9.0);
+        
+        String expected = "WARNING:\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as bigger than or equal to 10.0 and bigger than or equal to 9.0. This can be simplified\n";
+        expected += "At line: rule1: test >= 10.0 AND test >= 9.0\n\n";
+        
+        Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
 
     @Test
     @DisplayName("Test < 10.0 AND Test = 10.0")

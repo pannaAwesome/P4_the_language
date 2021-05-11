@@ -275,6 +275,7 @@ public class NoErrorsOrBeforeValueCheckTest {
         String id = "test";
         DecimalType secondDoub = new DecimalType();
         secondDoub.SetValue(">=", 11.0);
+        
         Double expected = 10.0;
         boolean expectedWith = false;
         
