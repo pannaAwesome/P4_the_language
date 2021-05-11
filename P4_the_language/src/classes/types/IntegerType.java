@@ -129,6 +129,9 @@ public class IntegerType extends BaseType {
                 if (t.maxValue != null && this.minValue >= t.maxValue){
                     TypeCheckVisitor.error++;
                     throw new ConstraintException(id, parentNode, t.maxValue, this.minValue);
+                } else if (t.maxValue != null && this.minValue == t.maxValue-1) {
+                    TypeCheckVisitor.error++;
+                    throw new ConstraintException(id, parentNode, t.maxValue, this.minValue, t);
                 }
             }
         } else if (t.minValue != null) { // alt er okay og derfor kan minimumværdien sættes
@@ -172,7 +175,7 @@ public class IntegerType extends BaseType {
                 } else if (t.withGivenMaxValue) { // maksimumværdierne er ikke helt ens
                     TypeCheckVisitor.error++;
                     throw new ConstraintException(id, parentNode, "less than or equal to", t.maxValue, "less than", maxValue);
-                } else { // makismumværdierne er ikke helt ens
+                }else { // makismumværdierne er ikke helt ens
                     TypeCheckVisitor.error++;
                     throw new ConstraintException(id, parentNode, "less than", t.maxValue, "less than or equal to", maxValue);
                 }
@@ -180,6 +183,9 @@ public class IntegerType extends BaseType {
                 if (this.maxValue <= t.minValue){
                     TypeCheckVisitor.warning++;
                     throw new ConstraintException(id, parentNode, this.maxValue, t.minValue);
+                } else if (this.maxValue-1 == t.minValue) {
+                    TypeCheckVisitor.error++;
+                    throw new ConstraintException(id, parentNode, this.maxValue, t.minValue, t);
                 } 
             } 
         } else if (t.maxValue != null) { // alt er okay og derfor kan maksimumværdien sættes

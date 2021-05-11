@@ -123,6 +123,10 @@ public class ConstraintException extends Exception {
     public ConstraintException(String id, SimpleNode parentNode, int max, int min){
         super(minBiggerThanMaxConstrainInt(id, parentNode, max, min));
     }
+
+    public ConstraintException(String id, SimpleNode parentNode, int max, int min, Object param){
+        super(noValueBetweenMinAndMax(id, parentNode, max, min, param));
+    }
     
     private static String constrainInt(String id, SimpleNode node, String firstConstrain, int wrongValue, String secondConstrain, int value) {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
@@ -161,6 +165,17 @@ public class ConstraintException extends Exception {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "ERROR:\n";
         newMessage += "CONSTRAINT ERROR: \"" + id + "\" cannot have a max value of " + max + ", which is smaller than the min value of " + min+ "\n";
+        newMessage += "At line: ";
+        node.jjtAccept(ppv, null);
+        newMessage += ppv.print;
+        newMessage += "\n";
+        return newMessage;
+    }
+
+    private static String noValueBetweenMinAndMax(String id, SimpleNode node, int max, int min, Object param) {
+        PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
+        String newMessage = "ERROR:\n";
+        newMessage += "CONSTRAINT ERROR: There are no integer values that are bigger than "+min+" and smaller than "+max+" for \""+id+"\"\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;
