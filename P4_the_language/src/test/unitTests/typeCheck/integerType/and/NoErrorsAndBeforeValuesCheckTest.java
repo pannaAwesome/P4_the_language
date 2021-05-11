@@ -34,7 +34,7 @@ public class NoErrorsAndBeforeValuesCheckTest {
         List<Integer> expected = new ArrayList<Integer>();
         expected.add(10);
         
-        firstInt.compareTypesOr( id, secondInt, parentNode);
+        firstInt.compareTypesAnd( id, secondInt, parentNode);
         List<Integer> actual = firstInt.equalValue;
 
         assertIterableEquals(expected, actual);

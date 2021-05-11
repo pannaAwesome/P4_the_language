@@ -77,8 +77,7 @@ public class IntegerType extends BaseType {
             t.maxValue == null &&
             t.withGivenMaxValue == false &&
             t.equalValue.size() == 0){ // id IS INTEGER AND id IS INTEGER
-            TypeCheckVisitor.warning++;
-            throw new DuplicationException(id, parentNode);
+            return true;
         } else {
             compareMinValue(id, t, parentNode);
             compareMaxValue(id, t, parentNode);
@@ -193,8 +192,6 @@ public class IntegerType extends BaseType {
         }
     }
 
-    
-
     private void compareEqualValue (String id, IntegerType t, SimpleNode parentNode) throws Exception {
         if (this.equalValue.size() > 0 && t.equalValue.size() != 0) { // den nuværende og den nye har begge lig med værdier
             if (this.equalValue.contains(t.equalValue.get(0))) { // lig med værdierne er de samme
@@ -263,6 +260,7 @@ public class IntegerType extends BaseType {
                 }
             } else {
                 this.equalValue.add(t.equalValue.get(0));
+                return;
             }
         }
         if (this.minValue != null && t.minValue != null) { // begge har en minimum værdi
