@@ -176,6 +176,25 @@ public class ConstrainExceptionAndTest {
     }
 
     @Test
+    @DisplayName("Test > 10 AND Test < 11")
+    public void biggerThanAndSmallerThanNoneFound() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue(">", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue("<", 11);
+        CreateAndExpression(">", 10, "<", 11);
+        
+        String expected = "ERROR:\n";
+        expected += "CONSTRAINT ERROR: There are no integer values that are bigger than 10 and smaller than 11 for \"test\"\n";
+        expected += "At line: rule1: test > 10 AND test < 11\n\n";
+        
+        Throwable thrown = assertThrows(ConstraintException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
     @DisplayName("Test > 10 AND Test <= 10")
     public void biggerThanOrSmallerThanOrEqual() throws Exception {
         IntegerType firstInt = new IntegerType();
@@ -321,6 +340,25 @@ public class ConstrainExceptionAndTest {
         
         String expected = "ERROR:\n";
         expected += "CONSTRAINT ERROR: \"test\" cannot have a max value of 10, which is smaller than the min value of 10\n";
+        expected += "At line: rule1: test < 10 AND test > 10\n\n";
+        
+        Throwable thrown = assertThrows(ConstraintException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
+        assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test < 10 AND Test > 9")
+    public void smallerThanAndBiggerThanNoneFound() throws Exception {
+        IntegerType firstInt = new IntegerType();
+        firstInt.SetValue("<", 10);
+
+        String id = "test";
+        IntegerType secondInt = new IntegerType();
+        secondInt.SetValue(">", 10);
+        CreateAndExpression("<", 10, ">", 10);
+        
+        String expected = "ERROR:\n";
+        expected += "CONSTRAINT ERROR: There are no integer values that are less than 10 and bigger than 9 for \"test\"\n";
         expected += "At line: rule1: test < 10 AND test > 10\n\n";
         
         Throwable thrown = assertThrows(ConstraintException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));
