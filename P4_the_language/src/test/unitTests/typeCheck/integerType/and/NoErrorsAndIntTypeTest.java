@@ -290,16 +290,16 @@ public class NoErrorsAndIntTypeTest {
     }
 
     @Test
-    @DisplayName("Test < 10 AND Test >= 9")
+    @DisplayName("Test < 10 AND Test >= 8")
     public void  smallerThanAndBiggerThanOrEqual() throws Exception {
         IntegerType firstInt = new IntegerType();
         firstInt.SetValue("<", 10);
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
-        secondInt.SetValue(">=", 9);
+        secondInt.SetValue(">=", 8);
         
-        int expected = 9;
+        int expected = 8;
         boolean expectedWith = true;
         
         firstInt.compareTypesAnd( id, secondInt, parentNode);
@@ -327,16 +327,16 @@ public class NoErrorsAndIntTypeTest {
     }
 
     @Test
-    @DisplayName("Test <= 10 AND Test > 15")
+    @DisplayName("Test <= 10 AND Test > 8")
     public void smallerThanOrEqualAndBiggerThan() throws Exception {
         IntegerType firstInt = new IntegerType();
         firstInt.SetValue("<=", 10);
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
-        secondInt.SetValue(">", 15);
+        secondInt.SetValue(">", 8);
         
-        int expected = 15;
+        int expected = 8;
         boolean expectedWith = false;
         
         firstInt.compareTypesAnd( id, secondInt, parentNode);
@@ -348,16 +348,16 @@ public class NoErrorsAndIntTypeTest {
     }
 
     @Test
-    @DisplayName("Test <= 10 AND Test >= 15")
+    @DisplayName("Test <= 10 AND Test >= 8")
     public void  smallerThanOrEqualAndBiggerThanOrEqual() throws Exception {
         IntegerType firstInt = new IntegerType();
         firstInt.SetValue("<=", 10);
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
-        secondInt.SetValue(">=", 15);
+        secondInt.SetValue(">=", 8);
         
-        int expected = 15;
+        int expected = 8;
         boolean expectedWith = true;
         
         firstInt.compareTypesAnd( id, secondInt, parentNode);
