@@ -120,8 +120,8 @@ public class ConstraintException extends Exception {
         super(equalOtherConstrainInt(id, node, wrongConstrain, wrongValue, value));
     }
 
-    public ConstraintException(String id, int max, int min){
-        super(minBiggerThanMaxConstrainInt(id, max, min));
+    public ConstraintException(String id, SimpleNode parentNode, int max, int min){
+        super(minBiggerThanMaxConstrainInt(id, parentNode, max, min));
     }
     
     private static String constrainInt(String id, SimpleNode node, String firstConstrain, int wrongValue, String secondConstrain, int value) {
@@ -157,9 +157,13 @@ public class ConstraintException extends Exception {
         return newMessage;
     }
 
-    private static String minBiggerThanMaxConstrainInt(String id, double max, int min) {
+    private static String minBiggerThanMaxConstrainInt(String id, SimpleNode node, int max, int min) {
+        PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "ERROR:\n";
         newMessage += "CONSTRAINT ERROR: \"" + id + "\" cannot have a max value of " + max + ", which is smaller than the min value of " + min+ "\n";
+        newMessage += "At line: ";
+        node.jjtAccept(ppv, null);
+        newMessage += ppv.print;
         newMessage += "\n";
         return newMessage;
     }
