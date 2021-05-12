@@ -99,7 +99,15 @@ public class RedundantSyntaxException extends Exception {
     }
     
     public RedundantSyntaxException(String id, SimpleNode node, int firstValue, String firstConstrain, int secondValue, String secondConstrain) {
-        super(multipleValuesDefinedDecimal(id, node, firstValue, firstConstrain, secondValue, secondConstrain));
+        super(multipleValuesDefinedInteger(id, node, firstValue, firstConstrain, secondValue, secondConstrain));
+    }
+
+    public RedundantSyntaxException(String id, SimpleNode node, int firstValue, String firstConstrain, int secondValue, String secondConstrain, String or) {
+        super(multipleValuesDefinedInteger(id, node, firstValue, firstConstrain, secondValue, secondConstrain, or));
+    }
+
+    public RedundantSyntaxException(String id, SimpleNode node, String firstConstrain, String secondConstrain, Object param) {
+        super(OrIsInteger(id, node, firstConstrain, secondConstrain, param));
     }
 
     private static String RedundantSyntaxExceptionDecimal(String id, SimpleNode node, int value) {
@@ -113,10 +121,32 @@ public class RedundantSyntaxException extends Exception {
         return newMessage;
     }
 
-    private static String multipleValuesDefinedDecimal(String id, SimpleNode node, int firstValue, String firstConstrain, int secondValue, String secondConstrain) {
+    private static String multipleValuesDefinedInteger(String id, SimpleNode node, int firstValue, String firstConstrain, int secondValue, String secondConstrain) {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "WARNING:\n";
         newMessage += "REDUNDANT SYNTAX WARNING: \"" + id + "\" has been defined as " + firstConstrain + firstValue + " and " + secondConstrain + secondValue + ". This can be simplified\n";
+        newMessage += "At line: ";
+        node.jjtAccept(ppv, null);
+        newMessage += ppv.print;
+        newMessage += "\n";
+        return newMessage;
+    }
+
+    private static String multipleValuesDefinedInteger(String id, SimpleNode node, int firstValue, String firstConstrain, int secondValue, String secondConstrain, String or) {
+        PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
+        String newMessage = "WARNING:\n";
+        newMessage += "REDUNDANT SYNTAX WARNING: \"" + id + "\" has been defined as " + firstConstrain + firstValue + " or " + secondConstrain + secondValue + ". This can be simplified\n";
+        newMessage += "At line: ";
+        node.jjtAccept(ppv, null);
+        newMessage += ppv.print;
+        newMessage += "\n";
+        return newMessage;
+    }
+
+    private static String OrIsInteger(String id, SimpleNode node, String firstConstrain, String secondConstrain, Object Param) {
+        PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
+        String newMessage = "WARNING:\n";
+        newMessage += "REDUNDANT SYNTAX WARNING: \"" + id + "\" has been defined as " + firstConstrain+ " or "+secondConstrain+". This can be simplified\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;

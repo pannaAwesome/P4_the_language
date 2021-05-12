@@ -136,7 +136,7 @@ public class RedundantSyntaxExceptionOrTest {
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
-        firstInt.SetValue(">", 9);
+        secondInt.SetValue(">", 9);
         CreateOrExpression("=", 10, ">", 9);
         
         String expected = "WARNING:\n";
@@ -155,7 +155,7 @@ public class RedundantSyntaxExceptionOrTest {
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
-        firstInt.SetValue(">=", 10);
+        secondInt.SetValue(">=", 10);
         CreateOrExpression("=", 10, ">=", 10);
         
         String expected = "WARNING:\n";
@@ -174,7 +174,7 @@ public class RedundantSyntaxExceptionOrTest {
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
-        firstInt.SetValue("<", 11);
+        secondInt.SetValue("<", 11);
         CreateOrExpression("=", 10, "<", 11);
         
         String expected = "WARNING:\n";
@@ -193,7 +193,7 @@ public class RedundantSyntaxExceptionOrTest {
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
-        firstInt.SetValue("<=", 10);
+        secondInt.SetValue("<=", 10);
         CreateOrExpression("=", 10, "<=", 10);
         
         String expected = "WARNING:\n";
