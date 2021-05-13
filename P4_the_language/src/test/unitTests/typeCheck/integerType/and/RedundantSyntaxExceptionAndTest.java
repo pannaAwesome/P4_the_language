@@ -108,7 +108,7 @@ public class RedundantSyntaxExceptionAndTest {
         CreateAndExpression(">", 10, "=", 11);
         
         String expected = "WARNING:\n";
-        expected += "REDUNDANT SYNTAX WARNING: \"test\" will always be equal to 11 and can be rewritten as \"test = 10\"\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" will always be equal to 11 and can be rewritten as \"test = 11\"\n";
         expected += "At line: rule1: test > 10 AND test = 11\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstInt.compareTypesAnd( id, secondInt, parentNode));

@@ -169,7 +169,7 @@ public class NoErrorsOrIntTypeTest {
     @DisplayName("Test > 10 OR Test <= 9")
     public void biggerThanOrSmallerThanOrEqual() throws Exception {
         IntegerType firstInt = new IntegerType();
-        firstInt.SetValue("=", 10);
+        firstInt.SetValue(">", 10);
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
