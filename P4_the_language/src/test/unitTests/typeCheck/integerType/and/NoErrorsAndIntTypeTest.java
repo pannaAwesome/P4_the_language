@@ -269,16 +269,16 @@ public class NoErrorsAndIntTypeTest {
     }
 
     @Test
-    @DisplayName("Test < 10 AND Test > 8")
+    @DisplayName("Test < 10 AND Test > 7")
     public void smallerThanAndBiggerThan() throws Exception {
         IntegerType firstInt = new IntegerType();
         firstInt.SetValue("<", 10);
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
-        secondInt.SetValue(">", 8);
+        secondInt.SetValue(">", 7);
         
-        int expected = 8;
+        int expected = 7;
         boolean expectedWith = false;
         
         firstInt.compareTypesAnd( id, secondInt, parentNode);

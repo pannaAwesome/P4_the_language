@@ -185,14 +185,14 @@ public class NoErrorsAndBeforeValuesCheckTest {
     }
 
     @Test
-    @DisplayName("Test < 10 AND Test > 8")
+    @DisplayName("Test < 10 AND Test > 7")
     public void smallerThanAndBiggerThan() throws Exception {
         IntegerType firstInt = new IntegerType();
         firstInt.SetValue("<", 10);
 
         String id = "test";
         IntegerType secondInt = new IntegerType();
-        secondInt.SetValue(">", 8);
+        secondInt.SetValue(">", 7);
         
         Integer expected = 10;
         boolean expectedWith = false;
