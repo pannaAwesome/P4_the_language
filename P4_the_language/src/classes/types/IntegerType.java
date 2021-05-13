@@ -87,26 +87,38 @@ public class IntegerType extends BaseType {
     private void compareMinValue(String id, IntegerType t, SimpleNode parentNode) throws Exception {
         if (this.minValue != null && this.withGivenMinValue) { // >= for den nuværende
             if (t.maxValue != null) { // < for den nye
-                if (this.minValue == t.maxValue || this.minValue == t.maxValue-1){ // min og max værdierne er lig hinanden
-                    TypeCheckVisitor.warning++;
-                    throw new RedundantSyntaxException(id, parentNode, this.minValue);
-                } else if (this.minValue >= t.maxValue){
+                if (this.minValue >= t.maxValue){
                     TypeCheckVisitor.warning++;
                     throw new ConstraintException(id, parentNode, t.maxValue, this.minValue);
+                } else if (this.minValue == t.maxValue || this.minValue == t.maxValue-1){ // min og max værdierne er lig hinanden
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue);
                 }
             } else if (t.equalValue.size() != 0) { // den nye indeholder en lig med værdi
-                TypeCheckVisitor.error++;
-                throw new ConstraintException(id, parentNode, "", t.equalValue.get(0), "bigger than or equal to", minValue);
-            }else if (t.minValue != null) { // den nye indeholder en minimumsværdi
-                if (this.minValue.equals(t.minValue) && t.withGivenMinValue) { // minimum værdierne er helt ens
+                if (this.minValue == t.equalValue.get(0)) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue);
+                } else {
+                    TypeCheckVisitor.error++;
+                    throw new ConstraintException(id, parentNode, "", t.equalValue.get(0), "bigger than or equal to", this.minValue);
+                }
+            } else if (t.minValue != null && t.withGivenMinValue){ // >=
+                if (this.minValue == t.minValue){
                     TypeCheckVisitor.warning++;
                     throw new DuplicationException(id, parentNode, "bigger than or equal to ", this.minValue);
-                } else if (t.withGivenMinValue) { // minimum værdierne er ikke helt ens
-                    TypeCheckVisitor.error++;
-                    throw new ConstraintException(id, parentNode, "bigger than or equal to", t.minValue, "bigger than or equal to", minValue);
+                } else {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than or equal to ", t.minValue, "bigger than or equal to ");
+                }
+            } else if (t.minValue != null && t.withGivenMinValue){
+
+            } else if (t.minValue != null) { // den nye indeholder en minimumsværdi
+                if (this.minValue == t.minValue) { // minimum værdierne er helt ens
+                    TypeCheckVisitor.warning++;
+                    throw new DuplicationException(id, parentNode, "bigger than or equal to ", this.minValue);
                 } else { // minimum værdierne er ikke helt ens
-                    TypeCheckVisitor.error++;
-                    throw new ConstraintException(id, parentNode, "bigger than", t.minValue, "bigger than or equal to", minValue);
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than or equal to ", t.minValue, "bigger than ");
                 } 
             }
         } else if (this.minValue != null && !this.withGivenMinValue) { // > for den nuværende
@@ -118,16 +130,24 @@ public class IntegerType extends BaseType {
                     TypeCheckVisitor.error++;
                     throw new RedundantSyntaxException(id, parentNode, t.equalValue.get(0));
                 }
-            }else if (t.minValue != null) { // den nye indeholder en minimumværdi
-                if (this.minValue.equals(t.minValue) && !t.withGivenMinValue) { // minimumværdierne er helt ens
+            } else if (t.minValue != null && t.withGivenMinValue){ // >=
+                TypeCheckVisitor.warning++;
+                throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than ", t.minValue, "bigger than or equal to ");
+            } else if (t.minValue != null) { // den nye indeholder en minimumværdi
+                if (this.minValue == t.minValue) { // minimumværdierne er helt ens
                     TypeCheckVisitor.warning++;
                     throw new DuplicationException(id, parentNode, "bigger than ", this.minValue);
-                } else if (t.withGivenMinValue) { // minimum værdierne er ikke helt ens
-                    TypeCheckVisitor.error++;
-                    throw new ConstraintException(id, parentNode, "bigger than or equal to", t.minValue, "bigger than", minValue);
                 } else { // minimum værdierne er ikke helt ens
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than ", t.minValue, "bigger than ");
+                }
+            } else if (t.maxValue != null && t.withGivenMaxValue){ // <= for den nye
+                if (this.minValue+1 == t.maxValue){
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, t.maxValue);
+                } else if (this.minValue == t.maxValue) {
                     TypeCheckVisitor.error++;
-                    throw new ConstraintException(id, parentNode, "bigger than", t.minValue, "bigger than or equal to", minValue);
+                    throw new ConstraintException(id, parentNode, t.maxValue, this.minValue);
                 }
             } else if (t.maxValue != null){ // < den nye indeholder maksværdi
                 if (this.minValue >= t.maxValue){
@@ -141,7 +161,8 @@ public class IntegerType extends BaseType {
                     throw new RedundantSyntaxException(id, parentNode, this.minValue+1);
                 }
             }
-        } else if (t.minValue != null) { // alt er okay og derfor kan minimumværdien sættes
+        } 
+        if (t.minValue != null) { // alt er okay og derfor kan minimumværdien sættes
             this.SetMinValue(t.minValue, t.withGivenMinValue);
         }
     }
@@ -152,91 +173,140 @@ public class IntegerType extends BaseType {
                 if (this.maxValue == t.minValue){ // min og max værdierne er lig hinanden
                     TypeCheckVisitor.warning++;
                     throw new RedundantSyntaxException(id, parentNode, this.minValue);
-                } 
+                } else if (t.minValue > this.maxValue) {
+                    TypeCheckVisitor.warning++;
+                    throw new ConstraintException(id, parentNode, this.maxValue, t.minValue);
+                }
             } else if (t.minValue != null){ // > den nye indeholder minværdi
-                System.out.println("IntegerType.compareMaxValue()");
                 if (this.maxValue <= t.minValue){
                     TypeCheckVisitor.warning++;
                     throw new ConstraintException(id, parentNode, this.maxValue, t.minValue);
-                } else {
+                } else if (this.maxValue-1 == t.minValue){
                     TypeCheckVisitor.warning++;
                     throw new RedundantSyntaxException(id, parentNode, this.maxValue);
                 }
             } else if (t.equalValue.size() != 0) { // den nye indeholder en lig med værdi
-                if (t.equalValue.get(0)<this.maxValue){
+                if (t.equalValue.get(0)>this.maxValue){
                     TypeCheckVisitor.error++;
                     throw new ConstraintException(id, parentNode, "", t.equalValue.get(0), "less than or equal to", this.maxValue);
                 } else {
                     TypeCheckVisitor.warning++;
                     throw new RedundantSyntaxException(id, parentNode, this.maxValue);
                 }
-            }else if (t.maxValue != null) { // den nye indeholder en maksimumsværdi
-                if (this.maxValue.equals(t.maxValue) && t.withGivenMaxValue) { // maksimumsværdierne er helt ens
+            } else if (t.maxValue != null && t.withGivenMaxValue){ // <= for den nye
+                if (this.maxValue == t.maxValue) {
+                    TypeCheckVisitor.warning++;
+                    throw new DuplicationException(id, parentNode, "less than or equal to ", t.maxValue);
+                }
+                TypeCheckVisitor.warning++;
+                throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than or equal to ", t.maxValue, "less than or equal to ");
+            } else if (t.maxValue != null && t.withGivenMaxValue) { // < den nye indeholder en maksimumsværdi
+                if (this.maxValue == t.maxValue) { // maksimumsværdierne er helt ens
                     TypeCheckVisitor.warning++;
                     throw new DuplicationException(id, parentNode, "less than or equal to ", this.maxValue);
-                } else if (t.withGivenMaxValue) { // makismum værdierne er ikke helt ens
-                    TypeCheckVisitor.error++;
-                    throw new ConstraintException(id, parentNode, "less than or equal to", t.maxValue, "less than or equal to", maxValue);
-                } else { // maksimumværdierne er ikke helt ens
-                    TypeCheckVisitor.error++;
-                    throw new ConstraintException(id, parentNode, "less than", t.maxValue, "less than or equal to", maxValue);
+                } else {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than or equal to ", t.maxValue, "less than or equal to ");
+                }
+            } else if (t.maxValue != null){ // < for den nye
+                if (t.maxValue+1 == this.maxValue){
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than or equal to ", t.maxValue, "less than ");
                 }
             }
         } else if (this.maxValue != null && !this.withGivenMaxValue) { // < for den nuværende
             if (t.equalValue.size() != 0) { // den nye indeholder en lig med værdi
-                TypeCheckVisitor.error++;
-                throw new ConstraintException(id, parentNode, "", t.equalValue.get(0), "less than", maxValue);
-            }else if (t.maxValue != null) { // den nye indeholder en maksimumværdi
-                if (this.maxValue.equals(t.maxValue) && !t.withGivenMaxValue) { // maksimumværdierne er helt ens
+                if (t.equalValue.get(0) < this.maxValue){
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, t.equalValue.get(0));
+                } else {
+                    TypeCheckVisitor.warning++;
+                    throw new ConstraintException(id, parentNode, t.equalValue.get(0), "less than "+this.maxValue);
+                }
+            } else if (t.maxValue != null && t.withGivenMaxValue){ // <= for den nye
+                TypeCheckVisitor.warning++;
+                throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than ", t.maxValue, "less than or equal to ");
+            } else if (t.maxValue != null) { // < den nye indeholder en maksimumværdi
+                if (this.maxValue == t.maxValue) { // maksimumværdierne er helt ens
                     TypeCheckVisitor.warning++;
                     throw new DuplicationException(id, parentNode, "less than ", this.maxValue);
-                } else if (t.withGivenMaxValue) { // maksimumværdierne er ikke helt ens
-                    TypeCheckVisitor.error++;
-                    throw new ConstraintException(id, parentNode, "less than or equal to", t.maxValue, "less than", maxValue);
-                }else { // makismumværdierne er ikke helt ens
-                    TypeCheckVisitor.error++;
-                    throw new ConstraintException(id, parentNode, "less than", t.maxValue, "less than or equal to", maxValue);
+                } else { // makismumværdierne er ikke helt ens
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than ", t.maxValue, "less than ");
                 }
-            }else if (t.minValue != null) { // <
+            } else if (t.minValue != null && t.withGivenMinValue) { // >= for den nye
+                if (this.maxValue-1 == t.minValue){
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue-1);
+                } else if (this.maxValue <= t.minValue){
+                    TypeCheckVisitor.error++;
+                    throw new ConstraintException(id, parentNode, this.maxValue, t.minValue);
+                }
+            } else if (t.minValue != null) { // > for den nye 
                 if (this.maxValue <= t.minValue){
                     TypeCheckVisitor.warning++;
                     throw new ConstraintException(id, parentNode, this.maxValue, t.minValue);
                 } else if (this.maxValue-1 == t.minValue) {
                     TypeCheckVisitor.error++;
                     throw new ConstraintException(id, parentNode, this.maxValue, t.minValue, t);
-                } 
+                } else if (this.maxValue-1 == t.minValue+1) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue-1);
+                }
             } 
-        } else if (t.maxValue != null) { // alt er okay og derfor kan maksimumværdien sættes
+        } 
+        if (t.maxValue != null) { // alt er okay og derfor kan maksimumværdien sættes
             this.SetMaxValue(t.maxValue, t.withGivenMaxValue);
         }
     }
 
     private void compareEqualValue (String id, IntegerType t, SimpleNode parentNode) throws Exception {
-        if (this.equalValue.size() > 0 && t.equalValue.size() != 0) { // den nuværende og den nye har begge lig med værdier
-            if (this.equalValue.contains(t.equalValue.get(0))) { // lig med værdierne er de samme
-                TypeCheckVisitor.warning++;
-                throw new DuplicationException(id, parentNode, t.equalValue.get(0));
-            }else { // lig med værdierne er ikke de samme
+        if (this.equalValue.size() > 0) { // = for den nuværende 
+            int thisEqVal =  this.equalValue.get(this.equalValue.size()-1);
+            if (t.equalValue.size() != 0) { // = for den nye
+                if (thisEqVal == t.equalValue.get(0)){
+                    TypeCheckVisitor.warning++;
+                    throw new DuplicationException(id, parentNode, thisEqVal);
+                }
                 TypeCheckVisitor.error++;
                 throw new ConstraintException(id, parentNode, t.equalValue.get(0), equalValuesToString());
-            }    
-        } else if (this.equalValue.size() > 0 && t.minValue != null) { // den nye har en minimumværdi
-            if (t.withGivenMinValue) { // >=
-                TypeCheckVisitor.error++;
-                throw new ConstraintException(id, parentNode, "bigger than or equal to ", t.minValue, equalValuesToString());
-            } else { // >
-                TypeCheckVisitor.error++;
-                throw new ConstraintException(id, parentNode, "bigger than ", t.minValue, equalValuesToString());
-            }
-        } else if (this.equalValue.size() > 0 && t.maxValue != null) { // den nye har en maximumværdi
-            if (t.withGivenMaxValue) { // <=
-                TypeCheckVisitor.error++;
-                throw new ConstraintException(id, parentNode, "less than or equal to ", t.maxValue, equalValuesToString());
-            } else { // <
-                TypeCheckVisitor.error++;
-                throw new ConstraintException(id, parentNode, "less than ", t.maxValue, equalValuesToString());
-            }
-        } else if (t.equalValue.size() != 0) { // alt er okay og derfor kan lig med værdien sættes
+            } else if (t.minValue != null) { // > den nye har en minimumværdi
+                if (t.withGivenMinValue) { // >=
+                    if (thisEqVal == t.minValue){
+                        TypeCheckVisitor.warning++;
+                        throw new RedundantSyntaxException(id, parentNode, thisEqVal);
+                    } else {
+                        TypeCheckVisitor.error++;
+                        throw new ConstraintException(id, parentNode, "bigger than or equal to ", t.minValue, equalValuesToString());
+                    }
+                } else if (t.minValue < thisEqVal) { 
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, thisEqVal);
+                } else {
+                    TypeCheckVisitor.error++;
+                    throw new ConstraintException(id, parentNode, "bigger than ", t.minValue, equalValuesToString());
+                }
+            } else if (t.maxValue != null) { // < den nye har en maximumværdi
+                if (t.withGivenMaxValue) { // <=
+                    if (thisEqVal == t.maxValue) {
+                        TypeCheckVisitor.warning++;
+                        throw new RedundantSyntaxException(id, parentNode, thisEqVal);
+                    } else {
+                        TypeCheckVisitor.error++;
+                        throw new ConstraintException(id, parentNode, "less than or equal to ", t.maxValue, equalValuesToString());
+                    }
+                } else if (t.maxValue > thisEqVal) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, thisEqVal);
+                } else { 
+                    TypeCheckVisitor.error++;
+                    throw new ConstraintException(id, parentNode, "less than ", t.maxValue, equalValuesToString());
+                }
+            }  
+            // alt er okay og derfor kan lig med værdien sættes    
+            
+        }
+        if (t.equalValue.size() != 0) {
             this.equalValue.add(t.equalValue.get(0));
         }
     }
@@ -439,7 +509,6 @@ public class IntegerType extends BaseType {
                 } 
             }
         }
-        System.out.println("IntegerType.compareValues()");
 
         // alt er ok, og vædier kan sættes, dog check de ikke er null
         if (t.equalValue.size() != 0) {
