@@ -197,38 +197,83 @@ public class DecimalType extends BaseType {
     }
 
     private void compareValues(String id, DecimalType t, SimpleNode parentNode) throws DuplicationException, RedundantSyntaxException {
+        if (ISDECIMAL(this) && ISDECIMAL(t)){
+            TypeCheckVisitor.warning++;
+            throw new DuplicationException(id, parentNode);
+        } else if (ISDECIMAL(this)){
+            String secondArg = "";
+            if (t.minValue != null){
+                secondArg = t.withGivenMinValue ? "bigger than or equal to "+t.minValue : "bigger than "+t.minValue;
+            } else if (t.maxValue != null){
+                secondArg = t.withGivenMaxValue ? "less than or equal to "+t.maxValue : "less than "+t.maxValue;
+            } else if (t.equalValue.size() != 0){
+                secondArg = "equal to "+t.equalValue.get(0);
+            }
+            TypeCheckVisitor.warning++;
+            throw new RedundantSyntaxException(id, parentNode, "Decimal", secondArg, t);
+        }
+        
         if (this.minValue != null && this.withGivenMinValue) { // >= for den nuværende
             if (t.maxValue != null && t.withGivenMaxValue){ // <= for den nye
-
+                if (Double.compare(this.minValue, t.maxValue) <= 0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than or equal to ", t.maxValue, "less than or equal to ", "or");
+                }
             } else if (t.maxValue != null){ // < for den nye
-
+                if (Double.compare(this.minValue, t.maxValue) < 0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than or equal to ", t.maxValue, "less than ", "or");
+                }
             } else if (t.minValue != null && t.withGivenMinValue) { // >= for den nye
                 if (areEqual(this.minValue, t.minValue)){ // minimumværdierne er helt ens
                     TypeCheckVisitor.warning++;
                     throw new DuplicationException(id, parentNode, "bigger than or equal to", this.minValue);
-                } else { // minimumværdierne er forskellige
+                } else { 
                     TypeCheckVisitor.warning++;
-                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than or equal to ", t.minValue, "bigger than or equal to ");
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than or equal to ", t.minValue, "bigger than or equal to ", "or");
                 }
             } else if (t.minValue != null){ // > for den nye
-
+                TypeCheckVisitor.warning++;
+                throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than or equal to ", t.minValue, "bigger than ", "or");
+            } else if (t.equalValue.size() != 0) {
+                if (Double.compare(t.equalValue.get(0), this.minValue) >= 0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than or equal to ", t.equalValue.get(0), "equal to ", "or");
+                }
+            } else if (ISDECIMAL(t)) {
+                TypeCheckVisitor.warning++;
+                throw new RedundantSyntaxException(id, parentNode, "bigger than or equal to "+this.minValue, "Decimal", "or", t);
             }
-        }
-        else if (this.minValue != null) { // > for den nuværende
+        } else if (this.minValue != null) { // > for den nuværende
             if (t.minValue != null && t.withGivenMinValue) { // >= for den nye
-                
+                TypeCheckVisitor.warning++;
+                throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than ", t.minValue, "bigger than or equal to ", "or");
             } else if (t.minValue != null) { // > for den nye
                 if (areEqual(this.minValue, t.minValue)){ // minimumværdierne er helt ens
                     TypeCheckVisitor.warning++;
                     throw new DuplicationException(id, parentNode, "bigger than", this.minValue);
                 } else { // minimumværdierne er forskellige
                     TypeCheckVisitor.warning++;
-                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than ", t.minValue, "bigger than ");
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than ", t.minValue, "bigger than ", "or");
                 }
             } else if (t.maxValue != null && t.withGivenMaxValue) { // <= for den nye
-
+                if (Double.compare(this.minValue, t.maxValue) <= 0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than ", t.maxValue, "less than or equal to ", "or");
+                }
             } else if (t.maxValue != null) { // < for den nye
-
+                if (Double.compare(this.minValue, t.maxValue) < 0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than ", t.maxValue, "less than ", "or");
+                }
+            } else if (t.equalValue.size() != 0) {
+                if (Double.compare(t.equalValue.get(0), this.minValue) > 0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than ", t.equalValue.get(0), "equal to ", "or");
+                }
+            } else if (ISDECIMAL(t)) {
+                TypeCheckVisitor.warning++;
+                throw new RedundantSyntaxException(id, parentNode, "bigger than "+this.minValue, "Decimal", "or", t);
             }
         } else if (this.maxValue != null && this.withGivenMaxValue) { // <= for den nuværende
             if (t.maxValue != null && t.withGivenMaxValue){ // <= for den nye
@@ -237,33 +282,93 @@ public class DecimalType extends BaseType {
                     throw new DuplicationException(id, parentNode, "less than or equal to", this.maxValue);
                 } else {
                     TypeCheckVisitor.warning++;
-                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than", t.maxValue, "less than");
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than or equal to ", t.maxValue, "less than or equal to ", "or");
                 }
             } else if (t.maxValue != null){ // < for den nye
-
+                TypeCheckVisitor.warning++;
+                throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than or equal to ", t.maxValue, "less than ", "or");
             } else if (t.minValue != null && t.withGivenMinValue) { // >= for den nye
-
+                if (Double.compare(t.minValue, this.maxValue) <= 0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than or equal to ", t.minValue, "bigger than or equal to ", "or");
+                }
             } else if (t.minValue != null){ // > for den nye
-
+                if (Double.compare(t.minValue, this.maxValue)<0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than or equal to ", t.minValue, "bigger than ", "or");
+                }
+            } else if (t.equalValue.size() != 0) { // = for den nye
+                if (Double.compare(t.equalValue.get(0), this.maxValue) <= 0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than or equal to ", t.equalValue.get(0), "equal to ", "or");
+                }
+            } else if (ISDECIMAL(t)) {
+                TypeCheckVisitor.warning++;
+                throw new RedundantSyntaxException(id, parentNode, "less than or equal to "+this.maxValue, "Decimal", "or", t);
             }
         } else if (this.maxValue != null) { // < for den nuværende
-            if (t.maxValue != null && t.withGivenMaxValue){ // <= for den nye
-
+            if (t.minValue != null && t.withGivenMinValue) { // >= for den nye
+                if (Double.compare(t.minValue, this.maxValue) <= 0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than ", t.minValue, "bigger than or equal to ", "or");
+                }
+            } else if (t.minValue != null) { // > for den nye
+                if (Double.compare(t.minValue, this.maxValue)<0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than ", t.minValue, "bigger than ", "or");
+                }
+            } else if (t.maxValue != null && t.withGivenMaxValue){ // <= for den nye
+                TypeCheckVisitor.warning++;
+                throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than ", t.maxValue, "less than or equal to ", "or");
             } else if (t.maxValue != null){ // < for den nye
                 if (areEqual(this.maxValue, t.maxValue)) {
                     TypeCheckVisitor.warning++;
                     throw new DuplicationException(id, parentNode, "less than", this.maxValue);
                 } else {
                     TypeCheckVisitor.warning++;
-                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than", t.maxValue, "less than");
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than ", t.maxValue, "less than ", "or");
                 }
-            }
-        } else if (t.equalValue.size() != 0){
-            double d2 = t.equalValue.get(0);
-            for (Double d : this.equalValue) {
-                if (areEqual(d, d2)) {
+            } else if (t.equalValue.size() != 0) { // = for den nye
+                if (Double.compare(t.equalValue.get(0), this.maxValue) < 0) {
                     TypeCheckVisitor.warning++;
-                    throw new DuplicationException(id, parentNode, d2);
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than ", t.equalValue.get(0), "equal to ", "or");
+                }
+            } else if (ISDECIMAL(t)) {
+                TypeCheckVisitor.warning++;
+                throw new RedundantSyntaxException(id, parentNode, "less than "+this.maxValue, "Decimal", "or", t);
+            }
+        } else if (this.equalValue.size() != 0){ // = for den nuværende
+            double thisEqVal = this.equalValue.get(this.equalValue.size()-1);
+            if (ISDECIMAL(t)) { // IS DECIMAL for den nye
+                TypeCheckVisitor.warning++;
+                throw new RedundantSyntaxException(id, parentNode, ""+this.equalValue.get(this.equalValue.size()-1), "Decimal", "or", t);
+            } else if (t.equalValue.size() != 0){
+                double d2 = t.equalValue.get(0);
+                for (Double d : this.equalValue) {
+                    if (areEqual(d, d2)) {
+                        TypeCheckVisitor.warning++;
+                        throw new DuplicationException(id, parentNode, d2);
+                    }
+                }
+            } else if (t.maxValue != null && t.withGivenMaxValue){ // <= for den nye
+                if (Double.compare(thisEqVal, t.maxValue) <= 0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, thisEqVal, "", t.maxValue, "less than or equal to ", "or");
+                }
+            } else if (t.maxValue != null) { // < for den nye
+                if (Double.compare(thisEqVal, t.maxValue) < 0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, thisEqVal, "", t.maxValue, "less than ", "or");
+                }
+            } else if (t.minValue != null && t.withGivenMinValue) { // >= for den nye
+                if (Double.compare(thisEqVal, t.minValue) >= 0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, thisEqVal, "", t.minValue, "bigger than or equal to ", "or");
+                }
+            } else if (t.minValue != null) { // > for den nye
+                if (Double.compare(thisEqVal, t.minValue) > 0) {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, thisEqVal, "", t.minValue, "bigger than ", "or");
                 }
             }
         }
@@ -273,12 +378,22 @@ public class DecimalType extends BaseType {
         }
         if (t.minValue != null) {
             this.minValue = t.minValue;
+            this.withGivenMinValue = t.withGivenMinValue;
         }
         if (t.maxValue != null) {
             this.maxValue = t.maxValue;
+            this.withGivenMaxValue = t.withGivenMaxValue;
         }
     }
     
+    private boolean ISDECIMAL(DecimalType t) {
+        return t.minValue == null &&
+               t.withGivenMinValue == false &&
+               t.maxValue == null &&
+               t.withGivenMaxValue == false &&
+               t.equalValue.size() == 0;
+    }
+
     // Used to compare doubles
     private boolean areEqual(Double d1, Double d2){
         return Double.compare(d1, d2) == 0;

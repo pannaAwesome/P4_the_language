@@ -64,8 +64,12 @@ public class RedundantSyntaxException extends Exception {
         super(RedundantSyntaxExceptionDecimal(id,  node, value));
     }
     
-    public RedundantSyntaxException(String id, SimpleNode node, double firstValue, String firstConstrain, double secondValue, String secondConstrain) {
-        super(multipleValuesDefinedDecimal(id, node, firstValue, firstConstrain, secondValue, secondConstrain));
+    public RedundantSyntaxException(String id, SimpleNode node, double firstValue, String firstConstrain, double secondValue, String secondConstrain, String orAnd) {
+        super(multipleValuesDefinedDecimal(id, node, firstValue, firstConstrain, secondValue, secondConstrain, orAnd));
+    }
+
+    public RedundantSyntaxException(String id, SimpleNode node, String firstConstrain, String secondConstrain, String orAnd, Object param){
+        super(isDecimalRedundant(id, node, firstConstrain, secondConstrain, orAnd));
     }
 
     private static String RedundantSyntaxExceptionDecimal(String id, SimpleNode node, double value) {
@@ -79,10 +83,21 @@ public class RedundantSyntaxException extends Exception {
         return newMessage;
     }
 
-    private static String multipleValuesDefinedDecimal(String id, SimpleNode node, double firstValue, String firstConstrain, double secondValue, String secondConstrain) {
+    private static String multipleValuesDefinedDecimal(String id, SimpleNode node, double firstValue, String firstConstrain, double secondValue, String secondConstrain, String orAnd) {
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "WARNING:\n";
-        newMessage += "REDUNDANT SYNTAX WARNING: \"" + id + "\" has been defined as " + firstConstrain + firstValue + " and " + secondConstrain + secondValue + ". This can be simplified\n";
+        newMessage += "REDUNDANT SYNTAX WARNING: \"" + id + "\" has been defined as " + firstConstrain + firstValue + " "+orAnd+" " + secondConstrain + secondValue + ". This can be simplified\n";
+        newMessage += "At line: ";
+        node.jjtAccept(ppv, null);
+        newMessage += ppv.print;
+        newMessage += "\n";
+        return newMessage;
+    }
+
+    private static String isDecimalRedundant(String id, SimpleNode node, String firstConstrain, String secondConstrain, String orAnd) {
+        PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
+        String newMessage = "WARNING:\n";
+        newMessage += "REDUNDANT SYNTAX WARNING: \"" + id + "\" has been defined as " + firstConstrain + " "+orAnd+" " + secondConstrain + ". This can be simplified\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;

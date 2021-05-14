@@ -136,7 +136,7 @@ public class RedundantSyntaxExceptionOrTest {
 
         String id = "test";
         DecimalType secondInt = new DecimalType();
-        firstInt.SetValue(">", 9.0);
+        secondInt.SetValue(">", 9.0);
         CreateOrExpression("=", 10.0, ">", 9.0);
         
         String expected = "WARNING:\n";
@@ -155,7 +155,7 @@ public class RedundantSyntaxExceptionOrTest {
 
         String id = "test";
         DecimalType secondInt = new DecimalType();
-        firstInt.SetValue(">=", 10.0);
+        secondInt.SetValue(">=", 10.0);
         CreateOrExpression("=", 10.0, ">=", 10.0);
         
         String expected = "WARNING:\n";
@@ -174,7 +174,7 @@ public class RedundantSyntaxExceptionOrTest {
 
         String id = "test";
         DecimalType secondInt = new DecimalType();
-        firstInt.SetValue("<", 11.0);
+        secondInt.SetValue("<", 11.0);
         CreateOrExpression("=", 10.0, "<", 11.0);
         
         String expected = "WARNING:\n";
@@ -193,7 +193,7 @@ public class RedundantSyntaxExceptionOrTest {
 
         String id = "test";
         DecimalType secondInt = new DecimalType();
-        firstInt.SetValue("<=", 10.0);
+        secondInt.SetValue("<=", 10.0);
         CreateOrExpression("=", 10.0, "<=", 10.0);
         
         String expected = "WARNING:\n";
