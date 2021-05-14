@@ -197,32 +197,91 @@ public class DecimalType extends BaseType {
     }
 
     private void compareValues(String id, DecimalType t, SimpleNode parentNode) throws DuplicationException, RedundantSyntaxException {
-        if (this.minValue != null && t.minValue != null) { // begge har en minimum værdi
-            String firstConstrain = this.withGivenMinValue ? "bigger than or equal to " : "bigger than ";
-            String secondConstrain = t.withGivenMinValue ? "bigger than or equal to " : "bigger than ";
-            if (this.withGivenMinValue == t.withGivenMinValue && this.minValue.equals(t.minValue)){ // minimumværdierne er helt ens
-                TypeCheckVisitor.warning++;
-                throw new DuplicationException(id, parentNode, firstConstrain, this.minValue);
-            } else { // minimumværdierne er forskellige
-                TypeCheckVisitor.warning++;
-                throw new RedundantSyntaxException(id, parentNode, this.minValue, firstConstrain, t.minValue, secondConstrain);
-            }
-        } else if (this.maxValue != null && t.maxValue != null){ // begge har en maksimum værdi
-            String firstConstrain = this.withGivenMaxValue ? "less than or equal to " : "less than ";
-            String secondConstrain = t.withGivenMaxValue ? "less than or equal to " : "less than ";
-            if (this.withGivenMaxValue == t.withGivenMaxValue && this.maxValue.equals(t.maxValue)){ // maksimumværdierne er helt ens
-                TypeCheckVisitor.warning++;
-                throw new DuplicationException(id, parentNode, firstConstrain, this.maxValue);
-            } else { // maksimumværdierne er forskellige
-                TypeCheckVisitor.warning++;
-                throw new RedundantSyntaxException(id, parentNode, this.maxValue, firstConstrain, t.maxValue, secondConstrain);
+        if (this.minValue != null && this.withGivenMinValue) { // >= for den nuværende
+            if (t.maxValue != null && t.withGivenMaxValue){ // <= for den nye
+
+            } else if (t.maxValue != null){ // < for den nye
+
+            } else if (t.minValue != null && t.withGivenMinValue) { // >= for den nye
+                if (areEqual(this.minValue, t.minValue)){ // minimumværdierne er helt ens
+                    TypeCheckVisitor.warning++;
+                    throw new DuplicationException(id, parentNode, "bigger than or equal to", this.minValue);
+                } else { // minimumværdierne er forskellige
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than or equal to ", t.minValue, "bigger than or equal to ");
+                }
+            } else if (t.minValue != null){ // > for den nye
+
             }
         }
+        else if (this.minValue != null) { // > for den nuværende
+            if (t.minValue != null && t.withGivenMinValue) { // >= for den nye
+                
+            } else if (t.minValue != null) { // > for den nye
+                if (areEqual(this.minValue, t.minValue)){ // minimumværdierne er helt ens
+                    TypeCheckVisitor.warning++;
+                    throw new DuplicationException(id, parentNode, "bigger than", this.minValue);
+                } else { // minimumværdierne er forskellige
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.minValue, "bigger than ", t.minValue, "bigger than ");
+                }
+            } else if (t.maxValue != null && t.withGivenMaxValue) { // <= for den nye
+
+            } else if (t.maxValue != null) { // < for den nye
+
+            }
+        } else if (this.maxValue != null && this.withGivenMaxValue) { // <= for den nuværende
+            if (t.maxValue != null && t.withGivenMaxValue){ // <= for den nye
+                if (areEqual(this.maxValue, t.maxValue)) {
+                    TypeCheckVisitor.warning++;
+                    throw new DuplicationException(id, parentNode, "less than or equal to", this.maxValue);
+                } else {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than", t.maxValue, "less than");
+                }
+            } else if (t.maxValue != null){ // < for den nye
+
+            } else if (t.minValue != null && t.withGivenMinValue) { // >= for den nye
+
+            } else if (t.minValue != null){ // > for den nye
+
+            }
+        } else if (this.maxValue != null) { // < for den nuværende
+            if (t.maxValue != null && t.withGivenMaxValue){ // <= for den nye
+
+            } else if (t.maxValue != null){ // < for den nye
+                if (areEqual(this.maxValue, t.maxValue)) {
+                    TypeCheckVisitor.warning++;
+                    throw new DuplicationException(id, parentNode, "less than", this.maxValue);
+                } else {
+                    TypeCheckVisitor.warning++;
+                    throw new RedundantSyntaxException(id, parentNode, this.maxValue, "less than", t.maxValue, "less than");
+                }
+            }
+        } else if (t.equalValue.size() != 0){
+            double d2 = t.equalValue.get(0);
+            for (Double d : this.equalValue) {
+                if (areEqual(d, d2)) {
+                    TypeCheckVisitor.warning++;
+                    throw new DuplicationException(id, parentNode, d2);
+                }
+            }
+        }
+        
         if (t.equalValue.size() != 0) {
             this.equalValue.add(t.equalValue.get(0));
         }
-        this.minValue = t.minValue;
-        this.maxValue = t.maxValue;
+        if (t.minValue != null) {
+            this.minValue = t.minValue;
+        }
+        if (t.maxValue != null) {
+            this.maxValue = t.maxValue;
+        }
+    }
+    
+    // Used to compare doubles
+    private boolean areEqual(Double d1, Double d2){
+        return Double.compare(d1, d2) == 0;
     }
 
     public String toString() {

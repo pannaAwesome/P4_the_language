@@ -53,7 +53,7 @@ public class DuplicationException extends Exception{
     private static String equalDuplicationDecimal(String id, SimpleNode node, double value){
         PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "WARNING:\n";
-        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined as " + value + "\n";
+        newMessage += "DUPLICATE WARNING: \"" + id + "\" has already been defined as " + value + ".\n";
         newMessage += "At line: ";
         node.jjtAccept(ppv, null);
         newMessage += ppv.print;
