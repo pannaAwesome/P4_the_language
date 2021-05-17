@@ -108,7 +108,7 @@ public class RedundantSyntaxExceptionAndTest {
         CreateAndExpression(">", 10.0, "=", 11.0);
         
         String expected = "WARNING:\n";
-        expected += "REDUNDANT SYNTAX WARNING: \"test\" will always be equal to 11.0 and can be rewritten as \"test = 10.0\"\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" will always be equal to 11.0 and can be rewritten as \"test = 11.0\"\n";
         expected += "At line: rule1: test > 10.0 AND test = 11.0\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));
@@ -211,19 +211,19 @@ public class RedundantSyntaxExceptionAndTest {
     }
 
     @Test
-    @DisplayName("Test < 10.0 AND Test = 10.0")
+    @DisplayName("Test < 11.0 AND Test = 10.0")
     public void smallerThanAndEqual() throws Exception {
         DecimalType firstDoub = new DecimalType();
-        firstDoub.SetValue("<", 10.0);
+        firstDoub.SetValue("<", 11.0);
 
         String id = "test";
         DecimalType secondDoub = new DecimalType();
         secondDoub.SetValue("=", 10.0);
-        CreateAndExpression("<", 10.0, "=", 10.0);
+        CreateAndExpression("<", 11.0, "=", 10.0);
         
         String expected = "WARNING:\n";
         expected += "REDUNDANT SYNTAX WARNING: \"test\" will always be equal to 10.0 and can be rewritten as \"test = 10.0\"\n";
-        expected += "At line: rule1: test < 10.0 AND test = 10.0\n\n";
+        expected += "At line: rule1: test < 11.0 AND test = 10.0\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));
         assertEquals(expected, thrown.getMessage());
@@ -317,7 +317,7 @@ public class RedundantSyntaxExceptionAndTest {
         CreateAndExpression("<=", 10.0, "<=", 11.0);
         
         String expected = "WARNING:\n";
-        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than or equal to 10.0 and less than or equal to 11.0 This can be simplified\n";
+        expected += "REDUNDANT SYNTAX WARNING: \"test\" has been defined as less than or equal to 10.0 and less than or equal to 11.0. This can be simplified\n";
         expected += "At line: rule1: test <= 10.0 AND test <= 11.0\n\n";
         
         Throwable thrown = assertThrows(RedundantSyntaxException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));

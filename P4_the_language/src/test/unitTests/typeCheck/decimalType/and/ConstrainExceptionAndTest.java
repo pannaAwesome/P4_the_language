@@ -134,24 +134,25 @@ public class ConstrainExceptionAndTest {
         assertEquals(expected, thrown.getMessage());
     }
 
-    @Test
-    @DisplayName("Test > 10.0 AND Test >= 10.0")
-    public void biggerThanAndBiggerThanOrEqual() throws Exception {
-        DecimalType firstDoub = new DecimalType();
-        firstDoub.SetValue(">", 10.0);
+    //this would be a redundant exception
+    // @Test
+    // @DisplayName("Test > 10.0 AND Test >= 10.0")
+    // public void biggerThanAndBiggerThanOrEqual() throws Exception {
+    //     DecimalType firstDoub = new DecimalType();
+    //     firstDoub.SetValue(">", 10.0);
 
-        String id = "test";
-        DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue(">=", 10.0);
-        CreateAndExpression(">", 10.0, ">=", 10.0);
+    //     String id = "test";
+    //     DecimalType secondDoub = new DecimalType();
+    //     secondDoub.SetValue(">=", 10.0);
+    //     CreateAndExpression(">", 10.0, ">=", 10.0);
         
-        String expected = "ERROR:\n";
-        expected += "CONSTRAINT ERROR: Cannot redefine \"test\" to be bigger than or equal to 10.0 because it is already defined as bigger than 10.0\n";
-        expected += "At line: rule1: test > 10.0 AND test >= 10.0\n\n";
+    //     String expected = "ERROR:\n";
+    //     expected += "CONSTRAINT ERROR: Cannot redefine \"test\" to be bigger than or equal to 10.0 because it is already defined as bigger than 10.0\n";
+    //     expected += "At line: rule1: test > 10.0 AND test >= 10.0\n\n";
         
-        Throwable thrown = assertThrows(ConstraintException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));
-        assertEquals(expected, thrown.getMessage());
-    }
+    //     Throwable thrown = assertThrows(ConstraintException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));
+    //     assertEquals(expected, thrown.getMessage());
+    // }
 
     @Test
     @DisplayName("Test > 10.0 AND Test < 10.0")
@@ -210,24 +211,25 @@ public class ConstrainExceptionAndTest {
         assertEquals(expected, thrown.getMessage());
     }
 
-    @Test
-    @DisplayName("Test >= 10.0 AND Test > 10.0")
-    public void biggerThanOrEqualAndBiggerThan() throws Exception {
-        DecimalType firstDoub = new DecimalType();
-        firstDoub.SetValue(">=", 10.0);
+    //this would be a redundant exception
+    // @Test
+    // @DisplayName("Test >= 10.0 AND Test > 10.0")
+    // public void biggerThanOrEqualAndBiggerThan() throws Exception {
+    //     DecimalType firstDoub = new DecimalType();
+    //     firstDoub.SetValue(">=", 10.0);
 
-        String id = "test";
-        DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue(">", 10.0);
-        CreateAndExpression(">=", 10.0, ">", 10.0);
+    //     String id = "test";
+    //     DecimalType secondDoub = new DecimalType();
+    //     secondDoub.SetValue(">", 10.0);
+    //     CreateAndExpression(">=", 10.0, ">", 10.0);
         
-        String expected = "ERROR:\n";
-        expected += "CONSTRAINT ERROR: Cannot redefine \"test\" to be bigger than 10.0 because it is already defined as bigger than or equal to 10.0\n";
-        expected += "At line: rule1: test >= 10.0 AND test > 10.0\n\n";
+    //     String expected = "ERROR:\n";
+    //     expected += "CONSTRAINT ERROR: Cannot redefine \"test\" to be bigger than 10.0 because it is already defined as bigger than or equal to 10.0\n";
+    //     expected += "At line: rule1: test >= 10.0 AND test > 10.0\n\n";
         
-        Throwable thrown = assertThrows(ConstraintException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));
-        assertEquals(expected, thrown.getMessage());
-    }
+    //     Throwable thrown = assertThrows(ConstraintException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));
+    //     assertEquals(expected, thrown.getMessage());
+    // }
 
     @Test
     @DisplayName("Test >= 10.0 AND Test < 10.0")
@@ -286,24 +288,25 @@ public class ConstrainExceptionAndTest {
         assertEquals(expected, thrown.getMessage());
     }
 
-    @Test
-    @DisplayName("Test < 10.0 AND Test <= 10.0")
-    public void smallerThanAndSmallerThanOrEqual() throws Exception {
-        DecimalType firstDoub = new DecimalType();
-        firstDoub.SetValue("<", 10.0);
+    //this would be a redundant exception
+    // @Test
+    // @DisplayName("Test < 10.0 AND Test <= 10.0")
+    // public void smallerThanAndSmallerThanOrEqual() throws Exception {
+    //     DecimalType firstDoub = new DecimalType();
+    //     firstDoub.SetValue("<", 10.0);
 
-        String id = "test";
-        DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue("<=", 10.0);
-        CreateAndExpression("<", 10.0, "<=", 10.0);
+    //     String id = "test";
+    //     DecimalType secondDoub = new DecimalType();
+    //     secondDoub.SetValue("<=", 10.0);
+    //     CreateAndExpression("<", 10.0, "<=", 10.0);
         
-        String expected = "ERROR:\n";
-        expected += "CONSTRAINT ERROR: Cannot redefine \"test\" to be less than or equal to 10.0 because it is already defined as less than 10.0\n";
-        expected += "At line: rule1: test < 10.0 AND test <= 10.0\n\n";
+    //     String expected = "ERROR:\n";
+    //     expected += "CONSTRAINT ERROR: Cannot redefine \"test\" to be less than or equal to 10.0 because it is already defined as less than 10.0\n";
+    //     expected += "At line: rule1: test < 10.0 AND test <= 10.0\n\n";
         
-        Throwable thrown = assertThrows(ConstraintException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));
-        assertEquals(expected, thrown.getMessage());
-    }
+    //     Throwable thrown = assertThrows(ConstraintException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));
+    //     assertEquals(expected, thrown.getMessage());
+    // }
 
     @Test
     @DisplayName("Test < 10.0 AND Test > 10.0")
@@ -362,24 +365,25 @@ public class ConstrainExceptionAndTest {
         assertEquals(expected, thrown.getMessage());
     }
 
-    @Test
-    @DisplayName("Test <= 10.0 AND Test < 10.0")
-    public void smallerThanOrEqualAndSmallerThan() throws Exception {
-        DecimalType firstDoub = new DecimalType();
-        firstDoub.SetValue("<=", 10.0);
+    //this would be a redundant exception
+    // @Test
+    // @DisplayName("Test <= 10.0 AND Test < 10.0")
+    // public void smallerThanOrEqualAndSmallerThan() throws Exception {
+    //     DecimalType firstDoub = new DecimalType();
+    //     firstDoub.SetValue("<=", 10.0);
 
-        String id = "test";
-        DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue("<", 10.0);
-        CreateAndExpression("<=", 10.0, "<", 10.0);
+    //     String id = "test";
+    //     DecimalType secondDoub = new DecimalType();
+    //     secondDoub.SetValue("<", 10.0);
+    //     CreateAndExpression("<=", 10.0, "<", 10.0);
         
-        String expected = "ERROR:\n";
-        expected += "CONSTRAINT ERROR: Cannot redefine \"test\" to be less than 10.0 because it is already defined as less than or equal to 10.0\n";
-        expected += "At line: rule1: test <= 10.0 AND test < 10.0\n\n";
+    //     String expected = "ERROR:\n";
+    //     expected += "CONSTRAINT ERROR: Cannot redefine \"test\" to be less than 10.0 because it is already defined as less than or equal to 10.0\n";
+    //     expected += "At line: rule1: test <= 10.0 AND test < 10.0\n\n";
         
-        Throwable thrown = assertThrows(ConstraintException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));
-        assertEquals(expected, thrown.getMessage());
-    }
+    //     Throwable thrown = assertThrows(ConstraintException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));
+    //     assertEquals(expected, thrown.getMessage());
+    // }
 
     @Test
     @DisplayName("Test <= 10.0 AND Test > 11.0")
@@ -394,7 +398,7 @@ public class ConstrainExceptionAndTest {
         
         String expected = "ERROR:\n";
         expected += "CONSTRAINT ERROR: \"test\" cannot have a max value of 10.0, which is smaller than the min value of 11.0\n";
-        expected += "At line: rule1: test >= 10.0 AND test < 10.0\n\n";
+        expected += "At line: rule1: test <= 10.0 AND test > 11.0\n\n";
         
         Throwable thrown = assertThrows(ConstraintException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));
         assertEquals(expected, thrown.getMessage());

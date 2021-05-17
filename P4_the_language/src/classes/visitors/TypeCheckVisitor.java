@@ -193,7 +193,7 @@ public class TypeCheckVisitor implements ScannerVisitor {
                 }            
             }
         } catch (TipException e) {
-            System.out.println(e.getMessage());            
+                        
         }
         
         return data;
@@ -201,6 +201,23 @@ public class TypeCheckVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(AND node, SimpleNode data) {
+
+        // check for id IS INTEGER AND id IS INTEGER
+        try {
+            Node l = node.jjtGetChild(0);
+            Node r = node.jjtGetChild(1);
+            if (l.toString().equals("IS") && r.toString().equals("IS")){
+                String constraint1 = l.jjtGetChild(1).toString();
+                String constraint2 = r.jjtGetChild(1).toString();
+                if (constraint1.equals("INTEGER") && constraint2.equals("INTEGER")){
+                    TypeCheckVisitor.warning++;
+                    throw new DuplicationException(l.jjtGetChild(0).toString(), node);
+                }
+            }
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         for (int i = 0; i < node.jjtGetNumChildren(); i++) {
             if (node.jjtGetChild(i).toString().equals("OR")) {
                 node.jjtGetChild(i).jjtAccept(this, data);

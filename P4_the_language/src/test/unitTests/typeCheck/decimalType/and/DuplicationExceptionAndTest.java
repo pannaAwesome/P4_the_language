@@ -49,7 +49,7 @@ public class DuplicationExceptionAndTest {
         CreateAndExpression("=", 10.0, "=", 10.0);
         
         String expected = "WARNING:\n";
-        expected += "DUPLICATE WARNING: \"test\" has already been defined as 10.0\n";
+        expected += "DUPLICATE WARNING: \"test\" has already been defined as 10.0.\n";
         expected += "At line: rule1: test = 10.0 AND test = 10.0\n\n";
         
         Throwable thrown = assertThrows(DuplicationException.class, () -> firstDoub.compareTypesAnd( id, secondDoub, parentNode));

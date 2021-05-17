@@ -60,8 +60,8 @@ public class ConstraintException extends Exception {
         super(equalOtherConstrainDecimal(id, node, wrongConstrain, wrongValue, value));
     }
 
-    public ConstraintException(String id, double max, double min){
-        super(minBiggerThanMaxConstrainDecimal(id, max, min));
+    public ConstraintException(String id, SimpleNode node, double max, double min){
+        super(minBiggerThanMaxConstrainDecimal(id, node, max, min));
     }
 
     private static String constrainDecimal(String id, SimpleNode node, String firstConstrain, double wrongValue, String secondConstrain, double value) {
@@ -97,9 +97,13 @@ public class ConstraintException extends Exception {
         return newMessage;
     }
 
-    private static String minBiggerThanMaxConstrainDecimal(String id, double max, double min) {
+    private static String minBiggerThanMaxConstrainDecimal(String id, SimpleNode node, double max, double min) {
+        PrettyPrinterVisitor ppv = new PrettyPrinterVisitor();
         String newMessage = "ERROR:\n";
         newMessage += "CONSTRAINT ERROR: \"" + id + "\" cannot have a max value of " + max + ", which is smaller than the min value of " + min+ "\n";
+        newMessage += "At line: ";
+        node.jjtAccept(ppv, null);
+        newMessage += ppv.print;
         newMessage += "\n";
         return newMessage;
     }
