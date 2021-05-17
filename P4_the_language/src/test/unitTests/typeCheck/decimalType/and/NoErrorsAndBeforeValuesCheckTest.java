@@ -185,14 +185,14 @@ public class NoErrorsAndBeforeValuesCheckTest {
     }
 
     @Test
-    @DisplayName("Test < 10.0 AND Test > 11.0")
+    @DisplayName("Test < 10.0 AND Test > 9.0")
     public void smallerThanAndBiggerThan() throws Exception {
         DecimalType firstDoub = new DecimalType();
         firstDoub.SetValue("<", 10.0);
 
         String id = "test";
         DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue(">", 11.0);
+        secondDoub.SetValue(">", 9.0);
         
         Double expected = 10.0;
         boolean expectedWith = false;
@@ -206,14 +206,14 @@ public class NoErrorsAndBeforeValuesCheckTest {
     }
 
     @Test
-    @DisplayName("Test < 10.0 AND Test >= 11.0")
+    @DisplayName("Test < 10.0 AND Test >= 9.0")
     public void  smallerThanAndBiggerThanOrEqual() throws Exception {
         DecimalType firstDoub = new DecimalType();
         firstDoub.SetValue("<", 10.0);
 
         String id = "test";
         DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue(">=", 11.0);
+        secondDoub.SetValue(">=", 9.0);
         
         Double expected = 10.0;
         boolean expectedWith = false;
@@ -247,14 +247,14 @@ public class NoErrorsAndBeforeValuesCheckTest {
     }
 
     @Test
-    @DisplayName("Test <= 10.0 AND Test > 11.0")
+    @DisplayName("Test <= 10.0 AND Test > 9.0")
     public void smallerThanOrEqualAndBiggerThan() throws Exception {
         DecimalType firstDoub = new DecimalType();
         firstDoub.SetValue("<=", 10.0);
 
         String id = "test";
         DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue(">", 11.0);
+        secondDoub.SetValue(">", 9.0);
         
         Double expected = 10.0;
         boolean expectedWith = true;
@@ -268,14 +268,14 @@ public class NoErrorsAndBeforeValuesCheckTest {
     }
 
     @Test
-    @DisplayName("Test <= 10.0 AND Test >= 11.0")
+    @DisplayName("Test <= 10.0 AND Test >= 9.0")
     public void  smallerThanOrEqualAndBiggerThanOrEqual() throws Exception {
         DecimalType firstDoub = new DecimalType();
         firstDoub.SetValue("<=", 10.0);
 
         String id = "test";
         DecimalType secondDoub = new DecimalType();
-        secondDoub.SetValue(">=", 11.0);
+        secondDoub.SetValue(">=", 9.0);
         
         Double expected = 10.0;
         boolean expectedWith = true;
