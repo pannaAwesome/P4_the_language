@@ -36,4 +36,4 @@ public interface ScannerVisitor
   public SimpleNode visit(MULT node, SimpleNode data);
   public SimpleNode visit(ADD node, SimpleNode data);
 }
-/* JavaCC - OriginalChecksum=00185dfa1f6884acec4194ae819b5d79 (do not edit this line) */
+/* JavaCC - OriginalChecksum=4ca8e15b631139624da02eb9143700d0 (do not edit this line) */

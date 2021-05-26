@@ -1620,10 +1620,9 @@ public static void main(String[] args) {
   }
 
   static final public void RULEOPT() throws ParseException {
- /*@bgen(jjtree) RULEOPT */
-  RULEOPT jjtn000 = new RULEOPT(JJTRULEOPT);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
+      RULEOPT jjtn001 = new RULEOPT(JJTRULEOPT);
+      boolean jjtc001 = true;
+      jjtree.openNodeScope(jjtn001);
     try {
       label_30:
       while (true) {
@@ -1649,23 +1648,23 @@ public static void main(String[] args) {
           }
         }
       }
-    } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
+    } catch (Throwable jjte001) {
+      if (jjtc001) {
+        jjtree.clearNodeScope(jjtn001);
+        jjtc001 = false;
       } else {
         jjtree.popNode();
       }
-      if (jjte000 instanceof RuntimeException) {
-        {if (true) throw (RuntimeException)jjte000;}
+      if (jjte001 instanceof RuntimeException) {
+        {if (true) throw (RuntimeException)jjte001;}
       }
-      if (jjte000 instanceof ParseException) {
-        {if (true) throw (ParseException)jjte000;}
+      if (jjte001 instanceof ParseException) {
+        {if (true) throw (ParseException)jjte001;}
       }
-      {if (true) throw (Error)jjte000;}
+      {if (true) throw (Error)jjte001;}
     } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
+      if (jjtc001) {
+        jjtree.closeNodeScope(jjtn001, jjtree.nodeArity() > 0);
       }
     }
   }
