@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 
 import src.classes.scanner.*;
 import src.classes.types.*;
@@ -115,66 +116,50 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(COLRULE node, SimpleNode data) {
-        String mabyePartRule = node.jjtGetChild(1).toString();
-        if (mabyePartRule.equals("COLPARTRULE")){
-            String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
-            output += "_"+ruleName+"Where = []\n"; 
-            output += "_"+ruleName+" = []\n";
-            for (int i = 0; i < node.jjtGetNumChildren(); i++){
-                node.jjtGetChild(i).jjtAccept(this, null);
-            }  
-            output += "def "+ruleName+"():\n";
-            output += "\ttry:\n";
-            output += "\t\ttempDf = pd.DataFrame(columns=df.columns)\n";
-            output += "\t\ttempBool = False\n";
-            output += "\t\ttempRes = False\n";
-            output += "\t\tfor index, row in df.iterrows():\n";
-            output += "\t\t\tfor func in _nameRuleWhere:\n";
-            output += "\t\t\t\ttempBool = tempBool or func(row)\n";
-            output += "\t\t\tif tempBool:\n";
-            output += "\t\t\t\ttempDf = tempDf.append(row)\n\n";
-		
-            output += "\t\t\tfor func in _"+ruleName+":\n";
-            output += "\t\t\t\ttempRes = tempRes or func(row)\n";
-            output += "\t\t\tif tempRes:\n";
-            output += "\t\t\t\treturn ['x', ' ']\n";
-            output += "\t\t\telse:\n";
-            output += "\t\t\t\treturn [' ', 'x']\n";
-            output += "\texcept Exception:\n";
-            output += "\t\treturn [' ', 'x']\n";
-            output += "columnRuleNames.append(\""+ruleName+"\")\n";
-            output += "resultFromColumnRules.append("+ruleName+"())\n\n";
-
-            return null;
-        }
-
         String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
-        output += "def "+ruleName+"():\n";
+        output += "def "+ruleName+"(df):\n";
+        output += "\ttempRes = False\n";
+        output += "\ttry:\n";
+        output += "\t\tdfCopy = df\n";
         int lastChild = node.jjtGetNumChildren()-1;
-        String mabyeWhereClause = node.jjtGetChild(lastChild).toString();
-        if (mabyeWhereClause.equals("WHERE")){ // if where clause exists, it has to be run first
-            output += "\ttempDf = pd.DataFrame(columns=df.columns)\n";
-            output += "\tfor index, row in df.iterrows():\n";
-            output += "\t\tif ";
+        SimpleNode mabyeWhereClause = (SimpleNode)node.jjtGetChild(lastChild);
+        if (mabyeWhereClause instanceof WHERE){ // if where clause exists, it has to be run first
+            output += "\t\ttempDf = pd.DataFrame(columns=df.columns)\n";
+            output += "\t\tfor index, row in df.iterrows():\n";
+            output += "\t\t\tif ";
             node.jjtGetChild(lastChild).jjtAccept(this, null);
             output += ":\n";
-            output += "\t\t\ttempDf = tempDf.append(row)\n";
-            output += "\tif ";
-            for (int i = 1; i < node.jjtGetNumChildren()-1; i++){
+            output += "\t\t\t\ttempDf = tempDf.append(row)\n";
+            output += "\t\tdf = tempDf\n";
+            output += "\t\tif ";
+            for (int i = 0; i < node.jjtGetNumChildren()-1; i++){
                 node.jjtGetChild(i).jjtAccept(this, null);
             }
+            output += ":\n";
+            output += "\t\t\ttempRes = True\n";
         } else {
-            output += "\tif ";
-            for (int i = 1; i < node.jjtGetNumChildren(); i++){
-                node.jjtGetChild(i).jjtAccept(this, null);
+            String mabyePartRule = node.jjtGetChild(1).toString();
+            if (mabyePartRule.equals("COLPARTRULE")){
+                for (int i = 0; i < node.jjtGetNumChildren(); i++){
+                    node.jjtGetChild(i).jjtAccept(this, null);
+                } 
+            } else {
+                output += "\t\tif ";
+                for (int i = 0; i < node.jjtGetNumChildren(); i++){
+                    node.jjtGetChild(i).jjtAccept(this, null);
+                }
+                output += ":\n";
+                output += "\t\t\ttempRes = True\n";
             }
         }
-        output += ":\n";
-        output += "\t\treturn ['x', ' ']\n";
-        output += "\telse:\n";
+        output += "\t\tif tempRes:\n";
+        output += "\t\t\treturn ['x', ' ']\n";
+        output += "\t\telse:\n";
+        output += "\t\t\treturn [' ', 'x']\n";
+        output += "\texcept Exception:\n";
         output += "\t\treturn [' ', 'x']\n";
         output += "columnRuleNames.append(\""+ruleName+"\")\n";
-        output += "resultFromColumnRules.append("+ruleName+"())\n";
+        output += "resultFromColumnRules.append("+ruleName+"(df))\n";
         output += "\n";
         
 
@@ -184,33 +169,36 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(COLPARTRULE node, SimpleNode data) {
         String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
-        output += "def "+ruleName+"Where(row):\n";
+        
         int lastChild = node.jjtGetNumChildren()-1;
         SimpleNode whereClause = (SimpleNode)node.jjtGetChild(lastChild);
-
-        output += "\treturn ";
+ 
         if (whereClause instanceof WHERE){
+            output += "\t\ttempDf = pd.DataFrame(columns=df.columns)\n";
+            output += "\t\tfor index, row in df.iterrows():\n";
+            output += "\t\t\tif ";
             for (int i = 0; i < whereClause.jjtGetNumChildren(); i++){
                 whereClause.jjtGetChild(i).jjtAccept(this, null);
             } 
-            output += "\n";
-            output += "_"+getParentRuleFromPartRule(node)+"Where.append("+ruleName+"Where)\n\n";
-
-            output += "def "+ruleName+"():\n";
-            output += "\treturn ";
+            output += ":\n";
+            output += "\t\t\t\ttempDf = tempDf.append(row)\n";
+            output += "\t\tdf = tempDf\n";
+            output += "\t\tif ";
             for (int i = 0; i < node.jjtGetNumChildren()-1; i++){
                 node.jjtGetChild(i).jjtAccept(this, null);
             }
-            output += "\n";
-            output += "_"+getParentRuleFromPartRule(node)+".append("+ruleName+")\n";
-            output += "\n";
+            output += ":\n";
+            output += "\t\t\ttempRes = True\n";
+            output += "\t\tdf = dfCopy\n\n";
         } else {
-            for (int i = 1; i < node.jjtGetNumChildren(); i++){
+            output += "\t\tif ";
+            for (int i = 0; i < node.jjtGetNumChildren(); i++){
                 node.jjtGetChild(i).jjtAccept(this, null);
             }
+            output += ":\n";
+            output += "\t\t\ttempRes = True\n\n";
         }
-
-
+        
         return null;
     }
 
@@ -278,7 +266,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         for (int i = 0; i < node.jjtGetNumChildren(); i++) {
             SimpleNode n = node.jjtGetChild(i).jjtAccept(this, data);
             if (n instanceof IDEN) {
-
+                
             }
         }
         return node;
@@ -339,33 +327,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(RULE node, SimpleNode data) {
-        String mabyePartRule = node.jjtGetChild(1).toString();
-        if (mabyePartRule.equals("PARTRULE")){
-            String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString(""); 
-            output += "_"+ruleName+" = []\n";
-            for (int i = 0; i < node.jjtGetNumChildren(); i++){
-                node.jjtGetChild(i).jjtAccept(this, null);
-            }  
-            output += "def "+ruleName+"():\n";
-            output += "\tresult = []\n";
-            output += "\ttempRes = False\n";
-            output += "\tfor index, row in df.iterrows():\n";
-            output += "\t\ttry:\n";
-            output += "\t\t\tfor func in _"+ruleName+":\n";
-            output += "\t\t\t\ttempRes = tempRes or func(row)\n";
-            output += "\t\t\tif tempRes:\n";
-            output += "\t\t\t\tresult.append(\"True\")\n";
-            output += "\t\t\telse:\n";
-            output += "\t\t\t\tresult.append(\"False\")\n";
-            output += "\t\t\ttempRes = False\n";
-            output += "\t\texcept Exception:\n";
-            output += "\t\t\tresult.append(\"False\")\n";
-            output += "\treturn pd.Series(result)\n";
-            output += "ruleNames.append(\""+ruleName+"\")\n";
-            output += "df[\""+ruleName+"\"] = "+ruleName+"()\n\n";
-
-            return null;
-        }
+        
 
         String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
         output += "def "+ruleName+"():\n";
@@ -373,9 +335,22 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\tfor index, row in df.iterrows():\n";
         output += "\t\ttry:\n";
         output += "\t\t\tif ";
-        for (int i = 1; i < node.jjtGetNumChildren(); i++){
-            node.jjtGetChild(i).jjtAccept(this, null);
-        }        
+
+        String mabyePartRule = node.jjtGetChild(1).toString();
+        if (mabyePartRule.equals("PARTRULE")){
+            int childNum = node.jjtGetNumChildren();
+            for (int i = 1; i < childNum; i++){
+                node.jjtGetChild(i).jjtAccept(this, null);
+                if (i != childNum-1){
+                    output += " or ";
+                }
+            } 
+        } else {
+            for (int i = 1; i < node.jjtGetNumChildren(); i++){
+                node.jjtGetChild(i).jjtAccept(this, null);
+            }
+        }
+
         output += ":\n";
         output += "\t\t\t\tresult.append(\"True\")\n"; 
         output += "\t\t\telse:\n";
@@ -391,28 +366,9 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
     @Override
     public SimpleNode visit(PARTRULE node, SimpleNode data) {
-        String ruleName = node.jjtGetChild(0).jjtAccept(this, null).toString("");
-        output += "def "+ruleName+"(row):\n";
-        /*int lastChild = node.jjtGetNumChildren()-1;
-        String mabyeWhereClause = node.jjtGetChild(lastChild).toString();
-        if (mabyeWhereClause.equals("WHERE")){ // if where clause exists, it has to be run first
-            output += "\tif ";
-            node.jjtGetChild(lastChild).jjtAccept(this, null);
-            output += "\t\treturn ";
-            for (int i = 1; i < node.jjtGetNumChildren()-1; i++){
-                node.jjtGetChild(i).jjtAccept(this, null);
-            }
-            output += "\telse:";
-            output += "return \"\"";
-        } else {*/
-            output += "\t return ";
-            for (int i = 1; i < node.jjtGetNumChildren(); i++){
-                node.jjtGetChild(i).jjtAccept(this, null);
-            }        
-            output += "\n";
-        //}
-        output += "_"+getParentRuleFromPartRule(node)+".append("+ruleName+")\n";
-        output += "\n";
+        for (int i = 1; i < node.jjtGetNumChildren(); i++){
+            node.jjtGetChild(i).jjtAccept(this, null);
+        }        
         return null;
     }
 
@@ -510,10 +466,10 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
                 output += "isint("+id+")";
                 break;
             case "EMPTY":
-                output += "pd.isna(row[\""+id+"\"])";
+                output += "pd.isna("+id+")";
                 break;
-            case "NOT":
-                output += "not pd.isna(row[\""+id+"\"])";
+            case "NOTEMPTY":
+                output += "not pd.isna("+id+")";
                 break;
         }
     }
@@ -567,10 +523,13 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\toverviewAxis.xaxis.set_major_formatter(mlt.PercentFormatter(1))\n";
         output += "\toverviewAxis.legend(['Passed', 'Failed'], loc=[1, 0.5])\n\n";
 
-        output += "\tanalyzeRuleTable[\"Total\"] = analyzeRuleTable[\"True\"] + analyzeRuleTable[\"False\"] \n";
-        output += "\tanalyzeRuleTable[\"%\"] = round((analyzeRuleTable[\"True\"] / analyzeRuleTable[\"Total\"]) * 100, 2)\n\n";
+        output += "\ttotalRows = len(df.index)\n";
+        output += "\tanalyzeRuleTable[\"%passed\"] = round((analyzeRuleTable[\"True\"] / totalRows) * 100, 2)\n";
+        output += "\tanalyzeRuleTable[\"%failed\"] = round(100 - analyzeRuleTable[\"%passed\"], 2)\n";
+        output += "\tanalyzeRuleTable[\"True\"] = analyzeRuleTable[\"True\"].astype(str)\n";
+        output += "\tanalyzeRuleTable[\"False\"] = analyzeRuleTable[\"False\"].astype(str)\n\n";
 
-        output += "\tcolumn_labels = ['No. of passed rows', 'No. of failed rows', 'no. of total rows', '% of passed rows']\n";
+        output += "\tcolumn_labels = ['No. of passed rows', 'No. of failed rows', '% of passed rows', '% of failed rows']\n";
         output += "\tnormalAxis.axis('off')\n";
         output += "\tnorPlot = normalAxis.table(\n";
         output += "\t\tcellText=analyzeRuleTable.values, \n";
@@ -598,7 +557,6 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
         output += "def ANALYZE():\n";
         output += "\tcolumnTable = pd.DataFrame.from_records(resultFromColumnRules)\n";
-
         output += "\ttotalFailure = 0\n";
         output += "\tfor row in df.iterrows():\n";
         output += "\t\tfor rule in ruleNames:\n";
@@ -607,15 +565,17 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         output += "\t\t\t\tbreak\n";
 
         output += "\ttotalRows = len(df.index)\n";
-        output += "\ttotalFailure = round((totalFailure / totalRows) * 100, 2)\n";
-        output += "\toverrall = pd.DataFrame([[totalFailure, 100-totalFailure]], columns=[\"False\", \"True\"]).rename(index={0: \"Overrall correctness\"})\n";
+        output += "\toverrall = pd.DataFrame([[totalFailure, totalRows-totalFailure]], columns=[\"False\", \"True\"]).rename(index={0: \"Overrall correctness\"})\n";
 
-        
         output += "\tcols = df[ruleNames].apply(pd.value_counts).fillna(0).transpose()\n";
         output += "\tcols = cols.append(overrall)\n";
         output += "\truleNames.append(\"Overral correctness\")\n";
         output += "\tanalyzeRuleTable = pd.DataFrame(cols[\"True\"])\n";
+        output += "\tanalyzeRuleTable[\"True\"] = pd.to_numeric(analyzeRuleTable[\"True\"], downcast='integer')\n";
+
         output += "\tanalyzeRuleTable[\"False\"] = cols[\"False\"]\n";
+        output += "\tanalyzeRuleTable[\"False\"] = pd.to_numeric(analyzeRuleTable[\"False\"], downcast='integer')\n";
+
         output += "\tpretty_print(analyzeRuleTable, columnTable)\n";
 
         output += "ANALYZE()";
@@ -630,8 +590,10 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         for (int i = 0; i < node.jjtGetNumChildren(); i++){
             node.jjtGetChild(i).jjtAccept(this, null);
         }
-        
-        output += "\tprint(rows.to_string())\n";
+        output += "\tif (len(rows)==0):\n";
+		output += "\t\tprint(\"No failed rows with the given arguments\")\n"; 
+	    output += "\telse:\n";
+		output += "\t\tprint(rows.to_string())\n";
         output += "ANALYZE()\n";
         return null;
     }
@@ -639,13 +601,21 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(RULEOPT node, SimpleNode data) {
         String ruleName = "";
+        List<String> list = new ArrayList<String>();
 
         for (int i = 0; i < node.jjtGetNumChildren(); i++){
             ruleName = node.jjtGetChild(i).jjtAccept(this, null).toString("");
             output += "\truleNames.remove(\""+ruleName+"\")\n";
+            list.add(ruleName);
         }
-
-        output += "\trows = df.loc[df['"+ruleName+"'] == \"False\"]\n";
+        output += "\trows = df.loc[";
+        for (int i = 0; i < list.size(); i++){
+            output += "(df['"+list.get(i)+"'] == \"False\")";
+            if (i != list.size()-1){
+                output += " | ";
+            }
+        }
+        output += "]\n";
         return null;
     }
 
@@ -701,11 +671,10 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
     }
 
     private String getType(IDEN n){
-        BaseType t = n.type;
-        if (t == null){
-            return "float";
-        }
-        if (t.toString().equals("Integer")){
+        STVal idTypes = SymbolTableVisitor.ST.get(n.toString(""));
+        if (idTypes.type.size() == 0) return "float";
+        
+        if (idTypes.type.contains(new IntegerType()) && !idTypes.type.contains(new DecimalType())){ 
             return "int";
         } else {
             return "float";
