@@ -1,0 +1,1 @@
+java src/classes/scanner/Taula %*

@@ -12,9 +12,9 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
 
     private String output = "";
 
-    public void getPyFile(){
+    public void getPyFile(String outputName){
         try {
-            PrintWriter out = new PrintWriter("output.py");
+            PrintWriter out = new PrintWriter(outputName+".py");
             out.println(output);
             out.close();
         } catch (FileNotFoundException e) {
@@ -303,7 +303,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         if (n instanceof IDEN){
             output += "row[\""+n+"\"]";
         } 
-        output += " + ";
+        output += " "+node.toString("")+" ";
         SimpleNode rightChild = node.jjtGetChild(1).jjtAccept(this, null);
         if (rightChild instanceof IDEN){
             output += "row[\""+n+"\"]";
@@ -317,7 +317,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
         if (n instanceof IDEN){
             output += "row[\""+n+"\"]";
         } 
-        output += " * ";
+        output += " "+node.toString("")+" ";
         SimpleNode rightChild = node.jjtGetChild(1).jjtAccept(this, null);
         if (rightChild instanceof IDEN){
             output += "row[\""+n+"\"]";
@@ -442,7 +442,7 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             output += node.toString("");
             SimpleNode rightNode = node.jjtGetChild(1).jjtAccept(this, null);
             if (rightNode instanceof IDEN) {
-                output += getType((IDEN)rightNode)+"row[\""+rightNode.toString("")+"\"]";
+                output += getType((IDEN)rightNode)+"(row[\""+rightNode.toString("")+"\"])";
             }          
         } else {
             String id = node.jjtGetChild(0).jjtAccept(this, null).toString("");
@@ -585,11 +585,11 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
     @Override
     public SimpleNode visit(ANLZOPTIONS node, SimpleNode data) {
         output += "def ANALYZE():\n";
-        output += "\trows = df.drop(labels = ruleNames, axis = 1)\n";
-        
+        output += "\trows = df\n";
         for (int i = 0; i < node.jjtGetNumChildren(); i++){
             node.jjtGetChild(i).jjtAccept(this, null);
         }
+        output += "\trows = rows.drop(labels = ruleNames, axis = 1)\n";
         output += "\tif (len(rows)==0):\n";
 		output += "\t\tprint(\"No failed rows with the given arguments\")\n"; 
 	    output += "\telse:\n";
@@ -626,7 +626,8 @@ public class CodeGeneratorVisitor implements ScannerVisitor {
             SimpleNode range = node.jjtGetChild(i).jjtAccept(this, null);
             
             output += "\tif (idColSet != False):\n";
-            output += "\t\trows[idColSet] = pd.to_numeric(rows[idColSet], downcast='signed')\n";
+            //output += "\t\trows[idColSet] = pd.to_numeric(rows[idColSet], downcast='signed')\n";
+            output += "\t\trows = rows.astype({idColSet: 'int32'})\n";
             output += "\t\trows = rows.loc[(rows[idColSet] >=";
             range.jjtGetChild(0).jjtAccept(this, null);
             output += ") & (rows[idColSet] <= ";
